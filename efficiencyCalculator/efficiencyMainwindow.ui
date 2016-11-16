@@ -72,7 +72,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Thickness of substrate  (sub - mm)</string>
+              <string>Thickness of substrate  (mm)</string>
              </property>
             </widget>
            </item>
@@ -85,9 +85,6 @@
               <string>Thickness of B4C  (μm)</string>
              </property>
             </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="BSpinBox"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="NbladesLabel">
@@ -110,6 +107,9 @@
             <widget class="QRadioButton" name="geometricalARadioButton">
              <property name="text">
               <string>Single Coated</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -167,6 +167,9 @@
               <number>90</number>
              </property>
             </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="BSpinBox"/>
            </item>
           </layout>
          </item>
@@ -362,7 +365,7 @@
               <height>561</height>
              </rect>
             </property>
-            <layout class="QVBoxLayout" name="plotLayout">
+            <layout class="QVBoxLayout" name="innerPlotLayout">
              <item>
               <layout class="QHBoxLayout" name="resultLayout_2">
                <item>
@@ -395,14 +398,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QWidget" name="plotDrawingWidget" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="plotLayout"/>
              </item>
             </layout>
            </widget>
