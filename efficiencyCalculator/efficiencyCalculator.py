@@ -29,6 +29,7 @@ class Window(base, form):
         sys.exit(app.exec_())
 
     def calculate_efficiency(self):
+        self.figure.clf()
         print ''
         print 'calculate'
         sys.stdout.write("Thickness of Substrate: ")
@@ -59,7 +60,6 @@ class Window(base, form):
         self.plotstoppingpower()
 
     def plotstoppingpower(self):
-        self.figure.clf()
         figure1 = matplotlib.figure.Figure()
         names = ["IONIZ_Linkoping_Alpha06.txt","IONIZ_Linkoping_Alpha94.txt","IONIZ_Linkoping_Li06.txt","IONIZ_Linkoping_Li94.txt"]
         threshold = 200000
