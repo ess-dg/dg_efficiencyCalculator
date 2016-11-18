@@ -30,12 +30,17 @@ class Window(base, form):
 
     def start_window(self):
         self.setupUi(self)
+        # Read from converter dict and place a selector in converterComboBox
+        for c in self.converters:
+            configs = self.converters.get(c).configurations
+            for conf in configs:
+                self.converterComboBox.addItem(conf.get('name'))
         # connect calculation functionality to the button
         self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
         # Include figure to place the plot
-        self.figure = matplotlib.figure.Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.plotLayout.addWidget(self.canvas)
+       # self.figure = matplotlib.figure.Figure()
+        #self.canvas = FigureCanvas(self.figure)
+        #self.plotLayout.addWidget(self.canvas)
         self.show()
 
     def calculate_efficiency(self):

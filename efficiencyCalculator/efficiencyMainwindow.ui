@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>884</width>
-    <height>701</height>
+    <width>909</width>
+    <height>711</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,14 +41,14 @@
           <x>20</x>
           <y>40</y>
           <width>391</width>
-          <height>611</height>
+          <height>634</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="ValuesSelectorVerticalLayout">
          <item>
           <widget class="QLabel" name="geometryTilteLabel">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Geometry of the detector&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Detector features&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -63,47 +63,31 @@
            <property name="leftMargin">
             <number>10</number>
            </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="thicknessSLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Thickness of substrate  (mm)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="substrateSpinBox"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="thicknessBLabel">
-             <property name="text">
-              <string>Thickness of B4C  (μm)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="NbladesLabel">
              <property name="text">
               <string>Number of blades</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <widget class="QSpinBox" name="bladeSpinBox"/>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="bladeSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
            </item>
-           <item row="6" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="geometricalLabel">
              <property name="text">
               <string>Geometrical arrangement</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
+           <item row="7" column="1">
             <widget class="QRadioButton" name="geometricalARadioButton">
              <property name="text">
               <string>Single Coated</string>
@@ -113,22 +97,28 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
+           <item row="8" column="1">
             <widget class="QRadioButton" name="geometricalBRadioButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Double coated</string>
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="12" column="0">
             <widget class="QLabel" name="MaterialLabel">
              <property name="text">
               <string>Material of substrate</string>
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="12" column="1">
             <widget class="QComboBox" name="materialComboBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <item>
               <property name="text">
                <string>Aluminium (Al)</string>
@@ -151,109 +141,57 @@
              </item>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="algleLabel">
+           <item row="11" column="1">
+            <widget class="QDoubleSpinBox" name="BSpinBox">
+             <property name="minimum">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="thicknessBLabel">
              <property name="text">
-              <string>Incident angle  (°)</string>
+              <string>Thickness of B4C  (μm)</string>
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QSpinBox" name="angleSpinBox">
-             <property name="maximum">
-              <number>90</number>
+           <item row="13" column="0">
+            <widget class="QLabel" name="thicknessSLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="value">
-              <number>90</number>
+             <property name="text">
+              <string>Thickness of substrate  (mm)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="BSpinBox"/>
+           <item row="13" column="1">
+            <widget class="QDoubleSpinBox" name="substrateSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimum">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="converterLabel">
+             <property name="text">
+              <string>Converter</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="converterComboBox"/>
            </item>
           </layout>
          </item>
          <item>
           <widget class="Line" name="geometryLine">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="gasTilteLabel">
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Gas Composition&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QFormLayout" name="gasLAyout">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
-           <property name="labelAlignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-           </property>
-           <property name="formAlignment">
-            <set>Qt::AlignHCenter|Qt::AlignTop</set>
-           </property>
-           <property name="leftMargin">
-            <number>10</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="gasSelectorLabel">
-             <property name="text">
-              <string>Gas Selector                                  </string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="gasSelectorComboBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <item>
-              <property name="text">
-               <string>Ar/CO2  90:10</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Ar/CO2  80:20</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Ar/CO2  70:30</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="pressureLabel">
-             <property name="text">
-              <string>Pressure (atm)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="pressureSpinBox">
-             <property name="value">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="Line" name="gasLine">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -293,17 +231,51 @@
            <item row="0" column="1">
             <widget class="QSpinBox" name="sigmaSpinBox"/>
            </item>
-           <item row="1" column="0">
+           <item row="2" column="0">
+            <widget class="QLabel" name="algleLabel">
+             <property name="text">
+              <string>Incident angle θ (°)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="angleSpinBox">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>90</number>
+             </property>
+             <property name="value">
+              <number>90</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
             <widget class="QLabel" name="thresholdLabel">
              <property name="text">
               <string>E threshold</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="3" column="1">
             <widget class="QSpinBox" name="thresholdSpinBox"/>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="Line" name="gasLine">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="gasTilteLabel">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Gas Composition&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="Line" name="neutronLine_2">
@@ -311,6 +283,77 @@
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="gasLAyout">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <property name="labelAlignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="formAlignment">
+            <set>Qt::AlignHCenter|Qt::AlignTop</set>
+           </property>
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="gasSelectorLabel">
+             <property name="text">
+              <string>Gas Selector                                  </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="gasSelectorComboBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Ar/CO2  90:10</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Ar/CO2  80:20</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Ar/CO2  70:30</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="pressureLabel">
+             <property name="text">
+              <string>Pressure (atm)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="pressureSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QPushButton" name="calculatePushButton">
@@ -360,15 +403,15 @@
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>0</y>
+              <y>10</y>
               <width>351</width>
-              <height>561</height>
+              <height>541</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="innerPlotLayout">
              <item>
-              <layout class="QHBoxLayout" name="resultLayout_2">
-               <item>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="0" column="0">
                 <widget class="QLabel" name="effiLabel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -377,14 +420,27 @@
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Efficiency (ε):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Total Efficiency (ε):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QLabel" name="resultLabel">
+               <item row="0" column="1">
+                <widget class="QLabel" name="totalResultLabel">
                  <property name="text">
                   <string>Result</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="effiLabel_2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Total Efficiency (ε):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -398,7 +454,7 @@
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="plotLayout"/>
+              <layout class="QVBoxLayout" name="plotLayout_2"/>
              </item>
             </layout>
            </widget>
@@ -423,7 +479,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>884</width>
+     <width>909</width>
      <height>22</height>
     </rect>
    </property>
