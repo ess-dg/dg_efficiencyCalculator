@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-
+import Models.B10 as B10
 import efftools
 from PyQt4 import QtGui, QtCore, uic
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -15,8 +15,20 @@ base, form = uic.loadUiType("efficiencyMainwindow.ui")
 
 
 class Window(base, form):
+    converters = {}
+
     def __init__(self,  parent=None):
         super(base, self).__init__(parent)
+        # init list of converter materials, load data and add to converter dict
+        self.converter_list()
+        self.start_window()
+        sys.exit(app.exec_())
+
+    def converter_list(self):
+        boron10 = B10.B10()
+        self.converters.update(B10=boron10)
+
+    def start_window(self):
         self.setupUi(self)
         # connect calculation functionality to the button
         self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
@@ -24,9 +36,7 @@ class Window(base, form):
         self.figure = matplotlib.figure.Figure()
         self.canvas = FigureCanvas(self.figure)
         self.plotLayout.addWidget(self.canvas)
-
         self.show()
-        sys.exit(app.exec_())
 
     def calculate_efficiency(self):
         self.figure.clf()
