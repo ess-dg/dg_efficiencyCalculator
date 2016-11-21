@@ -26,15 +26,13 @@ class Window(base, form):
 
     def converter_list(self):
         boron10 = B10.B10()
-        self.converters.update(B10=boron10)
+        self.converters.update(boron10.configurations)
 
     def start_window(self):
         self.setupUi(self)
         # Read from converter dict and place a selector in converterComboBox
         for c in self.converters:
-            configs = self.converters.get(c).configurations
-            for conf in configs:
-                self.converterComboBox.addItem(conf.get('name'))
+            self.converterComboBox.addItem(c)
         # connect calculation functionality to the button
         self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
         # Include figure to place the plot
