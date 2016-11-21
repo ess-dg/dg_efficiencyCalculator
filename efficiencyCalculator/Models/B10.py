@@ -21,7 +21,7 @@ class B10:
 
     #
     def ranges(self, threshold, name):
-        """Example function wi.
+        """calculates range of 4 particles given a threshold and configuration of B10.
 
         Args:
             threshold (int):  Threshold in KeV.
@@ -60,6 +60,19 @@ class B10:
         return r
 
 def findTh(array, threshold):
+    """calculates integral and x value for a y in the integral data matrix
+
+    Args:
+        threshold (int):  y point in the integral to find an x.
+        array (array[2]):  Array of 2 arrays, [0]contains array of x values, [1] contains array of y values
+    Returns:
+        thValue: point where y in the integral have the closest value to threshold
+
+
+
+    ..  Original source in Matlab: https: // bitbucket.org / europeanspallationsource / dg_matlabborontools / src / bcbac538ad10d074c5150a228847efc2e0269e0d / B10tools / rangesMAT.m?at = default & fileviewer = file - view - default
+
+    """
     x= array[0]
     E1= array[1]
     E3 = []
