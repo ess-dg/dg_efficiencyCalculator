@@ -4,6 +4,8 @@ import sys
 import math
 import numpy as np
 from bisect import bisect_left
+import matplotlib.pyplot as plt
+from scipy import interpolate
 
 class B10:
     configurations = {}
@@ -34,7 +36,7 @@ class B10:
 
             ranges in um
 
-        ..  Original source in Matlab: https: // bitbucket.org / europeanspallationsource / dg_matlabborontools / src / bcbac538ad10d074c5150a228847efc2e0269e0d / B10tools / rangesMAT.m?at = default & fileviewer = file - view - default
+        ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/rangesMAT.m?at=default&fileviewer=file-view-default
 
         """
         if threshold < 2:
@@ -58,6 +60,53 @@ class B10:
         Rli06 = findTh(config.get('Li06'), threshold)
         r[3] = Rli06/10000
         return r
+
+    def read_cross_section(self, lambdalist):
+        """calculates cross section for a list of lambdas
+
+        Args:
+            lambdalist (list):  List of lambda values in Amstrong.
+        Returns:
+            o(List): cross section list for lambda list
+
+        ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/readCrossSect.m?at=default&fileviewer=file-view-default
+
+        """
+        ht = 1.054e-34
+        nmass = 1.67e-27
+        # lambdaList transformed to ev
+        lamen = []
+        sigma = []
+        c0 = 0
+        for l in lambdalist:
+            lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l ** 2)) * 1e20 * 6.24e18)
+        x, y = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/B10CrossSect_(n,a).txt", delimiter=',', unpack=True)
+      #  f = interpolate.interp1d(x, y)
+       # f2 = interpolate.interp1d(x, y, kind='cubic')
+        #plt.gca().set_ylim([100, max(y)])
+        xlog = []
+        ylog = []
+        lamenlog =[]
+        for v in x:
+            xlog.append(math.log10(v))
+        for v in y:
+            ylog.append(math.log10(v))
+        for v in lamen:
+            lamenlog.append(math.log10(v))
+        f = interpolate.interp1d(xlog, ylog)
+        for v in lamenlog:
+            sigma.append(10**f(v))
+       # plt.plot(xlog, ylog)
+       # plt.figure()
+       # plt.plot(lambdalist, sigma, 'x')
+       # print lamen
+       # print sigma
+       # plt.show()
+        return sigma
+
+
+#TODO separate integral and threshold point calculation in different functions
+
 
 def findTh(array, threshold):
     """calculates integral and x value for a y in the integral data matrix
@@ -118,3 +167,4 @@ def findTh(array, threshold):
 if __name__ == '__main__':
     b = B10()
     b.ranges(200, '10B4C 2.24g/cm3')
+    b.read_cross_section([1.8, 2, 4])
