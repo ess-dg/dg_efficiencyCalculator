@@ -25,8 +25,8 @@ class Window(base, form):
         sys.exit(app.exec_())
 
     def converter_list(self):
-        boron10 = B10.B10()
-        self.converters.update(boron10.configurations)
+        self.Boron = B10.B10()
+        self.converters.update(self.Boron.configurations)
 
     def start_window(self):
         self.setupUi(self)
@@ -42,7 +42,7 @@ class Window(base, form):
         self.show()
 
     def calculate_efficiency(self):
-        self.figure.clf()
+        # self.figure.clf()
         print ''
         print 'calculate'
         sys.stdout.write("Thickness of Substrate: ")
@@ -63,14 +63,23 @@ class Window(base, form):
         print self.gasSelectorComboBox.currentText()
         sys.stdout.write("Pressure of gas: ")
         print self.pressureSpinBox.value()
-        sys.stdout.write("Sigma of Neutron: ")
-        print self.sigmaSpinBox.value()
+        sys.stdout.write("Lambda of Neutron: ")
+        print self.lambdaSpinBox.value()
         sys.stdout.write("Threshold of Neutron: ")
         print self.thresholdSpinBox.value()
-        result = efftools.efficiency4boron(self.BSpinBox.value(), 3, 1.3, 3.9, 1.5, 0.04)
-        totalEffResult=result[0][0]
-        self.resultLabel.setText(str(totalEffResult*100)+'%')
-        self.plotstoppingpower()
+        self.eff_boron_singleblade_doublecoated()
+
+    def eff_boron_singleblade_doublecoated(self):
+        ranges = self.Boron.ranges(self.thresholdSpinBox.value(), self.converterComboBox.currentText())
+        sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+        result = efftools.efficiency4boron(self.BSpinBox.value(), ranges[0], ranges[1], ranges[2], ranges[3], sigma)
+        self.ra94ResultLabel.setText(str(ranges[0]))
+        self.rli94ResultLabel.setText(str(ranges[1]))
+        self.ra6ResultLabel.setText(str(ranges[2]))
+        self.rli6ResultLabel.setText(str(ranges[3]))
+        self.totalResultLabel.setText(str(result[0][0]*100)+'%')
+        self.bsResultLabel.setText(str(result[1][0]*100)+'%')
+        self.tResultLabel.setText(str(result[2][0]*100)+'%')
 
     def plotstoppingpower(self):
         figure1 = matplotlib.figure.Figure()
@@ -159,9 +168,8 @@ class Window(base, form):
         self.canvas.draw_idle()
 
 
-
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-    #initialize app's main controller
-    #controller = MainController()
+    # initialize app's main controller
+    # controller = MainController()
     Window()

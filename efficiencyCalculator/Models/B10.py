@@ -12,10 +12,10 @@ class B10:
 
     def __init__(self, parent=None):
         self.configurations = {'10B4C 2.24g/cm3': {
-            'alpha06': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Alpha06.txt",unpack=True, skiprows=27),
-            'alpha94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Alpha94.txt",unpack=True, skiprows=27),
-            'Li06': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li06.txt",unpack=True, skiprows=27),
-            'Li94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li94.txt",unpack=True, skiprows=27),
+            'alpha06': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Alpha06.txt", unpack=True, skiprows=27),
+            'alpha94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Alpha94.txt", unpack=True, skiprows=27),
+            'Li06': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li06.txt", unpack=True, skiprows=27),
+            'Li94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li94.txt", unpack=True, skiprows=27),
         }, '10B4C 2.4g/cm3': {
 
         }
@@ -49,19 +49,20 @@ class B10:
 
         r = [0,0,0,0]
         threshold *= 1000
-        config = self.configurations.get(name)
-        Ra94 = findTh(config.get('alpha94'), threshold)
+        config = self.configurations.get('10B4C 2.24g/cm3')
+        Ra94 = find_th(config.get('alpha94'), threshold)
         r[0] = Ra94/10000
         #Esta lista no es la que deberia
-        Rli94 = findTh(config.get('Li94'), threshold)
+        Rli94 = find_th(config.get('Li94'), threshold)
         r[1] = Rli94/10000
-        Ralpha06 = findTh(config.get('alpha06'), threshold)
+        Ralpha06 = find_th(config.get('alpha06'), threshold)
         r[2] = Ralpha06/10000
-        Rli06 = findTh(config.get('Li06'), threshold)
+        Rli06 = find_th(config.get('Li06'), threshold)
         r[3] = Rli06/10000
         return r
 
-    def read_cross_section(self, lambdalist):
+    @staticmethod
+    def read_cross_section(lambdalist):
         """calculates cross section for a list of lambdas
 
         Args:
@@ -96,19 +97,60 @@ class B10:
         f = interpolate.interp1d(xlog, ylog)
         for v in lamenlog:
             sigma.append(10**f(v))
-       # plt.plot(xlog, ylog)
-       # plt.figure()
-       # plt.plot(lambdalist, sigma, 'x')
-       # print lamen
-       # print sigma
-       # plt.show()
+        # plt.plot(xlog, ylog)
+        # plt.figure()
+        # plt.plot(lambdalist, sigma, 'x')
+        print lamen
+        print sigma
+        plt.show()
         return sigma
 
+    @staticmethod
+    def macro_sigma(sigmainfin):
+        """calculates macro sigma for a sigma infinitesimal
 
-#TODO separate integral and threshold point calculation in different functions
+        Args:
+            sigmainfin (float): cross section value of B10
+        Returns:
+            sigma(List): cross section list for lambda list
 
+        ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
 
-def findTh(array, threshold):
+        """
+        # 2.242 g/cm3
+        density = 2.38 * (52 / 55.2)
+        composition = [[0.793, 0.025, 0.17, 0.007, 0.004, 0.001], [10, 11, 12, 1, 16, 14]]
+        # should be 1.0
+        suma = math.fsum(composition[0])
+        print suma
+        mmol = np.dot(composition[0], composition[1])
+        b10perc = composition[0][0]
+        sigma = (density*6.022e23/mmol)*b10perc*sigmainfin*1e-24*1e-4
+
+        return sigma
+
+    @staticmethod
+    def sigma_eq(macrosigma, theta):
+        """calculates sigma equivalent of Boron for a macro sigma and an angle
+
+        Args:
+            macrosigma (float): macro sigma of B10
+            theta (int): incident angle of neutron in degrees
+        Returns:
+
+            sigma (float): sigma equivalent
+        ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
+
+        """
+        sigmaeq = macrosigma/math.sin(math.radians(theta))
+        return sigmaeq
+
+    def full_sigma_calculation(self, lambd, theta):
+        sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)[0]), theta)
+        return sigma
+
+# TODO separate integral and threshold point calculation in different functions
+def find_th(array, threshold):
     """calculates integral and x value for a y in the integral data matrix
 
     Args:
@@ -163,8 +205,7 @@ def findTh(array, threshold):
     return thValue
 
 
-
 if __name__ == '__main__':
     b = B10()
-    b.ranges(200, '10B4C 2.24g/cm3')
-    b.read_cross_section([1.8, 2, 4])
+    # b.ranges(200, '10B4C 2.24g/cm3')
+    print b.macro_sigma(b.read_cross_section([1.8])[0])
