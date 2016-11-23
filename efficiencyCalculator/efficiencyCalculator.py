@@ -67,9 +67,14 @@ class Window(base, form):
         print self.lambdaSpinBox.value()
         sys.stdout.write("Threshold of Neutron: ")
         print self.thresholdSpinBox.value()
-        self.eff_boron_singleblade_doublecoated()
+        if not self.geometricalARadioButton.isChecked():
+            if self.BSpinBox.value() == 1:
+                self.eff_boron_singleblade_doublecoated()
+
 
     def eff_boron_singleblade_doublecoated(self):
+        print ''
+        print 'Boron single blade double coated calculation '
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), self.converterComboBox.currentText())
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.efficiency4boron(self.BSpinBox.value(), ranges[0], ranges[1], ranges[2], ranges[3], sigma)
