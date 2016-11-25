@@ -1,5 +1,7 @@
 
 from efficiencyCalculator.Models import B10
+from efficiencyCalculator.efftools import mg_same_thick
+from efficiencyCalculator.efftools import efficiency4boron
 import numpy
 
 
@@ -20,7 +22,6 @@ class B10_test:
         assert r1[1] == 1.1
         assert r1[2] == 3.7
         assert r1[3] == 1.3
-
         assert r2[0] == 3.1
         assert r2[1] == 1.35
         assert r2[2] == 4.0
@@ -51,3 +52,11 @@ class B10_test:
         assert numpy.isclose([sigma], [0.0398457257908], rtol=1e-05, atol=1e-08, equal_nan=False)
         sigma = self.b.full_sigma_calculation([2], 3)
         assert numpy.isclose([sigma], [0.845952315849], rtol=1e-05, atol=1e-08, equal_nan=False)
+
+    def mg_same_thick_test(self):
+        sigma = self.b.full_sigma_calculation([1.8], 5)
+        r1 = self.b.ranges(200, '10B4C 2.24g/cm3')
+        thick = 1
+        # check if mg with 1 blade and single blade gives the same value
+        assert numpy.isclose(mg_same_thick(sigma, r1, thick, 1), [efficiency4boron(thick, r1[0], r1[1], r1[2], r1[3], sigma)[0]], rtol=1e-05, atol=1e-08, equal_nan=False)
+        assert numpy.isclose( mg_same_thick(sigma, r1, thick, 20), [0.69218537268800717], rtol=1e-05, atol=1e-08, equal_nan=False)

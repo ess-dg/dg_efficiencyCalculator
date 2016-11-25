@@ -74,6 +74,29 @@ def efficiency4boron(d, Ralpha94, RLi94, Ralpha06, RLi06, sigma):
 	return eff
 
 
+def mg_same_thick(sigma_eq, ranges, thickness, nb):
+	"""calculates efficiency for configuration of multi grid with blades of same thickness, doesn't considerate aluminium.
+
+	Args:
+		sigma_eq (int):
+		ranges (array[4]):  array of ranges of particles
+		nb (int): number of blades
+		thickness (float): thickness of b10
+
+	Returns:
+		thValue: point where y in the integral have the closest value to threshold
+
+
+
+	..  Original source in Matlab: https: // bitbucket.org / europeanspallationsource / dg_matlabborontools / src / bcbac538ad10d074c5150a228847efc2e0269e0d / B10tools / rangesMAT.m?at = default & fileviewer = file - view - default
+
+	"""
+	eff = []
+	temp = efficiency4boron(thickness, ranges[0],  ranges[1], ranges[2], ranges[3], sigma_eq)
+	expi = pl.exp(-2*sigma_eq*thickness)
+	eff.append((temp[0][0]*(1-expi**nb)/(1-expi)))
+	return eff
+
 
 #def sigma(wavelength,theta,massdensity,composition)
 #"""Francesco's PhD thesis (download from twiki) is the reference for these scripts. The #output is the effective  macroscopic cross section  """
