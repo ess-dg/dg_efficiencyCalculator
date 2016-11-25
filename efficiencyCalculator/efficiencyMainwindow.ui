@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>943</width>
-    <height>758</height>
+    <width>951</width>
+    <height>770</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,8 +40,8 @@
          <rect>
           <x>20</x>
           <y>40</y>
-          <width>391</width>
-          <height>641</height>
+          <width>393</width>
+          <height>658</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="ValuesSelectorVerticalLayout">
@@ -173,17 +173,20 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Thickness of substrate  (mm)</string>
+              <string>Thickness of substrate T (μm)</string>
              </property>
             </widget>
            </item>
            <item row="13" column="1">
-            <widget class="QDoubleSpinBox" name="substrateSpinBox">
+            <widget class="QDoubleSpinBox" name="substrateTSpinBox">
              <property name="enabled">
               <bool>false</bool>
              </property>
              <property name="minimum">
-              <double>0.010000000000000</double>
+              <double>0.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -196,6 +199,23 @@
            </item>
            <item row="4" column="1">
             <widget class="QComboBox" name="converterComboBox"/>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Thickness of substrate BS (μm)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QDoubleSpinBox" name="substrateBSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -437,7 +457,7 @@
                <property name="fieldGrowthPolicy">
                 <enum>QFormLayout::FieldsStayAtSizeHint</enum>
                </property>
-               <item row="4" column="0">
+               <item row="5" column="0">
                 <widget class="QLabel" name="effiLabel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -450,14 +470,14 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
+               <item row="5" column="1">
                 <widget class="QLabel" name="totalResultLabel">
                  <property name="text">
                   <string>Result</string>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="0">
+               <item row="6" column="0">
                 <widget class="QLabel" name="effiLabel_2">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -470,14 +490,14 @@
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1">
+               <item row="6" column="1">
                 <widget class="QLabel" name="bsResultLabel">
                  <property name="text">
                   <string>Result</string>
                  </property>
                 </widget>
                </item>
-               <item row="6" column="0">
+               <item row="7" column="0">
                 <widget class="QLabel" name="effiLabel_3">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -490,7 +510,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="6" column="1">
+               <item row="7" column="1">
                 <widget class="QLabel" name="tResultLabel">
                  <property name="text">
                   <string>Result</string>
@@ -553,6 +573,13 @@
                  </property>
                 </widget>
                </item>
+               <item row="4" column="0">
+                <widget class="Line" name="line">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item>
@@ -588,7 +615,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>943</width>
+     <width>951</width>
      <height>22</height>
     </rect>
    </property>

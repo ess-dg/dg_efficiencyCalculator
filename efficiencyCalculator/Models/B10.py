@@ -16,8 +16,6 @@ class B10:
             'alpha94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Alpha94.txt", unpack=True, skiprows=27),
             'Li06': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li06.txt", unpack=True, skiprows=27),
             'Li94': np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/IONIZ_Linkoping_Li94.txt", unpack=True, skiprows=27),
-        }, '10B4C 2.4g/cm3': {
-
         }
         }
 
@@ -49,10 +47,9 @@ class B10:
 
         r = [0,0,0,0]
         threshold *= 1000
-        config = self.configurations.get('10B4C 2.24g/cm3')
+        config = self.configurations.get(name)
         Ra94 = find_th(config.get('alpha94'), threshold)
         r[0] = Ra94/10000
-        #Esta lista no es la que deberia
         Rli94 = find_th(config.get('Li94'), threshold)
         r[1] = Rli94/10000
         Ralpha06 = find_th(config.get('alpha06'), threshold)
@@ -68,7 +65,7 @@ class B10:
         Args:
             lambdalist (list):  List of lambda values in Amstrong.
         Returns:
-            o(List): cross section list for lambda list
+            sigma(List): cross section list for lambda list
 
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/readCrossSect.m?at=default&fileviewer=file-view-default
 
@@ -82,9 +79,6 @@ class B10:
         for l in lambdalist:
             lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l ** 2)) * 1e20 * 6.24e18)
         x, y = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/B10CrossSect_(n,a).txt", delimiter=',', unpack=True)
-      #  f = interpolate.interp1d(x, y)
-       # f2 = interpolate.interp1d(x, y, kind='cubic')
-        #plt.gca().set_ylim([100, max(y)])
         xlog = []
         ylog = []
         lamenlog =[]
@@ -94,12 +88,12 @@ class B10:
             ylog.append(math.log10(v))
         for v in lamen:
             lamenlog.append(math.log10(v))
-        f = interpolate.interp1d(xlog, ylog)
+        f = interpolate.interp1d(xlog, ylog, kind='cubic')
         for v in lamenlog:
             sigma.append(10**f(v))
-        # plt.plot(xlog, ylog)
-        # plt.figure()
-        # plt.plot(lambdalist, sigma, 'x')
+        # check if interpolation works
+        # xnew = np.linspace(xlog[0], xlog[100], num=41, endpoint=True)
+        # plt.plot(xlog, ylog, 'o', xnew, f(xnew), '--')
         print lamen
         print sigma
         plt.show()
@@ -148,6 +142,7 @@ class B10:
     def full_sigma_calculation(self, lambd, theta):
         sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)[0]), theta)
         return sigma
+
 
 # TODO separate integral and threshold point calculation in different functions
 def find_th(array, threshold):
@@ -208,4 +203,4 @@ def find_th(array, threshold):
 if __name__ == '__main__':
     b = B10()
     # b.ranges(200, '10B4C 2.24g/cm3')
-    print b.macro_sigma(b.read_cross_section([1.8])[0])
+    print b.read_cross_section([1.8, 3, 6])
