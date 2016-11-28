@@ -97,7 +97,7 @@ class Window(base, form):
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())
         self.plotTitleLAbel.setText('Multi blade optimization')
-        data = efftools.data_samethick_vs_thickandnb(sigma, ranges, self.bladeSpinBox.value())
+        data = efftools.data_samethick_vs_thickandnb(sigma,ranges,self.bladeSpinBox.value())
         #self.plotstoppingpower()
         #self.plot_samethick_vs_thickandnb()
         self.plot(data)
