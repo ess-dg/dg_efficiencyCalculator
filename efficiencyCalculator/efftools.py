@@ -4,7 +4,8 @@
 #from scipy import * 
 import pylab as pl
 #import scipy as sp
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 def efficiency2particles(d,R1,R2,sigma):
 	"""This script is the implementation of Equations from 3.11 to 3.16 from page 63 on Francesco's PhD thesis (download from twiki). The output is efficiency for a BS layer and a T layer,
@@ -84,7 +85,7 @@ def mg_same_thick(sigma_eq, ranges, thickness, nb):
 		thickness (float): thickness of b10
 
 	Returns:
-		thValue: point where y in the integral have the closest value to threshold
+		eff: total efficiency result
 
 
 
@@ -96,6 +97,15 @@ def mg_same_thick(sigma_eq, ranges, thickness, nb):
 	expi = pl.exp(-2*sigma_eq*thickness)
 	eff.append((temp[0][0]*(1-expi**nb)/(1-expi)))
 	return eff
+
+def data_samethick_vs_thickandnb(sigma_eq, ranges, nb):
+	thicklist = np.arange(0, 5, 0.05)
+	eff = []
+	for n in thicklist:
+		eff.append(mg_same_thick(sigma_eq,ranges,n, nb))
+	return eff, thicklist
+
+
 
 
 #def sigma(wavelength,theta,massdensity,composition)

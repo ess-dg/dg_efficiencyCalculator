@@ -145,6 +145,8 @@ class B10:
 
 
 
+
+
 # TODO separate integral and threshold point calculation in different functions
 def find_th(array, threshold):
     """calculates integral and x value for a y in the integral data matrix

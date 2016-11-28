@@ -10,6 +10,7 @@ import matplotlib.figure
 import numpy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import random
 
 base, form = uic.loadUiType("efficiencyMainwindow.ui")
 
@@ -36,13 +37,13 @@ class Window(base, form):
         # connect calculation functionality to the button
         self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
         # Include figure to place the plot
-       # self.figure = matplotlib.figure.Figure()
-        #self.canvas = FigureCanvas(self.figure)
-        #self.plotLayout.addWidget(self.canvas)
+        self.figure = matplotlib.figure.Figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.plotLayout.addWidget(self.canvas)
         self.show()
 
     def calculate_efficiency(self):
-        # self.figure.clf()
+        self.figure.clf()
         print ''
         print 'calculate'
         sys.stdout.write("Thickness of Substrate: ")
@@ -69,8 +70,10 @@ class Window(base, form):
         print self.thresholdSpinBox.value()
         # Calculation celection logic
         if not self.geometricalARadioButton.isChecked():
-            if self.BSpinBox.value() == 1:
+            if self.bladeSpinBox.value() == 1:
                 self.eff_boron_singleblade_doublecoated()
+            elif self.bladeSpinBox.value() > 1:
+                self.eff_boron_multiblade_doublecoated()
 
     def eff_boron_singleblade_doublecoated(self):
         print ''
@@ -78,6 +81,7 @@ class Window(base, form):
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.efficiency4boron(self.BSpinBox.value(), ranges[0], ranges[1], ranges[2], ranges[3], sigma)
+        self.plotTitleLAbel.setText('Single blade optimization')
         self.ra94ResultLabel.setText(str(ranges[0]))
         self.rli94ResultLabel.setText(str(ranges[1]))
         self.ra6ResultLabel.setText(str(ranges[2]))
@@ -85,6 +89,41 @@ class Window(base, form):
         self.totalResultLabel.setText(str(result[0][0]*100)+'%')
         self.bsResultLabel.setText(str(result[1][0]*100)+'%')
         self.tResultLabel.setText(str(result[2][0]*100)+'%')
+
+    def eff_boron_multiblade_doublecoated(self):
+        print ''
+        print 'Boron multi-blade double coated calculation '
+        ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+        sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+        result = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())
+        self.plotTitleLAbel.setText('Multi blade optimization')
+        data = efftools.data_samethick_vs_thickandnb(sigma, ranges, self.bladeSpinBox.value())
+        #self.plotstoppingpower()
+        #self.plot_samethick_vs_thickandnb()
+        self.plot(data)
+        self.ra94ResultLabel.setText(str(ranges[0]))
+        self.rli94ResultLabel.setText(str(ranges[1]))
+        self.ra6ResultLabel.setText(str(ranges[2]))
+        self.rli6ResultLabel.setText(str(ranges[3]))
+        self.totalResultLabel.setText(str(result[0]*100)+'%')
+
+      #  self.plotstoppingpower()
+
+    def plot(self, data):
+        ''' plot some random stuff '''
+        # random data
+
+        # create an axis
+        ax = self.figure.add_subplot(111)
+        # discards the old graph
+        ax.hold(False)
+
+        # plot data
+        ax.plot(data[1], data[0], '-')
+
+        # refresh canvas
+        ax.grid()
+        self.canvas.draw()
 
     def plotstoppingpower(self):
         figure1 = matplotlib.figure.Figure()
@@ -164,14 +203,16 @@ class Window(base, form):
         # now add the threshold line
         plt.subplot(211)
         # plt.legend()
-        plt.subplot(212)
-        plt.xlabel('x (um)')
-        plt.ylabel('Erem (KeV)')
-        # threshold horizontal line
-        plt.plot([0, 50000], [threshold, threshold], color='k', linestyle='--', linewidth=1, label='Threshold ')
         # plt.legend()
         self.canvas.draw_idle()
 
+
+    def plot_samethick_vs_thickandnb(self):
+        self.figure.clf()
+        plt.grid(True)
+        plt.xlabel('x (um)')
+        plt.ylabel('dE/dx (keV/um)')
+        self.canvas.draw_idle()
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
