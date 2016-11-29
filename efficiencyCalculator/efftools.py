@@ -98,12 +98,44 @@ def mg_same_thick(sigma_eq, ranges, thickness, nb):
 	eff.append((temp[0][0]*(1-expi**nb)/(1-expi)))
 	return eff
 
-def data_samethick_vs_thickandnb(sigma_eq, ranges, nb):
-	thicklist = np.arange(0, 5, 0.05)
+def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
+	''' plot some random stuff '''
+	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
-	for n in thicklist:
-		eff.append(mg_same_thick(sigma_eq,ranges,n, nb))
-	return eff, thicklist
+	efftotal = []
+	c = 0
+	nb.append(5)
+	nb.append(15)
+	nb.append(20)
+	#nb = list(set(nb) - set(nb))
+	for b in nb:
+		for n in thicklist:
+			eff.append(mg_same_thick(sigma_eq, ranges, n, b))
+		efftotal.append(eff)
+		eff = []
+
+	# random data
+
+	# create an axis
+	ax = window.figure.add_subplot(111)
+	# discards the old graph
+	#ax.hold(False)
+	ax.grid()
+	# plot data
+	c=0
+	ax.set_color_cycle(['red', 'blue', 'black', 'green'])
+	for b in nb:
+		if c==0:
+			ax.plot(thicklist, efftotal[c], '-', label='Nb='+str(b), linewidth=3)
+		else:
+			ax.plot(thicklist, efftotal[c], '-', label='Nb=' + str(b))
+		ax.plot([thicklist[efftotal[c].index(max(efftotal[c])[0])], thicklist[efftotal[c].index(max(efftotal[c])[0])]], [0, max(efftotal[c])[0]], '--',color='black')
+		ax.plot([0, thicklist[efftotal[c].index(max(efftotal[c])[0])]], [max(efftotal[c]), max(efftotal[c])], '--', color='black')
+		c +=1
+	ax.legend()
+	# refresh canvas
+
+	window.canvas.draw()
 
 
 
