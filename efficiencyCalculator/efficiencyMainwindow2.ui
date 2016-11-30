@@ -359,7 +359,7 @@
              <rect>
               <x>20</x>
               <y>0</y>
-              <width>171</width>
+              <width>481</width>
               <height>16</height>
              </rect>
             </property>
@@ -417,7 +417,7 @@
              </property>
             </column>
            </widget>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="clearButton">
             <property name="geometry">
              <rect>
               <x>900</x>
@@ -434,7 +434,7 @@
            <zorder>verticalLayoutWidget_4</zorder>
            <zorder>plotTitleLAbel</zorder>
            <zorder>plotTableWidget</zorder>
-           <zorder>pushButton</zorder>
+           <zorder>clearButton</zorder>
           </widget>
          </item>
         </layout>

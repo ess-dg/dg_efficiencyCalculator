@@ -32,11 +32,13 @@ class Window(base, form):
 
     def start_window(self):
         self.setupUi(self)
+        self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
         # Read from converter dict and place a selector in converterComboBox
         for c in self.converters:
             self.converterComboBox.addItem(c)
         # connect calculation functionality to the button
         self.plotButton.clicked.connect(lambda: self.plotview())
+        self.clearButton.clicked.connect(lambda: self.clear_plots())
         # Include figure to place the plot
         self.figure = matplotlib.figure.Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -44,11 +46,20 @@ class Window(base, form):
         self.show()
 
     def plotview(self):
-        if len(self.plotlist) < 1:
-            a=0
         if self.xAxisComboBox.currentText() == 'Efficiency':
             if self.yAxisComboBox.currentText() == 'Thickness':
                 if self.varComboBox.currentText() == 'Number of blades':
+                    if len(self.plotlist) < 1:
+                        self.plotTitleLAbel.setText(
+                            '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Efficiency VS Thickness with different Number of blades</span></p></body></html>')
+                        self.thresholdSpinBox.setEnabled(False)
+                        self.converterComboBox.setEnabled(False)
+                        self.angleSpinBox.setEnabled(False)
+                        self.lambdaSpinBox.setEnabled(False)
+                        self.BSpinBox.setEnabled(False)
+                        self.xAxisComboBox.setEnabled(False)
+                        self.yAxisComboBox.setEnabled(False)
+                        self.varComboBox.setEnabled(False)
                     ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                     sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
                     eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
@@ -65,7 +76,7 @@ class Window(base, form):
                     self.add_new_plot(newplot)
                     # id = newplot.keys()[0]
                     self.plotlist.update(newplot)
-                    self.plot_list()
+                    self.plot_list('d (um)', 'Efficiency')
 
     def calculate_efficiency(self):
         self.figure.clf()
@@ -100,12 +111,14 @@ class Window(base, form):
             elif self.bladeSpinBox.value() > 1:
                 self.eff_boron_multiblade_doublecoated()
 
-    def plot_list(self):
+    def plot_list(self, xlabel, ylabel):
         ''' plot some random stuff '''
 
         # create an axis
+
         ax = self.figure.add_subplot(111)
-        ax.grid()
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
         # discards the old graph
         #ax.hold(False)
 
@@ -115,7 +128,7 @@ class Window(base, form):
         # plot data
 
         # refresh canvas
-
+        ax.grid(True)
         self.canvas.draw()
 
     def add_new_plot(self, newplot):
@@ -131,6 +144,20 @@ class Window(base, form):
         self.plotTableWidget.setItem(rowPosition, 6, QtGui.QTableWidgetItem(str(newplot.get(key).get('eff'))))
         self.plotTableWidget.setItem(rowPosition, 7, QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
 
+    def clear_plots(self):
+        self.plotTableWidget.setRowCount(0)
+        self.canvas.figure.clear()
+        self.canvas.draw()
+        self.plotlist = {}
+        self.thresholdSpinBox.setEnabled(True)
+        self.converterComboBox.setEnabled(True)
+        self.angleSpinBox.setEnabled(True)
+        self.lambdaSpinBox.setEnabled(True)
+        self.BSpinBox.setEnabled(True)
+        self.xAxisComboBox.setEnabled(True)
+        self.yAxisComboBox.setEnabled(True)
+        self.varComboBox.setEnabled(True)
+        self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
 
     def eff_boron_singleblade_doublecoated(self):
         print ''
@@ -156,23 +183,6 @@ class Window(base, form):
         self.plotTitleLAbel.setText('Multi blade plots')
         self.figure.clf()
         data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [self.bladeSpinBox.value()], self)
-
-
-    def plot(self, data):
-        ''' plot some random stuff '''
-        # random data
-
-        # create an axis
-        ax = self.figure.add_subplot(111)
-        # discards the old graph
-        ax.hold(False)
-
-        # plot data
-        ax.plot(data[1], data[0], '-')
-
-        # refresh canvas
-        ax.grid()
-        self.canvas.draw()
 
     def plotstoppingpower(self):
         figure1 = matplotlib.figure.Figure()
@@ -256,12 +266,6 @@ class Window(base, form):
         self.canvas.draw_idle()
 
 
-    def plot_samethick_vs_thickandnb(self):
-        self.figure.clf()
-        plt.grid(True)
-        plt.xlabel('x (um)')
-        plt.ylabel('dE/dx (keV/um)')
-        self.canvas.draw_idle()
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
