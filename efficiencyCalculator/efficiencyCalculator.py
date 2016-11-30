@@ -12,11 +12,12 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import random
 
-base, form = uic.loadUiType("efficiencyMainwindow.ui")
+base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 
 
 class Window(base, form):
     converters = {}
+    plotlist = {}
 
     def __init__(self,  parent=None):
         super(base, self).__init__(parent)
@@ -35,12 +36,36 @@ class Window(base, form):
         for c in self.converters:
             self.converterComboBox.addItem(c)
         # connect calculation functionality to the button
-        self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
+        self.plotButton.clicked.connect(lambda: self.plotview())
         # Include figure to place the plot
         self.figure = matplotlib.figure.Figure()
         self.canvas = FigureCanvas(self.figure)
         self.plotLayout.addWidget(self.canvas)
         self.show()
+
+    def plotview(self):
+        if len(self.plotlist) < 1:
+            a=0
+        if self.xAxisComboBox.currentText() == 'Efficiency':
+            if self.yAxisComboBox.currentText() == 'Thickness':
+                if self.varComboBox.currentText() == 'Number of blades':
+                    ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+                    sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+                    eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
+                    metadata = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, self.bladeSpinBox.value())
+                    newplot = {str(len(self.plotlist)): {
+                        'thickness': self.BSpinBox.value(),
+                        'nb': self.bladeSpinBox.value(),
+                        'wavelength': self.lambdaSpinBox.value(),
+                        'angle': self.angleSpinBox.value(),
+                        'threshold': self.thresholdSpinBox.value(),
+                        'eff': eff,
+                        'meta': metadata}
+                    }
+                    self.add_new_plot(newplot)
+                    # id = newplot.keys()[0]
+                    self.plotlist.update(newplot)
+                    self.plot_list()
 
     def calculate_efficiency(self):
         self.figure.clf()
@@ -75,6 +100,38 @@ class Window(base, form):
             elif self.bladeSpinBox.value() > 1:
                 self.eff_boron_multiblade_doublecoated()
 
+    def plot_list(self):
+        ''' plot some random stuff '''
+
+        # create an axis
+        ax = self.figure.add_subplot(111)
+        ax.grid()
+        # discards the old graph
+        #ax.hold(False)
+
+        for plot in self.plotlist:
+            data = self.plotlist.get(plot).get('meta')
+            ax.plot(data[0], data[1], '-')
+        # plot data
+
+        # refresh canvas
+
+        self.canvas.draw()
+
+    def add_new_plot(self, newplot):
+        key = newplot.keys()[0]
+        self.plotlist.update(newplot)
+        rowPosition = self.plotTableWidget.rowCount()
+        self.plotTableWidget.insertRow(rowPosition)
+        self.plotTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(newplot.get(key).get('thickness'))))
+        self.plotTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(newplot.get(key).get('nb'))))
+        self.plotTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(newplot.get(key).get('wavelength'))))
+        self.plotTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(newplot.get(key).get('angle'))))
+        self.plotTableWidget.setItem(rowPosition, 5, QtGui.QTableWidgetItem(str(newplot.get(key).get('threshold'))))
+        self.plotTableWidget.setItem(rowPosition, 6, QtGui.QTableWidgetItem(str(newplot.get(key).get('eff'))))
+        self.plotTableWidget.setItem(rowPosition, 7, QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
+
+
     def eff_boron_singleblade_doublecoated(self):
         print ''
         print 'Boron single blade double coated calculation '
@@ -97,17 +154,9 @@ class Window(base, form):
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())
         self.plotTitleLAbel.setText('Multi blade plots')
-        data = efftools.data_samethick_vs_thickandnb(sigma,ranges, [self.bladeSpinBox.value()], self)
-        #self.plotstoppingpower()
-        #self.plot_samethick_vs_thickandnb()
-        #self.plot(data)
-        self.ra94ResultLabel.setText(str(ranges[0]))
-        self.rli94ResultLabel.setText(str(ranges[1]))
-        self.ra6ResultLabel.setText(str(ranges[2]))
-        self.rli6ResultLabel.setText(str(ranges[3]))
-        self.totalResultLabel.setText(str(result[0]*100)+'%')
+        self.figure.clf()
+        data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [self.bladeSpinBox.value()], self)
 
-      #  self.plotstoppingpower()
 
     def plot(self, data):
         ''' plot some random stuff '''

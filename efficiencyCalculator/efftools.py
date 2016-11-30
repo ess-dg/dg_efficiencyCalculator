@@ -152,6 +152,33 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 
 	window.canvas.draw()
 
+
+def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
+	"""calculates efficiency for configuration of multi grid with blades of same thickness, doesn't considerate aluminium.
+
+	Args:
+		sigma_eq (int):
+		ranges (array[4]):  array of ranges of particles
+		nb (int): number of blades
+	returns:
+		thicklist (list):  x axis
+		eff  (list): y axis
+
+
+
+	..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/MultiGrid_Optimization/MG1_Calc4monoch_sameThickBlades_VS_ThickAndNb.m?at=default&fileviewer=file-view-default
+
+	"""
+	thicklist = np.arange(0.0011, 5, 0.05)
+	eff = []
+	efftotal = []
+	for n in thicklist:
+		eff.append(mg_same_thick(sigma_eq, ranges, n, nb))
+	efftotal.append(eff)
+	return thicklist, eff,
+
+
+
 def data_samethick_vs_wave(sigma_eq, ranges, nb, window):
 	a=0
 
