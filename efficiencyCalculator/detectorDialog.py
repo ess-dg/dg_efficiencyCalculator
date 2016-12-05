@@ -5,6 +5,7 @@ import sys
 import Models.B10 as B10
 import efftools
 from PyQt4 import QtGui, QtCore, uic
+import Models.Detector as Detector
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib
 import matplotlib.figure
@@ -46,21 +47,28 @@ class DateDialog( QtGui.QDialog):
 
 
 class detectorDialog( QtGui.QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, detector, parent = None):
         super(detectorDialog, self).__init__(parent)
         uic.loadUi("detectorform.ui", self)
-
+        self.nameLineEdit.setText(detector.name)
+        self.angleSpinBox.setValue(detector.angle)
+        self.thresholdSpinBox.setValue(detector.threshold)
         # nice widget for editing the date
-
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
 
     # get current date and time from the dialog
-    def dateTime(self):
-        return 1
+    def detector(self):
+        detector = Detector.Detector('')
+        detector.name = str(self.nameLineEdit.text())
+        detector.threshold = self.thresholdSpinBox.value()
+        detector.angle = self.angleSpinBox.value()
+        return detector
 
     # static method to create the dialog and return (date, time, accepted)
     @staticmethod
-    def getDateTime(parent=None):
-        dialog = detectorDialog(parent)
+    def getDetector(detector, parent=None):
+        dialog = detectorDialog(detector, parent)
         result = dialog.exec_()
-        date = dialog.dateTime()
-        return 1
+        detector = dialog.detector()
+        return (detector, result == QtGui.QDialog.Accepted)

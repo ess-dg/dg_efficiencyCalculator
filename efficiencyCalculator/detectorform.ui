@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>1110</x>
-     <y>550</y>
+     <y>560</y>
      <width>181</width>
      <height>32</height>
     </rect>
@@ -59,7 +59,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="nameLineEdit"/>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_4">
@@ -69,7 +69,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QComboBox" name="converterComboBox_2"/>
+     <widget class="QComboBox" name="substrateComboBox"/>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="converterLabel">
@@ -141,7 +141,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget_2">
+     <widget class="QTableWidget" name="lambdaTableWidget">
       <column>
        <property name="text">
         <string>lambda</string>
@@ -164,7 +164,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+       <widget class="QDoubleSpinBox" name="waveSpinBox"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_6">
@@ -174,7 +174,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QSpinBox" name="spinBox"/>
+       <widget class="QSpinBox" name="percentSpinBox"/>
       </item>
      </layout>
     </item>
@@ -244,7 +244,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="BladeTableWidget">
       <column>
        <property name="text">
         <string>N</string>
@@ -287,7 +287,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBox_2"/>
+         <widget class="QSpinBox" name="nbspinBox"/>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_8">
@@ -297,7 +297,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+         <widget class="QDoubleSpinBox" name="bsSpinBox"/>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_9">
@@ -307,7 +307,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+         <widget class="QDoubleSpinBox" name="tSpinBox"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_10">
@@ -317,14 +317,21 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+         <widget class="QDoubleSpinBox" name="subSpinBox"/>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="addBladeButton">
         <property name="text">
          <string>Add Blades</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>Optimize blades</string>
         </property>
        </widget>
       </item>
@@ -384,11 +391,11 @@
     <enum>Qt::Vertical</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="deleteButton">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>400</y>
+     <x>130</x>
+     <y>490</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -397,35 +404,21 @@
     <string>Delete detector</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>440</y>
-     <width>121</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Optimize blades</string>
-   </property>
-  </widget>
   <zorder>buttonBox</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>verticalLayoutWidget</zorder>
   <zorder>line</zorder>
   <zorder>line_2</zorder>
   <zorder>line_3</zorder>
-  <zorder>pushButton_2</zorder>
-  <zorder>pushButton_2</zorder>
+  <zorder>addBladeButton</zorder>
+  <zorder>addBladeButton</zorder>
   <zorder>verticalLayoutWidget_3</zorder>
-  <zorder>pushButton_2</zorder>
+  <zorder>addBladeButton</zorder>
   <zorder>label_11</zorder>
   <zorder>line_4</zorder>
   <zorder>line_5</zorder>
   <zorder>line_6</zorder>
-  <zorder>pushButton_3</zorder>
-  <zorder>pushButton_4</zorder>
+  <zorder>deleteButton</zorder>
  </widget>
  <resources/>
  <connections>

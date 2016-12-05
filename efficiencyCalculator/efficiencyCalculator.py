@@ -2,6 +2,7 @@
 import os
 import sys
 import Models.B10 as B10
+import Models.Detector as Detector
 import efftools
 from PyQt4 import QtGui, QtCore, uic
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -19,6 +20,7 @@ base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 class Window(QtGui.QMainWindow):
     converters = {}
     plotlist = {}
+    detectorList = []
 
     def __init__(self):
         super(Window, self).__init__()
@@ -48,8 +50,10 @@ class Window(QtGui.QMainWindow):
         self.show()
 
     def open_detector_dialog(self):
-        date, time, ok = detectorDialog.detectorDialog.getDateTime()
-        #self.child_win.show()
+        detector = Detector.Detector('')
+        detector = detectorDialog.detectorDialog.getDetector(detector)
+        self.detectorList.append(detector[0])
+
 
 
     def plotview(self):
