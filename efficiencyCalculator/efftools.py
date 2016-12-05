@@ -100,7 +100,7 @@ def mg_same_thick(sigma_eq, ranges, thickness, nb):
 
 
 def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
-	"""calculates efficiency for configuration of multi grid with blades of same thickness, doesn't considerate aluminium.
+	"""calculates efficiency for configuration of multi grid with blades of same thickness and plots it in a given window, doesn't considerate aluminium.
 
 	Args:
 		sigma_eq (int):
@@ -171,16 +171,16 @@ def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
 	"""
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
-	efftotal = []
 	for n in thicklist:
 		eff.append(mg_same_thick(sigma_eq, ranges, n, nb))
-	efftotal.append(eff)
 	return thicklist, eff,
 
 
-
-def data_samethick_vs_wave(sigma_eq, ranges, nb, window):
-	a=0
+def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
+	eff = []
+	for sigma in sigmaeq:
+		eff.append(mg_same_thick(sigma, ranges, thickness, nb))
+	return eff
 
 
 

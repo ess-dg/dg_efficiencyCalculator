@@ -94,8 +94,6 @@ class B10:
         # check if interpolation works
         # xnew = np.linspace(xlog[0], xlog[100], num=41, endpoint=True)
         # plt.plot(xlog, ylog, 'o', xnew, f(xnew), '--')
-        print lamen
-        print sigma
         plt.show()
         return sigma
 
@@ -116,7 +114,6 @@ class B10:
         composition = [[0.793, 0.025, 0.17, 0.007, 0.004, 0.001], [10, 11, 12, 1, 16, 14]]
         # should be 1.0
         suma = math.fsum(composition[0])
-        print suma
         mmol = np.dot(composition[0], composition[1])
         b10perc = composition[0][0]
         sigma = (density*6.022e23/mmol)*b10perc*sigmainfin*1e-24*1e-4

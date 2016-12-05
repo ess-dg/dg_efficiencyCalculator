@@ -10,44 +10,52 @@ import matplotlib.figure
 import numpy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import random
+import numpy as np
+import detectorDialog
 
 base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 
 
-class Window(base, form):
+class Window(QtGui.QMainWindow):
     converters = {}
     plotlist = {}
 
-    def __init__(self,  parent=None):
-        super(base, self).__init__(parent)
+    def __init__(self):
+        super(Window, self).__init__()
+        uic.loadUi("efficiencyMainwindow2.ui", self)
         # init list of converter materials, load data and add to converter dict
-        self.converter_list()
+        # self.setupUi(self)
         self.start_window()
-        sys.exit(app.exec_())
 
     def converter_list(self):
         self.Boron = B10.B10()
         self.converters.update(self.Boron.configurations)
 
     def start_window(self):
-        self.setupUi(self)
+       # self.setupUi(self)
         self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
         # Read from converter dict and place a selector in converterComboBox
-        for c in self.converters:
-            self.converterComboBox.addItem(c)
+ #       for c in self.converters:
+#            self.converterComboBox.addItem(c)
         # connect calculation functionality to the button
         self.plotButton.clicked.connect(lambda: self.plotview())
         self.clearButton.clicked.connect(lambda: self.clear_plots())
+        self.addButton.clicked.connect(lambda: self.open_detector_dialog())
         # Include figure to place the plot
         self.figure = matplotlib.figure.Figure()
         self.canvas = FigureCanvas(self.figure)
         self.plotLayout.addWidget(self.canvas)
         self.show()
 
+    def open_detector_dialog(self):
+        date, time, ok = detectorDialog.detectorDialog.getDateTime()
+        #self.child_win.show()
+
+
     def plotview(self):
-        if self.xAxisComboBox.currentText() == 'Efficiency':
-            if self.yAxisComboBox.currentText() == 'Thickness':
+        """This method is called when the plot button is pushed"""
+        if self.yAxisComboBox.currentText() == 'Efficiency':
+            if self.xAxisComboBox.currentText() == 'Thickness':
                 if self.varComboBox.currentText() == 'Number of blades':
                     if len(self.plotlist) < 1:
                         self.plotTitleLAbel.setText(
@@ -77,6 +85,40 @@ class Window(base, form):
                     # id = newplot.keys()[0]
                     self.plotlist.update(newplot)
                     self.plot_list('d (um)', 'Efficiency')
+            elif self.xAxisComboBox.currentText() == 'Wavelength':
+                if len(self.plotlist) < 1:
+                    self.plotTitleLAbel.setText(
+                        '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Efficiency VS Thickness with different Number of blades</span></p></body></html>')
+                    self.thresholdSpinBox.setEnabled(False)
+                    self.converterComboBox.setEnabled(False)
+                    self.angleSpinBox.setEnabled(False)
+                    self.lambdaSpinBox.setEnabled(False)
+                    self.BSpinBox.setEnabled(False)
+                    self.xAxisComboBox.setEnabled(False)
+                    self.yAxisComboBox.setEnabled(False)
+                    self.varComboBox.setEnabled(False)
+                ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+                sigmalist = np.arange(0.0011, 20, 0.1)
+                sigmaeq=[]
+                sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+                eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
+                for sigma in sigmalist:
+                    sigmaeq.append(self.Boron.full_sigma_calculation([sigma], self.angleSpinBox.value()))
+                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.BSpinBox.value(), ranges, self.bladeSpinBox.value())
+                metadata = [sigmalist, y]
+                newplot = {str(len(self.plotlist)): {
+                    'thickness': self.BSpinBox.value(),
+                    'nb': self.bladeSpinBox.value(),
+                    'wavelength': self.lambdaSpinBox.value(),
+                    'angle': self.angleSpinBox.value(),
+                    'threshold': self.thresholdSpinBox.value(),
+                    'eff': eff,
+                    'meta': metadata}
+                }
+                self.add_new_plot(newplot)
+                # id = newplot.keys()[0]
+                self.plotlist.update(newplot)
+                self.plot_list('Wavelength', 'Efficiency')
 
     def calculate_efficiency(self):
         self.figure.clf()
@@ -271,4 +313,5 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     # initialize app's main controller
     # controller = MainController()
-    Window()
+    window = Window()
+    sys.exit(app.exec_())
