@@ -6,6 +6,7 @@ from bisect import bisect_left
 import matplotlib.pyplot as plt
 from scipy import interpolate
 
+
 class Detector:
     name = ''
     blades = []

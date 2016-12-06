@@ -209,7 +209,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Title&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
-           <widget class="QTableWidget" name="plotTableWidget">
+           <widget class="QTableWidget" name="detectorTableWidget">
             <property name="geometry">
              <rect>
               <x>40</x>
@@ -217,6 +217,15 @@
               <width>611</width>
               <height>171</height>
              </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
             </property>
             <column>
              <property name="text">
@@ -291,7 +300,7 @@
            <zorder>verticalLayoutWidget_3</zorder>
            <zorder>verticalLayoutWidget_4</zorder>
            <zorder>plotTitleLAbel</zorder>
-           <zorder>plotTableWidget</zorder>
+           <zorder>detectorTableWidget</zorder>
            <zorder>geometryTilteLabel</zorder>
            <zorder>verticalLayoutWidget_5</zorder>
           </widget>

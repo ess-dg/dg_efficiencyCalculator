@@ -25,6 +25,7 @@ class Window(QtGui.QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
         uic.loadUi("efficiencyMainwindow2.ui", self)
+        self.setWindowTitle("Detector efficiency calculator")
         # init list of converter materials, load data and add to converter dict
         # self.setupUi(self)
         self.start_window()
@@ -34,12 +35,7 @@ class Window(QtGui.QMainWindow):
         self.converters.update(self.Boron.configurations)
 
     def start_window(self):
-       # self.setupUi(self)
         self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
-        # Read from converter dict and place a selector in converterComboBox
- #       for c in self.converters:
-#            self.converterComboBox.addItem(c)
-        # connect calculation functionality to the button
         self.plotButton.clicked.connect(lambda: self.plotview())
         self.clearButton.clicked.connect(lambda: self.clear_plots())
         self.addButton.clicked.connect(lambda: self.open_detector_dialog())
@@ -50,11 +46,24 @@ class Window(QtGui.QMainWindow):
         self.show()
 
     def open_detector_dialog(self):
-        detector = Detector.Detector('')
+        detector = Detector.Detector('Detector')
         detector = detectorDialog.detectorDialog.getDetector(detector)
-        self.detectorList.append(detector[0])
+        if detector[1]:
+            self.detectorList.append(detector[0])
+            self.update_detector_list()
 
-
+    def update_detector_list(self):
+        self.detectorTableWidget.setRowCount(0)
+        c=0
+        for d in self.detectorList:
+            rowPosition = c
+            self.detectorTableWidget.insertRow(rowPosition)
+            self.detectorTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(d.name)))
+            self.detectorTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(len(d.blades))))
+            self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
+            self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
+            self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
+            c=+1
 
     def plotview(self):
         """This method is called when the plot button is pushed"""
