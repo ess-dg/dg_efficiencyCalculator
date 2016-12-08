@@ -39,6 +39,7 @@ class Window(QtGui.QMainWindow):
         self.plotButton.clicked.connect(lambda: self.plotview())
         self.clearButton.clicked.connect(lambda: self.clear_plots())
         self.addButton.clicked.connect(lambda: self.open_detector_dialog())
+        self.editButton.clicked.connect(lambda: self.edit_detector())
         # Include figure to place the plot
         self.figure = matplotlib.figure.Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -46,11 +47,24 @@ class Window(QtGui.QMainWindow):
         self.show()
 
     def open_detector_dialog(self):
-        detector = Detector.Detector('Detector')
+        detector = Detector.Detector('Detector '+str(len(self.detectorList)+1))
         detector = detectorDialog.detectorDialog.getDetector(detector)
         if detector[1]:
             self.detectorList.append(detector[0])
             self.update_detector_list()
+
+    def edit_detector(self):
+        try:
+            detector = detectorDialog.detectorDialog.getDetector(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()])
+            if detector[1]:
+                self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()] = detector[0]
+                self.update_detector_list()
+        except IndexError:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please select a detector of the list")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.exec_()
 
     def update_detector_list(self):
         self.detectorTableWidget.setRowCount(0)
@@ -58,12 +72,17 @@ class Window(QtGui.QMainWindow):
         for d in self.detectorList:
             rowPosition = c
             self.detectorTableWidget.insertRow(rowPosition)
-            self.detectorTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(d.name)))
-            self.detectorTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(len(d.blades))))
-            self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
-            self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
-            self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
-            c=+1
+            if d.name is not None:
+                self.detectorTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(d.name)))
+            if d.blades is not None:
+                self.detectorTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(len(d.blades))))
+            if d.angle is not None:
+                self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
+            if len(d.wavelength) is not 0:
+                self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
+            if d.threshold is not None:
+                self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
+            c += 1
 
     def plotview(self):
         """This method is called when the plot button is pushed"""

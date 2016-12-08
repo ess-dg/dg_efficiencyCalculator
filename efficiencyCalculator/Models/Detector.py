@@ -6,16 +6,14 @@ from bisect import bisect_left
 import matplotlib.pyplot as plt
 from scipy import interpolate
 
-
 class Detector:
-    name = ''
-    blades = []
-    wavelength = []
-    angle = 0
-    threshold = 0
 
     def __init__(self, name):
         self.name = name
+        self.blades = []
+        self.wavelength = []
+        self.angle = 0
+        self.threshold = 0
 
     def add_blade(self,blade):
         self.blades.append(blade)

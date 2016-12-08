@@ -24,8 +24,12 @@ class detectorDialog( QtGui.QDialog):
 
     def __init__(self, detector, parent = None):
         super(detectorDialog, self).__init__(parent)
-        uic.loadUi("detectorform.ui", self)
+        uic.loadUi("detectorDialogTab.ui", self)
+        self.detector = detector
         self.setWindowTitle("Detector configurator")
+        self.bladeList = []
+        self.bladeList = detector.blades
+        self.wavelengthList = detector.wavelength
         self.nameLineEdit.setText(detector.name)
         self.angleSpinBox.setValue(detector.angle)
         self.thresholdSpinBox.setValue(detector.threshold)
@@ -34,17 +38,16 @@ class detectorDialog( QtGui.QDialog):
         self.addWavelengthButton.clicked.connect(lambda: self.add_wavelength())
         self.addBladeButton.clicked.connect(lambda: self.add_blades())
 
-    def detector(self):
-        detector = Detector.Detector('')
-        detector.name = str(self.nameLineEdit.text())
-        detector.threshold = self.thresholdSpinBox.value()
-        detector.angle = self.angleSpinBox.value()
-        detector.wavelength = self.wavelengthList
-        detector.blades = self.bladeList
-        return detector
+    def returnDetector(self):
+        self.detector.name = str(self.nameLineEdit.text())
+        self.detector.threshold = self.thresholdSpinBox.value()
+        self.detector.angle = self.angleSpinBox.value()
+        self.detector.wavelength = self.wavelengthList
+        self.detector.blades = self.bladeList
+        return self.detector
 
     def add_wavelength(self):
-        self.wavelengthList.append([self.waveSpinBox.value(), self.percentSpinBox.value()])
+        self.detector.wavelength.append([self.waveSpinBox.value(), self.percentSpinBox.value()])
         rowPosition = self.lambdaTableWidget.rowCount()
         self.lambdaTableWidget.insertRow(rowPosition)
         self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(self.waveSpinBox.value())))
@@ -59,7 +62,7 @@ class detectorDialog( QtGui.QDialog):
             sub = self.subSpinBox.value()
             for n in range(0, nb):
                 blade = Blade.Blade(bs, ts, sub, 0)
-                self.bladeList.append(blade)
+                self.detector.blades.append(blade)
                 self.BladeTableWidget.insertRow(n)
                 self.BladeTableWidget.setItem(n, 0, QtGui.QTableWidgetItem(str(n+1)))
                 self.BladeTableWidget.setItem(n, 1, QtGui.QTableWidgetItem(str(bs)))
@@ -79,5 +82,5 @@ class detectorDialog( QtGui.QDialog):
         dialog = detectorDialog(detector, parent)
         dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         result = dialog.exec_()
-        detector = dialog.detector()
+        detector = dialog.returnDetector()
         return detector, result == QtGui.QDialog.Accepted
