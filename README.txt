@@ -3,7 +3,7 @@ Detector Efficiency Calculator
 ============
 
 Python standalone application 
-This is an internship project in order to make available to the public a standalone tool and a webpage using Francesco Piscitelli's analytical tools for the calculation of detector efficiency.
+This is an internship project in the ESS ERIC in order to make available to the public a standalone tool and a webpage using Francesco Piscitelli's analytical tools for the calculation of detector efficiency.
 
     ESS Wiki Page:   https://ess-ics.atlassian.net/wiki/display/DG/Detector+efficiency+calculator
     Jira Project:    https://ess-ics.atlassian.net/projects/DGEF/

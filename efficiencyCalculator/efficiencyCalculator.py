@@ -38,7 +38,7 @@ class Window(QtGui.QMainWindow):
         self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
         self.plotButton.clicked.connect(lambda: self.plotview())
         self.clearButton.clicked.connect(lambda: self.clear_plots())
-        self.addButton.clicked.connect(lambda: self.open_detector_dialog())
+        self.addButton.clicked.connect(lambda: self.create_detector())
         self.editButton.clicked.connect(lambda: self.edit_detector())
         # Include figure to place the plot
         self.figure = matplotlib.figure.Figure()
@@ -46,19 +46,24 @@ class Window(QtGui.QMainWindow):
         self.plotLayout.addWidget(self.canvas)
         self.show()
 
-    def open_detector_dialog(self):
+    def create_detector(self):
         detector = Detector.Detector('Detector '+str(len(self.detectorList)+1))
-        detector = detectorDialog.detectorDialog.getDetector(detector)
+        detector = detectorDialog.detectorDialog.getDetector(detector, 'create')
         if detector[1]:
             self.detectorList.append(detector[0])
             self.update_detector_list()
 
     def edit_detector(self):
         try:
-            detector = detectorDialog.detectorDialog.getDetector(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()])
+            detector = detectorDialog.detectorDialog.getDetector(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()],'edit')
             if detector[1]:
-                self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()] = detector[0]
-                self.update_detector_list()
+                if detector[2] == 'edit':
+                    self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()] = detector[0]
+                    self.update_detector_list()
+                elif detector[2] == 'delete':
+                    self.detectorList.pop(self.detectorTableWidget.selectedIndexes()[0].row())
+                    self.update_detector_list()
+
         except IndexError:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)

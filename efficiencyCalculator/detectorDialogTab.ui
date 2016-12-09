@@ -209,6 +209,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="deleteBladeButton">
+          <property name="text">
+           <string>Delete Blades</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pushButton_4">
           <property name="text">
            <string>Optimize blades</string>
@@ -289,6 +296,13 @@
        <widget class="QPushButton" name="addWavelengthButton">
         <property name="text">
          <string>Add Wavelength</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deleteWaveButton">
+        <property name="text">
+         <string>Delete Wavelength</string>
         </property>
        </widget>
       </item>
