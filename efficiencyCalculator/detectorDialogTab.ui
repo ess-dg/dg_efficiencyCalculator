@@ -13,464 +13,562 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTabWidget" name="tabWidget">
+  <widget class="QScrollArea" name="scrollArea">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>1231</width>
-     <height>621</height>
+     <x>0</x>
+     <y>0</y>
+     <width>1271</width>
+     <height>671</height>
     </rect>
    </property>
-   <property name="currentIndex">
-    <number>0</number>
+   <property name="widgetResizable">
+    <bool>true</bool>
    </property>
-   <widget class="QWidget" name="config_tab">
-    <attribute name="title">
-     <string>Configurator</string>
-    </attribute>
-    <widget class="Line" name="line_4">
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1269</width>
+      <height>669</height>
+     </rect>
+    </property>
+    <widget class="QTabWidget" name="tabWidget">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>350</y>
-       <width>641</width>
-       <height>20</height>
+       <x>10</x>
+       <y>10</y>
+       <width>1251</width>
+       <height>651</height>
       </rect>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="tabPosition">
+      <enum>QTabWidget::West</enum>
      </property>
-    </widget>
-    <widget class="QPushButton" name="deleteButton">
-     <property name="geometry">
-      <rect>
-       <x>1060</x>
-       <y>0</y>
-       <width>121</width>
-       <height>41</height>
-      </rect>
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="text">
-      <string>Delete detector</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_11">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>0</y>
-       <width>221</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Detector configuration&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_2">
-     <property name="geometry">
-      <rect>
-       <x>670</x>
-       <y>50</y>
-       <width>21</width>
-       <height>471</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>930</x>
-       <y>0</y>
-       <width>111</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Export config</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_3">
-     <property name="geometry">
-      <rect>
-       <x>680</x>
-       <y>510</y>
-       <width>501</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_3">
-     <property name="geometry">
-      <rect>
-       <x>710</x>
-       <y>70</y>
-       <width>441</width>
-       <height>421</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Blade List</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="BladeTableWidget">
-        <column>
-         <property name="text">
-          <string>N</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Back thick</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>T thick</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Substrate</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+     <widget class="QWidget" name="config_tab">
+      <attribute name="title">
+       <string>Configurator</string>
+      </attribute>
+      <widget class="Line" name="line_4">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>280</y>
+         <width>361</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="deleteButton">
+       <property name="geometry">
+        <rect>
+         <x>880</x>
+         <y>600</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Delete detector</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>0</y>
+         <width>221</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Detector configuration&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>770</x>
+         <y>600</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Export config</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>410</x>
+         <y>70</y>
+         <width>251</width>
+         <height>240</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QFormLayout" name="formLayout_2">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Blades&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_7">
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>N of blades</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="nbspinBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Backscatter thickness</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="bsSpinBox"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Transmission thickness</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="tSpinBox"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Substrate thickness</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="subSpinBox"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="addBladeButton">
             <property name="text">
-             <string>N of blades</string>
+             <string>Add Blades</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deleteBladeButton">
+            <property name="text">
+             <string>Delete Blades</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>310</y>
+         <width>241</width>
+         <height>268</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Wavelength List:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="lambdaTableWidget">
+          <column>
+           <property name="text">
+            <string>lambda</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>%</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Wavelength</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="nbspinBox">
-            <property name="minimum">
-             <number>1</number>
+           <widget class="QDoubleSpinBox" name="waveSpinBox">
+            <property name="value">
+             <double>1.800000000000000</double>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>Backscatter thickness</string>
+             <string>%</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="bsSpinBox"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Transmission thickness</string>
+           <widget class="QSpinBox" name="percentSpinBox">
+            <property name="minimum">
+             <number>100</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
             </property>
            </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="tSpinBox"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Substrate thickness</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="subSpinBox"/>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="addBladeButton">
+         <widget class="QPushButton" name="addWavelengthButton">
           <property name="text">
-           <string>Add Blades</string>
+           <string>Add Wavelength</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="deleteBladeButton">
+         <widget class="QPushButton" name="deleteWaveButton">
           <property name="text">
-           <string>Delete Blades</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>Optimize blades</string>
+           <string>Delete Wavelength</string>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>430</x>
-       <y>80</y>
-       <width>241</width>
-       <height>261</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Wavelength List:</string>
+      </widget>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="geometry">
+        <rect>
+         <x>1000</x>
+         <y>600</y>
+         <width>164</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>90</y>
+         <width>281</width>
+         <height>184</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="detectorLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="lambdaTableWidget">
-        <column>
-         <property name="text">
-          <string>lambda</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>%</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Wavelength</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="waveSpinBox">
-          <property name="value">
-           <double>1.800000000000000</double>
-          </property>
-         </widget>
-        </item>
+        <property name="labelAlignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="formAlignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="leftMargin">
+         <number>10</number>
+        </property>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_6">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>%</string>
+           <string>Name</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="percentSpinBox">
-          <property name="minimum">
-           <number>100</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
+         <widget class="QLineEdit" name="nameLineEdit"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Substrate</string>
           </property>
          </widget>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="converterLabel">
+          <property name="text">
+           <string>Converter</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="algleLabel">
+          <property name="text">
+           <string>Incident angle θ (°)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QSpinBox" name="angleSpinBox">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>90</number>
+          </property>
+          <property name="value">
+           <number>90</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="thresholdLabel">
+          <property name="text">
+           <string>E threshold (keV)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QSpinBox" name="thresholdSpinBox">
+          <property name="minimum">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <number>779</number>
+          </property>
+          <property name="value">
+           <number>200</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="substrateComboBox">
+          <item>
+           <property name="text">
+            <string>Al</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="converterComboBox">
+          <item>
+           <property name="text">
+            <string>10B4C 2.24g/cm3</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="addWavelengthButton">
-        <property name="text">
-         <string>Add Wavelength</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="deleteWaveButton">
-        <property name="text">
-         <string>Delete Wavelength</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="geometry">
-      <rect>
-       <x>1020</x>
-       <y>550</y>
-       <width>164</width>
-       <height>32</height>
-      </rect>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>90</y>
-       <width>281</width>
-       <height>181</height>
-      </rect>
-     </property>
-     <layout class="QFormLayout" name="detectorLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::ExpandingFieldsGrow</enum>
-      </property>
-      <property name="labelAlignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="formAlignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="leftMargin">
-       <number>10</number>
-      </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="nameLineEdit"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Substrate</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="substrateComboBox">
-        <item>
-         <property name="text">
-          <string>10B4C 2.24g/cm3</string>
+      </widget>
+      <widget class="Line" name="line_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>1201</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_6">
+       <property name="geometry">
+        <rect>
+         <x>1200</x>
+         <y>50</y>
+         <width>21</width>
+         <height>591</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>50</y>
+         <width>21</width>
+         <height>561</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QTabWidget" name="tabWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>660</x>
+         <y>60</y>
+         <width>531</width>
+         <height>521</height>
+        </rect>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>List</string>
+        </attribute>
+        <widget class="QTableWidget" name="BladeTableWidget">
+         <property name="geometry">
+          <rect>
+           <x>60</x>
+           <y>0</y>
+           <width>431</width>
+           <height>471</height>
+          </rect>
          </property>
-        </item>
+         <column>
+          <property name="text">
+           <string>N</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Back thick</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>T thick</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Substrate</string>
+          </property>
+         </column>
+        </widget>
        </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="converterLabel">
-        <property name="text">
-         <string>Converter</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="converterComboBox">
-        <item>
-         <property name="text">
-          <string>Al</string>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Plot</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget_2">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>0</y>
+           <width>531</width>
+           <height>481</height>
+          </rect>
          </property>
-        </item>
+         <layout class="QVBoxLayout" name="bladePlotLayout"/>
+        </widget>
        </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="algleLabel">
-        <property name="text">
-         <string>Incident angle θ (°)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QSpinBox" name="angleSpinBox">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="value">
-         <number>90</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="thresholdLabel">
-        <property name="text">
-         <string>E threshold (keV)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QSpinBox" name="thresholdSpinBox">
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>779</number>
-        </property>
-        <property name="value">
-         <number>200</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      </widget>
+      <widget class="Line" name="line_7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>630</y>
+         <width>1201</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>50</y>
+         <width>21</width>
+         <height>591</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Efficiency</string>
+      </attribute>
+      <widget class="QPushButton" name="calculateTotalEffButton">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>141</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Calculate efficiency</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>60</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Total efficiency:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="totalEfflabel">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>60</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Total efficiency:</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
-    <widget class="Line" name="line_5">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>1171</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-    <widget class="Line" name="line_6">
-     <property name="geometry">
-      <rect>
-       <x>1170</x>
-       <y>50</y>
-       <width>21</width>
-       <height>471</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-    <widget class="Line" name="line">
-     <property name="geometry">
-      <rect>
-       <x>400</x>
-       <y>50</y>
-       <width>21</width>
-       <height>311</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_2">
-    <attribute name="title">
-     <string>Plots</string>
-    </attribute>
    </widget>
   </widget>
  </widget>

@@ -35,15 +35,8 @@ class Window(QtGui.QMainWindow):
         self.converters.update(self.Boron.configurations)
 
     def start_window(self):
-        self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
-        self.plotButton.clicked.connect(lambda: self.plotview())
-        self.clearButton.clicked.connect(lambda: self.clear_plots())
         self.addButton.clicked.connect(lambda: self.create_detector())
         self.editButton.clicked.connect(lambda: self.edit_detector())
-        # Include figure to place the plot
-        self.figure = matplotlib.figure.Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.plotLayout.addWidget(self.canvas)
         self.show()
 
     def create_detector(self):

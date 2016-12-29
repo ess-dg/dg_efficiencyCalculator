@@ -128,7 +128,9 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 		eff = []
 
 	# random data
-
+	'''
+	'''
+	return efftotal
 	# create an axis
 	ax = window.figure.add_subplot(111)
 	ax.set_xlabel('d (um)')
@@ -151,6 +153,27 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 	# refresh canvas
 
 	window.canvas.draw()
+
+def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades, varargin):
+	if varargin is None:
+		#transparent substrate
+		delta = 1
+	else:
+		delta = varargin
+	eff1blade = []
+	efftotal = []
+	for b in blades:
+		eff1blade.append(efficparam(b.backscatter, sigma_eq, ranges, varargin))
+	cumthick = 0
+	c = 0
+	for b in blades:
+		expi = pl.exp(-2*sigma_eq*cumthick)
+		# no substrate ,  with substrate
+		efftotal.append([eff1blade[c][0]*expi, eff1blade[c][4]*expi*(delta**c)])
+		cumthick = cumthick*b.backscatter
+	return efftotal
+
+
 
 
 def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
@@ -182,7 +205,43 @@ def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
 		eff.append(mg_same_thick(sigma, ranges, thickness, nb))
 	return eff
 
+def efficparam(thickness,sigma_eq,ranges,varargin):
+	"""calculates efficiency of a double layer blade (back and transmission) with the sabe thickness of bs and t
 
+    Args:
+        sigma_eq (int):
+        ranges (array[4]):  array of ranges of particles
+        nb (int): number of blades
+    returns:
+        efficiency (list):	[0]	eff back-scattering only
+							[1] eff transmission only
+							[2] eff trasmission after crossing back-scattering
+							[3] eff double layer (bscatt first and then transmission)
+							[4] eff trasmission after crossing back-scattering and substrate
+
+..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/MultiGrid_Optimization/MG1_Calc4monoch_sameThickBlades_VS_ThickAndNb.m?at=default&fileviewer=file-view-default
+
+    """
+	if varargin is None:
+		#transparent substrate
+		delta = 1
+	else:
+		delta = varargin
+	c1 = efficiency2particles(thickness,ranges[0],ranges[1],sigma_eq)
+	d1 = efficiency2particles(thickness,ranges[2],ranges[3],sigma_eq)
+	efficiency = []
+	# backscatt
+	efficiency.append(0.94 * c1[0] + 0.06 * d1[0])
+	# trasmission
+	efficiency.append(0.94 * c1[1] + 0.06 * d1[1])
+	#TODO
+	# eff trasmission after crossing back-scattering
+	efficiency.append((pl.exp(-thickness * sigma_eq)) * efficiency[1])
+	# BS + T
+	efficiency.append(efficiency[0] + efficiency[2])
+	# BS + T + substrate
+	efficiency.append(efficiency[0] + delta * efficiency[2])
+	return efficiency
 
 #def sigma(wavelength,theta,massdensity,composition)
 #"""Francesco's PhD thesis (download from twiki) is the reference for these scripts. The #output is the effective  macroscopic cross section  """
