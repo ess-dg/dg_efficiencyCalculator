@@ -168,8 +168,9 @@ class detectorDialog( QtGui.QDialog):
         print 'Boron multi-blade double coated calculation '
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
-        result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades, len(self.detector.blades))
+        result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
       # self.plotTitleLAbel.setText('Multi blade plots')
        # self.figure.clf()
        # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
         self.totalEfflabel.setText(str(result[0]))
+

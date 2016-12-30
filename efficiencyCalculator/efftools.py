@@ -154,23 +154,23 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 
 	window.canvas.draw()
 
-def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades, varargin):
-	if varargin is None:
+def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
+	if blades[0].substrate == 0:
 		#transparent substrate
 		delta = 1
 	else:
-		delta = varargin
+		delta = blades[0].substrate
 	eff1blade = []
 	efftotal = []
 	for b in blades:
-		eff1blade.append(efficparam(b.backscatter, sigma_eq, ranges, varargin))
+		eff1blade.append(efficparam(b.backscatter, sigma_eq, ranges, delta))
 	cumthick = 0
 	c = 0
 	for b in blades:
 		expi = pl.exp(-2*sigma_eq*cumthick)
 		# no substrate ,  with substrate
-		efftotal.append([eff1blade[c][0]*expi, eff1blade[c][4]*expi*(delta**c)])
-		cumthick = cumthick*b.backscatter
+		efftotal.append([eff1blade[c][3]*expi, eff1blade[c][4]*expi*(delta**c)])
+		cumthick = cumthick+b.backscatter
 	return efftotal
 
 
@@ -231,9 +231,9 @@ def efficparam(thickness,sigma_eq,ranges,varargin):
 	d1 = efficiency2particles(thickness,ranges[2],ranges[3],sigma_eq)
 	efficiency = []
 	# backscatt
-	efficiency.append(0.94 * c1[0] + 0.06 * d1[0])
+	efficiency.append((0.94 * c1[0] + 0.06 * d1[0])[0])
 	# trasmission
-	efficiency.append(0.94 * c1[1] + 0.06 * d1[1])
+	efficiency.append((0.94 * c1[1] + 0.06 * d1[1])[0])
 	#TODO
 	# eff trasmission after crossing back-scattering
 	efficiency.append((pl.exp(-thickness * sigma_eq)) * efficiency[1])
