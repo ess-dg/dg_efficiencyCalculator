@@ -166,12 +166,19 @@ def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 		eff1blade.append(efficparam(b.backscatter, sigma_eq, ranges, delta))
 	cumthick = 0
 	c = 0
+	#TOFIX
 	for b in blades:
 		expi = pl.exp(-2*sigma_eq*cumthick)
 		# no substrate ,  with substrate
 		efftotal.append([eff1blade[c][3]*expi, eff1blade[c][4]*expi*(delta**c)])
 		cumthick = cumthick+b.backscatter
-	return efftotal
+		c = +1
+	sinsub = 0
+	sub = 0
+	for e in efftotal:
+		sinsub = sinsub + e[0]
+		sub = sub + e[1]
+	return efftotal, sinsub, sub
 
 
 

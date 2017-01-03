@@ -443,7 +443,7 @@
         </rect>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -496,6 +496,22 @@
          <layout class="QVBoxLayout" name="bladePlotLayout"/>
         </widget>
        </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Efficiency</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>531</width>
+           <height>481</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="bladeEfficiencyPlotLayout"/>
+        </widget>
+       </widget>
       </widget>
       <widget class="Line" name="line_7">
        <property name="geometry">
@@ -523,16 +539,11 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Efficiency</string>
-      </attribute>
       <widget class="QPushButton" name="calculateTotalEffButton">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>10</y>
+         <x>450</x>
+         <y>350</y>
          <width>141</width>
          <height>32</height>
         </rect>
@@ -541,24 +552,24 @@
         <string>Calculate efficiency</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_12">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>60</y>
-         <width>91</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Total efficiency:</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="totalEfflabel">
        <property name="geometry">
         <rect>
-         <x>150</x>
-         <y>60</y>
+         <x>540</x>
+         <y>410</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Total efficiency</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="totaltEfflabel">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>410</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -567,6 +578,11 @@
         <string>Total efficiency:</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Efficiency</string>
+      </attribute>
      </widget>
     </widget>
    </widget>

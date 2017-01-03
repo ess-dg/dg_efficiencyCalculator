@@ -32,9 +32,16 @@ class detectorDialog( QtGui.QDialog):
         self.thresholdSpinBox.setValue(detector.threshold)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
+
+        # Add plots layouts
         self.bladeInfoFigure = matplotlib.figure.Figure()
         self.bladeInfoCanvas = FigureCanvas(self.bladeInfoFigure)
         self.bladePlotLayout.addWidget(self.bladeInfoCanvas)
+
+        self.bladeEffFigure = matplotlib.figure.Figure()
+        self.bladeEffCanvas = FigureCanvas(self.bladeEffFigure)
+        self.bladeEfficiencyPlotLayout.addWidget(self.bladeEffCanvas)
+
         if self.action == 'create':
             self.deleteButton.setEnabled(False)
         # List widget update
@@ -169,8 +176,20 @@ class detectorDialog( QtGui.QDialog):
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
         result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
-      # self.plotTitleLAbel.setText('Multi blade plots')
+       # self.plotTitleLAbel.setText('Multi blade plots')
        # self.figure.clf()
        # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
-        self.totalEfflabel.setText(str(result[0]))
+        self.totalEfflabel.setText(str(result[1]))
+        ax = self.bladeEffFigure.add_subplot(111)
+        ax.set_xlabel('Blade Number')
+        ax.set_ylabel('Blade efficiency')
+        ax.set_ylim([0, (result[0][0][1]*100+1)])
+        ax.plot(0, 0)
+        ax.plot(0, len(result[0])+1)
+       # ax.plot(nb + 1, 0)
+        for n in range(0, len(result[0])):
+            # Note that the plot displayed is the backscattering thickness
+            ax.plot(n + 1, result[0][n][1]*100, 'o', color='red')
+        ax.grid(True)
+        self.bladeEffCanvas.draw()
 
