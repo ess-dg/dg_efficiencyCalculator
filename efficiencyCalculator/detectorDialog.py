@@ -113,16 +113,19 @@ class detectorDialog( QtGui.QDialog):
         self.lambdaTableWidget.setRowCount(0)
         self.addWavelengthButton.setEnabled(True)
         self.deleteWaveButton.setEnabled(False)
+        self.bladeEffFigure.clear()
+        self.bladeEffCanvas.draw()
+        self.totalEfflabel.setText('unknown')
 
     def add_blades(self):
-        if (self.tSpinBox.value() > 0) | (self.bsSpinBox.value() > 0):
+        if self.bsSpinBox.value() > 0:
             nb = self.nbspinBox.value()
             bs = self.bsSpinBox.value()
-            ts = self.tSpinBox.value()
+            ts = self.bsSpinBox.value()
             sub = self.subSpinBox.value()
             ax = self.bladeInfoFigure.add_subplot(111)
             ax.set_xlabel('Blade Number')
-            ax.set_ylabel('Blade thickness')
+            ax.set_ylabel('Blade thickness ($\mu$)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
             ax.plot(nb+1,0)
@@ -134,8 +137,7 @@ class detectorDialog( QtGui.QDialog):
                 self.BladeTableWidget.insertRow(n)
                 self.BladeTableWidget.setItem(n, 0, QtGui.QTableWidgetItem(str(n+1)))
                 self.BladeTableWidget.setItem(n, 1, QtGui.QTableWidgetItem(str(bs)))
-                self.BladeTableWidget.setItem(n, 2, QtGui.QTableWidgetItem(str(ts)))
-                self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(sub)))
+                self.BladeTableWidget.setItem(n, 2, QtGui.QTableWidgetItem(str(sub)))
             ax.grid(True)
             self.bladeInfoCanvas.draw()
             self.addBladeButton.setEnabled(False)
@@ -154,6 +156,9 @@ class detectorDialog( QtGui.QDialog):
         self.BladeTableWidget.setRowCount(0)
         self.addBladeButton.setEnabled(True)
         self.deleteBladeButton.setEnabled(False)
+        self.bladeEffFigure.clear()
+        self.bladeEffCanvas.draw()
+        self.totalEfflabel.setText('unknown')
 
     def delete_detector(self):
         reply = QtGui.QMessageBox.question(self, 'delete', 'Are you sure you want to delete this detector?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
@@ -171,25 +176,42 @@ class detectorDialog( QtGui.QDialog):
         return detector, result == QtGui.QDialog.Accepted, action
 
     def calculate_total_efficiency(self):
-        print ''
-        print 'Boron multi-blade double coated calculation '
-        ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
-        sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
-        result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
-       # self.plotTitleLAbel.setText('Multi blade plots')
-       # self.figure.clf()
-       # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
-        self.totalEfflabel.setText(str(result[1]))
-        ax = self.bladeEffFigure.add_subplot(111)
-        ax.set_xlabel('Blade Number')
-        ax.set_ylabel('Blade efficiency')
-        ax.set_ylim([0, (result[0][0][1]*100+1)])
-        ax.plot(0, 0)
-        ax.plot(0, len(result[0])+1)
-       # ax.plot(nb + 1, 0)
-        for n in range(0, len(result[0])):
-            # Note that the plot displayed is the backscattering thickness
-            ax.plot(n + 1, result[0][n][1]*100, 'o', color='red')
-        ax.grid(True)
-        self.bladeEffCanvas.draw()
+        if len(self.detector.blades) >= 1:
+            if len(self.detector.wavelength) >= 1:
+                print ''
+                print 'Boron multi-blade double coated calculation '
+                ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+                sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
+                result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
+               # self.plotTitleLAbel.setText('Multi blade plots')
+               # self.figure.clf()
+               # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
+                self.bladeEffFigure.clear()
+                self.totalEfflabel.setText(str(result[1]))
+                ax = self.bladeEffFigure.add_subplot(111)
+                ax.set_xlabel('Blade Number')
+                ax.set_ylabel('Blade efficiency (%)')
+                ax.set_ylim([0, (result[0][0][1]*100+1)])
+                ax.set_xlim([0, len(result[0])+1])
+                ax.plot(0, 0)
+                ax.plot(0, len(result[0])+1)
+               # ax.plot(nb + 1, 0)
+                for n in range(0, len(result[0])):
+                    # Note that the plot displayed is the backscattering thickness
+                    ax.plot(n + 1, result[0][n][1]*100, 'o', color='red')
+                    self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(result[0][n][1]*100)+'%'))
+                ax.grid(True)
+                self.bladeEffCanvas.draw()
+            else:
+                msg = QtGui.QMessageBox()
+                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg.setText("Please add wavelength")
+                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                retval = msg.exec_()
 
+        else:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please add blades")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            retval = msg.exec_()
