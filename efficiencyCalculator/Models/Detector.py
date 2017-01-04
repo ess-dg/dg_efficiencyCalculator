@@ -12,8 +12,8 @@ class Detector:
         self.name = name
         self.blades = []
         self.wavelength = []
-        self.angle = 0
-        self.threshold = 0
+        self.angle = 90
+        self.threshold = 100
 
     def add_blade(self,blade):
         self.blades.append(blade)

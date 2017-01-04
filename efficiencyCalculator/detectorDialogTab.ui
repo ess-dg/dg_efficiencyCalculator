@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1277</width>
-    <height>675</height>
+    <width>1308</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1271</width>
-     <height>671</height>
+     <width>1301</width>
+     <height>681</height>
     </rect>
    </property>
    <property name="widgetResizable">
@@ -30,8 +30,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1269</width>
-      <height>669</height>
+      <width>1299</width>
+      <height>679</height>
      </rect>
     </property>
     <widget class="QTabWidget" name="tabWidget">
@@ -39,8 +39,8 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>1251</width>
-       <height>651</height>
+       <width>1281</width>
+       <height>661</height>
       </rect>
      </property>
      <property name="tabPosition">
@@ -127,7 +127,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>N of blades</string>
+             <string>Number of blades</string>
             </property>
            </widget>
           </item>
@@ -386,7 +386,7 @@
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>1201</width>
+         <width>1241</width>
          <height>20</height>
         </rect>
        </property>
@@ -397,7 +397,7 @@
       <widget class="Line" name="line_6">
        <property name="geometry">
         <rect>
-         <x>1200</x>
+         <x>1240</x>
          <y>50</y>
          <width>21</width>
          <height>591</height>
@@ -410,10 +410,10 @@
       <widget class="Line" name="line">
        <property name="geometry">
         <rect>
-         <x>400</x>
-         <y>50</y>
-         <width>21</width>
-         <height>561</height>
+         <x>380</x>
+         <y>60</y>
+         <width>41</width>
+         <height>551</height>
         </rect>
        </property>
        <property name="orientation">
@@ -425,7 +425,7 @@
         <rect>
          <x>680</x>
          <y>60</y>
-         <width>521</width>
+         <width>561</width>
          <height>521</height>
         </rect>
        </property>
@@ -434,14 +434,14 @@
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>List</string>
+         <string>Blade List</string>
         </attribute>
         <widget class="QTableWidget" name="BladeTableWidget">
          <property name="geometry">
           <rect>
            <x>60</x>
            <y>0</y>
-           <width>431</width>
+           <width>441</width>
            <height>471</height>
           </rect>
          </property>
@@ -469,14 +469,14 @@
        </widget>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">
-         <string>Plot</string>
+         <string>Thickness Plot</string>
         </attribute>
         <widget class="QWidget" name="verticalLayoutWidget_2">
          <property name="geometry">
           <rect>
-           <x>10</x>
+           <x>0</x>
            <y>0</y>
-           <width>531</width>
+           <width>551</width>
            <height>481</height>
           </rect>
          </property>
@@ -485,18 +485,50 @@
        </widget>
        <widget class="QWidget" name="tab_4">
         <attribute name="title">
-         <string>Efficiency</string>
+         <string>Efficiency Plot</string>
         </attribute>
         <widget class="QWidget" name="verticalLayoutWidget_4">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>531</width>
+           <width>551</width>
            <height>481</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="bladeEfficiencyPlotLayout"/>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>thickVSEff</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget_5">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>551</width>
+           <height>481</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="thickVsEffPlotLayout"/>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>EffVSWave</string>
+        </attribute>
+        <widget class="QWidget" name="verticalLayoutWidget_6">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>551</width>
+           <height>481</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="waveVsEffPlotLayout"/>
         </widget>
        </widget>
       </widget>
@@ -505,7 +537,7 @@
         <rect>
          <x>10</x>
          <y>630</y>
-         <width>1201</width>
+         <width>1241</width>
          <height>20</height>
         </rect>
        </property>
@@ -542,20 +574,20 @@
       <widget class="QLabel" name="totalEfflabel">
        <property name="geometry">
         <rect>
-         <x>540</x>
-         <y>410</y>
-         <width>91</width>
-         <height>16</height>
+         <x>480</x>
+         <y>460</y>
+         <width>111</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="text">
-        <string>Total efficiency</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Unknown&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QLabel" name="totaltEfflabel">
        <property name="geometry">
         <rect>
-         <x>440</x>
+         <x>420</x>
          <y>410</y>
          <width>91</width>
          <height>16</height>
@@ -565,11 +597,6 @@
         <string>Total efficiency:</string>
        </property>
       </widget>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Efficiency</string>
-      </attribute>
      </widget>
     </widget>
    </widget>

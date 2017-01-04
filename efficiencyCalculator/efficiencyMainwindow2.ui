@@ -38,9 +38,9 @@
        <widget class="QTableWidget" name="detectorTableWidget">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>60</y>
-          <width>621</width>
+          <x>80</x>
+          <y>70</y>
+          <width>521</width>
           <height>311</height>
          </rect>
         </property>
@@ -76,11 +76,6 @@
         <column>
          <property name="text">
           <string>Threshold</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Efficiency</string>
          </property>
         </column>
        </widget>

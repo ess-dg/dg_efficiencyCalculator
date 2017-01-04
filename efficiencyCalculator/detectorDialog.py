@@ -42,6 +42,14 @@ class detectorDialog( QtGui.QDialog):
         self.bladeEffCanvas = FigureCanvas(self.bladeEffFigure)
         self.bladeEfficiencyPlotLayout.addWidget(self.bladeEffCanvas)
 
+        self.thickVsEffFigure = matplotlib.figure.Figure()
+        self.thickVsEffCanvas = FigureCanvas(self.thickVsEffFigure)
+        self.thickVsEffPlotLayout.addWidget(self.thickVsEffCanvas)
+
+        self.waveVsEffFigure = matplotlib.figure.Figure()
+        self.waveVsEffCanvas = FigureCanvas(self.waveVsEffFigure)
+        self.waveVsEffPlotLayout.addWidget(self.waveVsEffCanvas)
+
         if self.action == 'create':
             self.deleteButton.setEnabled(False)
         # List widget update
@@ -183,11 +191,42 @@ class detectorDialog( QtGui.QDialog):
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
                 result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
+
+                thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma,ranges, len(self.detector.blades))
+                self.thickVsEffFigure.clear()
+                bx = self.thickVsEffFigure.add_subplot(111)
+                bx.plot(thickVsEff[0], thickVsEff[1])
+                bx.grid(True)
+                bx.set_xlabel('Blade thickness')
+                bx.set_ylabel('Blade efficiency (%)')
+                line = bx.plot([self.detector.blades[1].backscatter, self.detector.blades[1].backscatter], [0, result[1]], '--')
+                plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+                line2 = bx.plot([0, self.detector.blades[1].backscatter], [result[1], result[1]], '--')
+                plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
+                self.thickVsEffCanvas.draw()
+                self.waveVsEffFigure.clear()
+                sigmalist = np.arange(0.0011, 20, 0.1)
+                sigmaeq = []
+                for sigma in sigmalist:
+                    # transformation for meeting requirements of functions
+                    sigma = [[sigma],]
+                    sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
+                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.detector.blades[1].backscatter, ranges, len(self.detector.blades))
+                self.waveVsEffFigure.clear()
+                cx = self.waveVsEffFigure.add_subplot(111)
+                cx.plot(sigmalist, y, color='g')
+                cx.plot([self.detector.wavelength[0][0], self.detector.wavelength[0][0]], [0, result[1]], '--', color='k')
+                cx.plot([0, self.detector.wavelength[0][0]], [result[1], result[1]], '--', color='k')
+                cx.grid(True)
+                cx.set_xlabel('Blade wavelength')
+                cx.set_ylabel('Blade efficiency (%)')
+                self.waveVsEffCanvas.draw()
+
                # self.plotTitleLAbel.setText('Multi blade plots')
                # self.figure.clf()
                # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
                 self.bladeEffFigure.clear()
-                self.totalEfflabel.setText(str(result[1]))
+                self.totalEfflabel.setText('<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">'+str(result[1]*100)[:4]+'%')
                 ax = self.bladeEffFigure.add_subplot(111)
                 ax.set_xlabel('Blade Number')
                 ax.set_ylabel('Blade efficiency (%)')
