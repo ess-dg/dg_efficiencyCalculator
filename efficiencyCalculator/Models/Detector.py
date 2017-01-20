@@ -14,6 +14,7 @@ class Detector:
         self.wavelength = []
         self.angle = 90
         self.threshold = 100
+        self.single = False
 
     def add_blade(self,blade):
         self.blades.append(blade)
@@ -21,24 +22,6 @@ class Detector:
     def add_wavelength(self, wavelength):
         self.wavelength.append(wavelength)
 
-
-    def optimize_thickness_different(self):
-        a=-1
-
-    def optimize_thickness_same(self):
-        a=0
-
-    def plot_eff_vs_thick(self):
-        a = 1
-
-    def plot_eff_vs_wavelength(self):
-        a=2
-
-    def plot_blade_eff(self):
-        a=3
-
-    def plot_blade_thick(self):
-        a=4
 
 class Blade:
     backscatter = 0.0

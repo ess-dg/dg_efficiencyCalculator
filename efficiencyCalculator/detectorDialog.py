@@ -96,10 +96,13 @@ class detectorDialog( QtGui.QDialog):
         #Button connections
         self.deleteWaveButton.clicked.connect(lambda: self.delete_wavelength())
         self.addBladeButton.clicked.connect(lambda: self.add_blades())
+        self.addSingleBladeButton.clicked.connect(lambda: self.add_layer())
         self.addWavelengthButton.clicked.connect(lambda: self.add_wavelength())
         self.deleteBladeButton.clicked.connect(lambda: self.delete_blades())
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
+
+
 
     def returnDetector(self):
         self.detector.name = str(self.nameLineEdit.text())
@@ -149,7 +152,48 @@ class detectorDialog( QtGui.QDialog):
             ax.grid(True)
             self.bladeInfoCanvas.draw()
             self.addBladeButton.setEnabled(False)
+            self.addSingleBladeButton.setEnabled(False)
             self.deleteBladeButton.setEnabled(True)
+            self.detector.single = False
+        else:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please set thickness")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            retval = msg.exec_()
+
+    def add_layer(self):
+        bs =0
+        ts=0
+        if self.bsSingleSpinBox.value() > 0:
+
+            ax = self.bladeInfoFigure.add_subplot(111)
+            ax.set_xlabel('Blade Number')
+            ax.set_ylabel('Blade thickness ($\mu$)')
+            ax.set_ylim([0, 8])
+            ax.plot(0, 0)
+
+            if self.transRadioButton.isChecked():
+                bs = self.bsSingleSpinBox.value()
+                ax.plot(1, bs, 'd', color='black')
+            else:
+                ts = self.bsSpinBox.value()
+                ax.plot(1, ts, 'd', color='black')
+            nb = 1
+            sub = self.subSpinBox.value()
+            ax.plot(nb + 1, 0)
+            blade = Blade.Blade(bs, ts, sub, 0)
+            self.detector.blades.append(blade)
+            self.BladeTableWidget.insertRow(0)
+            self.BladeTableWidget.setItem(0, 0, QtGui.QTableWidgetItem(str(1)))
+            self.BladeTableWidget.setItem(0, 1, QtGui.QTableWidgetItem(str(self.bsSingleSpinBox.value())))
+            self.BladeTableWidget.setItem(0, 2, QtGui.QTableWidgetItem(str(sub)))
+            ax.grid(True)
+            self.bladeInfoCanvas.draw()
+            self.addBladeButton.setEnabled(False)
+            self.addSingleBladeButton.setEnabled(False)
+            self.deleteBladeButton.setEnabled(True)
+            self.detector.single = True
         else:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
@@ -163,6 +207,7 @@ class detectorDialog( QtGui.QDialog):
         self.detector.blades = []
         self.BladeTableWidget.setRowCount(0)
         self.addBladeButton.setEnabled(True)
+        self.addSingleBladeButton.setEnabled(True)
         self.deleteBladeButton.setEnabled(False)
         self.bladeEffFigure.clear()
         self.bladeEffCanvas.draw()
@@ -190,8 +235,10 @@ class detectorDialog( QtGui.QDialog):
                 print 'Boron multi-blade double coated calculation '
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
-                result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
-
+                if self.detector.single:
+                    result = efftools.efficiency4boron(self.detector.blades[0].backscatter, ranges[0], ranges[1],  ranges[2],  ranges[3], sigma)
+                else:
+                    result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
                 thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma,ranges, len(self.detector.blades))
                 self.thickVsEffFigure.clear()
                 bx = self.thickVsEffFigure.add_subplot(111)
@@ -199,9 +246,9 @@ class detectorDialog( QtGui.QDialog):
                 bx.grid(True)
                 bx.set_xlabel('Blade thickness')
                 bx.set_ylabel('Blade efficiency (%)')
-                line = bx.plot([self.detector.blades[1].backscatter, self.detector.blades[1].backscatter], [0, result[1]], '--')
+                line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1]], '--')
                 plt.setp(line, 'color', 'k', 'linewidth', 0.5)
-                line2 = bx.plot([0, self.detector.blades[1].backscatter], [result[1], result[1]], '--')
+                line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1], result[1]], '--')
                 plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
                 self.thickVsEffCanvas.draw()
                 self.waveVsEffFigure.clear()
@@ -211,7 +258,7 @@ class detectorDialog( QtGui.QDialog):
                     # transformation for meeting requirements of functions
                     sigma = [[sigma],]
                     sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
-                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.detector.blades[1].backscatter, ranges, len(self.detector.blades))
+                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.detector.blades[0].backscatter, ranges, len(self.detector.blades))
                 self.waveVsEffFigure.clear()
                 cx = self.waveVsEffFigure.add_subplot(111)
                 cx.plot(sigmalist, y, color='g')
@@ -247,10 +294,8 @@ class detectorDialog( QtGui.QDialog):
                 msg.setText("Please add wavelength")
                 msg.setStandardButtons(QtGui.QMessageBox.Ok)
                 retval = msg.exec_()
-
-        else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
-            msg.setText("Please add blades")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
-            retval = msg.exec_()
+        msg = QtGui.QMessageBox()
+        msg.setIcon(QtGui.QMessageBox.Warning)
+        msg.setText("Please add blades")
+        msg.setStandardButtons(QtGui.QMessageBox.Ok)
+        retval = msg.exec_()

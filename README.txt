@@ -12,6 +12,7 @@ This is an internship project in the ESS ERIC in order to make available to the 
 Uses code from the project B10 MathUtils in https://bitbucket.org/europeanspallationsource/dg_dgcode
 
 Python 2.7.12
+pyqt 4
 
 Execution
 ------------
