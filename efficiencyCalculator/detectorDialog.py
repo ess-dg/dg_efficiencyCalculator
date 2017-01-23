@@ -232,25 +232,19 @@ class detectorDialog( QtGui.QDialog):
         if len(self.detector.blades) >= 1:
             if len(self.detector.wavelength) >= 1:
                 print ''
-                print 'Boron multi-blade double coated calculation '
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
                 if self.detector.single:
-                    result = efftools.efficiency4boron(self.detector.blades[0].backscatter, ranges[0], ranges[1],  ranges[2],  ranges[3], sigma)
+                    print 'Boron single layer calculation '
+                    result = efftools.efficiency2particles(self.detector.blades[0].backscatter, ranges[0], ranges[1], sigma)
+                    self.totalEfflabel.setText(
+                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;"> BS: ' + str(result[0][0] * 100)[:4] + '%, Ts: ' + str(result[1][0] * 100)[:4])
                 else:
+                    print 'Boron multi-blade double coated calculation '
                     result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
-                thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma,ranges, len(self.detector.blades))
-                self.thickVsEffFigure.clear()
-                bx = self.thickVsEffFigure.add_subplot(111)
-                bx.plot(thickVsEff[0], thickVsEff[1])
-                bx.grid(True)
-                bx.set_xlabel('Blade thickness')
-                bx.set_ylabel('Blade efficiency (%)')
-                line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1]], '--')
-                plt.setp(line, 'color', 'k', 'linewidth', 0.5)
-                line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1], result[1]], '--')
-                plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
-                self.thickVsEffCanvas.draw()
+                    self.totalEfflabel.setText(
+                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] * 100)[:4] + '%')
+                self.plot_thick_vs_eff(sigma, ranges, self.detector.blades, result)
                 self.waveVsEffFigure.clear()
                 sigmalist = np.arange(0.0011, 20, 0.1)
                 sigmaeq = []
@@ -258,44 +252,71 @@ class detectorDialog( QtGui.QDialog):
                     # transformation for meeting requirements of functions
                     sigma = [[sigma],]
                     sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
-                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.detector.blades[0].backscatter, ranges, len(self.detector.blades))
-                self.waveVsEffFigure.clear()
-                cx = self.waveVsEffFigure.add_subplot(111)
-                cx.plot(sigmalist, y, color='g')
-                cx.plot([self.detector.wavelength[0][0], self.detector.wavelength[0][0]], [0, result[1]], '--', color='k')
-                cx.plot([0, self.detector.wavelength[0][0]], [result[1], result[1]], '--', color='k')
-                cx.grid(True)
-                cx.set_xlabel('Blade wavelength')
-                cx.set_ylabel('Blade efficiency (%)')
-                self.waveVsEffCanvas.draw()
-
-               # self.plotTitleLAbel.setText('Multi blade plots')
-               # self.figure.clf()
-               # data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [len(self.detector.blades)], self)
-                self.bladeEffFigure.clear()
-                self.totalEfflabel.setText('<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">'+str(result[1]*100)[:4]+'%')
-                ax = self.bladeEffFigure.add_subplot(111)
-                ax.set_xlabel('Blade Number')
-                ax.set_ylabel('Blade efficiency (%)')
-                ax.set_ylim([0, (result[0][0][1]*100+1)])
-                ax.set_xlim([0, len(result[0])+1])
-                ax.plot(0, 0)
-                ax.plot(0, len(result[0])+1)
-               # ax.plot(nb + 1, 0)
-                for n in range(0, len(result[0])):
-                    # Note that the plot displayed is the backscattering thickness
-                    ax.plot(n + 1, result[0][n][1]*100, 'o', color='red')
-                    self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(result[0][n][1]*100)+'%'))
-                ax.grid(True)
-                self.bladeEffCanvas.draw()
+                self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
+                self.plot_blade_figure(result)
             else:
                 msg = QtGui.QMessageBox()
                 msg.setIcon(QtGui.QMessageBox.Warning)
                 msg.setText("Please add wavelength")
                 msg.setStandardButtons(QtGui.QMessageBox.Ok)
                 retval = msg.exec_()
-        msg = QtGui.QMessageBox()
-        msg.setIcon(QtGui.QMessageBox.Warning)
-        msg.setText("Please add blades")
-        msg.setStandardButtons(QtGui.QMessageBox.Ok)
-        retval = msg.exec_()
+        else:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please add blades")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            retval = msg.exec_()
+
+    def plot_thick_vs_eff(self, sigma, ranges, blades, result):
+        thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
+        self.thickVsEffFigure.clear()
+        bx = self.thickVsEffFigure.add_subplot(111)
+        bx.plot(thickVsEff[0], thickVsEff[1])
+        bx.grid(True)
+        bx.set_xlabel('Blade thickness')
+        bx.set_ylabel('Blade efficiency (%)')
+        line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1]],
+                       '--')
+        plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+        if self.detector.single:
+            line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1][0], result[1][0]], '--')
+        else:
+            line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1], result[1]], '--')
+        plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
+        self.thickVsEffCanvas.draw()
+
+    def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
+        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges,
+                                                len(blades))
+        self.waveVsEffFigure.clear()
+        cx = self.waveVsEffFigure.add_subplot(111)
+        cx.plot(sigmalist, y, color='g')
+        if self.detector.single:
+            cx.plot([wavelength[0][0], wavelength[0][0]], [0, result[1][0]], '--',
+                    color='k')
+            cx.plot([0, wavelength[0][0]], [result[1][0], result[1][0]], '--', color='k')
+        else:
+            cx.plot([wavelength[0][0], wavelength[0][0]], [0, result[1]], '--',
+                    color='k')
+            cx.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
+        cx.grid(True)
+        cx.set_xlabel('Blade wavelength')
+        cx.set_ylabel('Blade efficiency (%)')
+        self.waveVsEffCanvas.draw()
+
+    def plot_blade_figure(self, result):
+        self.bladeEffFigure.clear()
+        ax = self.bladeEffFigure.add_subplot(111)
+        ax.set_xlabel('Blade Number')
+        ax.set_ylabel('Blade efficiency (%)')
+        ax.set_ylim([0, (result[1] * 100 + 1)])
+        ax.set_xlim([0, len(result[0]) + 1])
+        ax.plot(0, 0)
+        ax.plot(0, len(result[0]) + 1)
+        # ax.plot(nb + 1, 0)
+        for n in range(0, len(result[0])):
+            # Note that the plot displayed is the backscattering thickness
+            ax.plot(n + 1, result[0][n][1] * 100, 'o', color='red')
+            self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(result[0][n][1] * 100) + '%'))
+        ax.grid(True)
+        self.bladeEffCanvas.draw()
