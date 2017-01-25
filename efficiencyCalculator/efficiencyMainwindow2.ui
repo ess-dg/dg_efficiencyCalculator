@@ -89,7 +89,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Detector list&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Detector configuration list&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
        <widget class="QWidget" name="verticalLayoutWidget_5">
@@ -105,14 +105,14 @@
          <item>
           <widget class="QPushButton" name="addButton">
            <property name="text">
-            <string>Add detector</string>
+            <string>Add configuration</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="editButton">
            <property name="text">
-            <string>Edit detector</string>
+            <string>Edit configuration</string>
            </property>
           </widget>
          </item>

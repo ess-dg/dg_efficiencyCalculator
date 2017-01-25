@@ -101,7 +101,7 @@ class detectorDialog( QtGui.QDialog):
         self.deleteBladeButton.clicked.connect(lambda: self.delete_blades())
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
-
+        self.calculateTotalEffButton.setDefault(True)
 
 
     def returnDetector(self):
@@ -172,13 +172,8 @@ class detectorDialog( QtGui.QDialog):
             ax.set_ylabel('Blade thickness ($\mu$)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
-
-            if self.transRadioButton.isChecked():
-                bs = self.bsSingleSpinBox.value()
-                ax.plot(1, bs, 'd', color='black')
-            else:
-                ts = self.bsSpinBox.value()
-                ax.plot(1, ts, 'd', color='black')
+            bs = self.bsSingleSpinBox.value()
+            ax.plot(1, bs, 'd', color='black')
             nb = 1
             sub = self.subSpinBox.value()
             ax.plot(nb + 1, 0)
@@ -300,8 +295,8 @@ class detectorDialog( QtGui.QDialog):
                     color='k')
             cx.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
         cx.grid(True)
-        cx.set_xlabel('Blade wavelength')
-        cx.set_ylabel('Blade efficiency (%)')
+        cx.set_xlabel('Neutron wavelength (Angstrom)')
+        cx.set_ylabel('Blade detection efficiency (%)')
         self.waveVsEffCanvas.draw()
 
     def plot_blade_figure(self, result):
