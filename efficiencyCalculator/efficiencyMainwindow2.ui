@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>534</height>
+    <width>716</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>661</width>
-      <height>491</height>
+      <width>691</width>
+      <height>531</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -97,8 +97,8 @@
          <rect>
           <x>270</x>
           <y>400</y>
-          <width>160</width>
-          <height>80</height>
+          <width>175</width>
+          <height>100</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -116,6 +116,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="duplicateButton">
+           <property name="text">
+            <string>Duplicate configuration</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </widget>
@@ -128,7 +135,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>677</width>
+     <width>716</width>
      <height>22</height>
     </rect>
    </property>

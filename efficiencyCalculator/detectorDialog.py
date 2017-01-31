@@ -361,7 +361,7 @@ class detectorDialog( QtGui.QDialog):
         # ax.plot(nb + 1, 0)
         ax.plot(1, result[0][0] * 100, 'o', label=" BS", color='red')
         ax.plot(1, result[1][0] * 100, 'o', label=" TS", color='b')
-        ax.legend()
+        ax.legend(numpoints=1)
         self.BladeTableWidget.setItem(0, 3, QtGui.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% BS, '+str(result[1][0] * 100)[:4]+'% TS'))
         ax.grid(True)
         self.bladeEffCanvas.draw()

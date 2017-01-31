@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 import detectorDialog
+import copy
 
 base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 
@@ -37,6 +38,7 @@ class Window(QtGui.QMainWindow):
     def start_window(self):
         self.addButton.clicked.connect(lambda: self.create_detector())
         self.editButton.clicked.connect(lambda: self.edit_detector())
+        self.duplicateButton.clicked.connect(lambda: self.duplicate_detector())
         self.show()
 
     def create_detector(self):
@@ -45,6 +47,20 @@ class Window(QtGui.QMainWindow):
         if detector[1]:
             self.detectorList.append(detector[0])
             self.update_detector_list()
+
+    def duplicate_detector(self):
+        try:
+            detector = copy.deepcopy(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()])
+            detector.name = 'Copy of'+detector.name
+            self.detectorList.append(detector)
+            self.update_detector_list()
+
+        except IndexError:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please select a detector of the list")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.exec_()
 
     def edit_detector(self):
         try:
