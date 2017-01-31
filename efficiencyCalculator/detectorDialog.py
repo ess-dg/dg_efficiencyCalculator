@@ -126,6 +126,29 @@ class detectorDialog( QtGui.QDialog):
         self.bladeEffCanvas.draw()
         self.totalEfflabel.setText('unknown')
 
+    def refresh_blades(self):
+        ax = self.bladeInfoFigure.add_subplot(111)
+        ax.set_xlabel('Blade Number')
+        ax.set_ylabel('Blade thickness ($\mu$)')
+        ax.set_ylim([0, 8])
+        ax.plot(0, 0)
+        nb = len(self.detector.blades)
+        ax.plot(nb + 1, 0)
+        bs = self.detector.blades[0].backscatter
+        ts = self.detector.blades[0].transmission
+        sub = self.detector.blades[0].substrate
+        for n in range(0, nb):
+            # Note that the plot displayed is the backscattering thickness
+            ax.plot(n + 1, bs, 'd', color='black')
+            blade = Blade.Blade(bs, ts, sub, 0)
+            self.detector.blades.append(blade)
+            self.BladeTableWidget.insertRow(n)
+            self.BladeTableWidget.setItem(n, 0, QtGui.QTableWidgetItem(str(n + 1)))
+            self.BladeTableWidget.setItem(n, 1, QtGui.QTableWidgetItem(str(bs)))
+            self.BladeTableWidget.setItem(n, 2, QtGui.QTableWidgetItem(str(sub)))
+        ax.grid(True)
+        self.bladeInfoCanvas.draw()
+
     def add_blades(self):
         if self.bsSpinBox.value() > 0:
             nb = self.nbspinBox.value()
@@ -347,7 +370,21 @@ class detectorDialog( QtGui.QDialog):
         max = np.array(self.thickVsEff[1]).argmax()
         c = 0
         max = self.thickVsEff[0][max]
+        self.bladeInfoFigure.clear()
+        ax = self.bladeInfoFigure.add_subplot(111)
+        ax.set_xlabel('Blade Number')
+        ax.set_ylabel('Blade thickness ($\mu$)')
+        ax.set_ylim([0, 8])
+        ax.plot(0, 0)
+        nb = len(self.detector.blades)
+        ax.plot(nb + 1, 0)
         for b in self.detector.blades:
             b.backscatter = max
+            ax.plot(c + 1, max, 'd', color='black')
             self.detector.blades[c] = b
+            self.BladeTableWidget.setItem(c, 1, QtGui.QTableWidgetItem(str(b.backscatter)))
+            c += 1
+        ax.grid(True)
+        self.bladeInfoCanvas.draw()
         self.calculate_total_efficiency()
+       # self.refresh_blades()
