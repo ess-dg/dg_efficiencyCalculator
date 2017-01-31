@@ -32,20 +32,17 @@ class detectorDialog( QtGui.QDialog):
         self.thresholdSpinBox.setValue(detector.threshold)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-
+        self.thickVsEff = []
         # Add plots layouts
         self.bladeInfoFigure = matplotlib.figure.Figure()
         self.bladeInfoCanvas = FigureCanvas(self.bladeInfoFigure)
         self.bladePlotLayout.addWidget(self.bladeInfoCanvas)
-
         self.bladeEffFigure = matplotlib.figure.Figure()
         self.bladeEffCanvas = FigureCanvas(self.bladeEffFigure)
         self.bladeEfficiencyPlotLayout.addWidget(self.bladeEffCanvas)
-
         self.thickVsEffFigure = matplotlib.figure.Figure()
         self.thickVsEffCanvas = FigureCanvas(self.thickVsEffFigure)
         self.thickVsEffPlotLayout.addWidget(self.thickVsEffCanvas)
-
         self.waveVsEffFigure = matplotlib.figure.Figure()
         self.waveVsEffCanvas = FigureCanvas(self.waveVsEffFigure)
         self.waveVsEffPlotLayout.addWidget(self.waveVsEffCanvas)
@@ -70,8 +67,8 @@ class detectorDialog( QtGui.QDialog):
                     ax.plot(c+1, b.backscatter, 'd', color='black')
                     self.BladeTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem('Blade N:'+str(c+1)))
                     self.BladeTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(b.backscatter)))
-                    self.BladeTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(b.transmission)))
-                    self.BladeTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(b.substrate)))
+                  #  self.BladeTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(b.transmission)))
+                    self.BladeTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(b.substrate)))
                     c += 1
                 ax.grid(True)
                 self.bladeInfoCanvas.draw()
@@ -101,6 +98,7 @@ class detectorDialog( QtGui.QDialog):
         self.deleteBladeButton.clicked.connect(lambda: self.delete_blades())
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
+        self.optimizeThicknessSameButton.clicked.connect(lambda: self.optimize_thickness_same())
         self.calculateTotalEffButton.setDefault(True)
 
 
@@ -233,12 +231,14 @@ class detectorDialog( QtGui.QDialog):
                     print 'Boron single layer calculation '
                     result = efftools.efficiency2particles(self.detector.blades[0].backscatter, ranges[0], ranges[1], sigma)
                     self.totalEfflabel.setText(
-                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;"> BS: ' + str(result[0][0] * 100)[:4] + '%, Ts: ' + str(result[1][0] * 100)[:4])
+                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;"> BS: ' + str(result[0][0] * 100)[:4] + '% Ts: ' + str(result[1][0] * 100)[:4])
+                    self.plot_blade_figure_single(result)
                 else:
                     print 'Boron multi-blade double coated calculation '
                     result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
                     self.totalEfflabel.setText(
                         '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] * 100)[:4] + '%')
+                    self.plot_blade_figure(result)
                 self.plot_thick_vs_eff(sigma, ranges, self.detector.blades, result)
                 self.waveVsEffFigure.clear()
                 sigmalist = np.arange(0.0011, 20, 0.1)
@@ -248,7 +248,7 @@ class detectorDialog( QtGui.QDialog):
                     sigma = [[sigma],]
                     sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                 self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
-                self.plot_blade_figure(result)
+                self.optimizeThicknessSameButton.setEnabled(True)
             else:
                 msg = QtGui.QMessageBox()
                 msg.setIcon(QtGui.QMessageBox.Warning)
@@ -263,16 +263,26 @@ class detectorDialog( QtGui.QDialog):
             retval = msg.exec_()
 
     def plot_thick_vs_eff(self, sigma, ranges, blades, result):
-        thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
         self.thickVsEffFigure.clear()
         bx = self.thickVsEffFigure.add_subplot(111)
-        bx.plot(thickVsEff[0], thickVsEff[1])
-        bx.grid(True)
-        bx.set_xlabel('Blade thickness')
-        bx.set_ylabel('Blade efficiency (%)')
-        line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1]],
-                       '--')
-        plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+        if self.detector.single:
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
+            bx.plot(thickVsEff[0], thickVsEff[1])
+            bx.grid(True)
+            bx.set_xlabel('Blade thickness')
+            bx.set_ylabel('Blade efficiency (%)')
+            line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1][0]*100],'--')
+            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+        else:
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
+            self.thickVsEff = thickVsEff
+            bx.plot(thickVsEff[0], thickVsEff[1])
+            bx.grid(True)
+            bx.set_xlabel('Blade thickness')
+            bx.set_ylabel('Blade efficiency (%)')
+            line = bx.plot([self.detector.blades[0].backscatter, self.detector.blades[0].backscatter], [0, result[1]],
+                           '--')
+            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         if self.detector.single:
             line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1][0], result[1][0]], '--')
         else:
@@ -312,6 +322,32 @@ class detectorDialog( QtGui.QDialog):
         for n in range(0, len(result[0])):
             # Note that the plot displayed is the backscattering thickness
             ax.plot(n + 1, result[0][n][1] * 100, 'o', color='red')
-            self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(result[0][n][1] * 100) + '%'))
+            self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(str(result[0][n][1] * 100)[:4] + '%'))
         ax.grid(True)
         self.bladeEffCanvas.draw()
+
+    def plot_blade_figure_single(self, result):
+        self.bladeEffFigure.clear()
+        ax = self.bladeEffFigure.add_subplot(111)
+        ax.set_xlabel('Blade Number')
+        ax.set_ylabel('Blade efficiency (%)')
+        ax.set_ylim([0, (result[1] * 100 + 1)])
+        ax.set_xlim([0, len(result[0]) + 1])
+        ax.plot(0, 0)
+        ax.plot(0, len(result[0]) + 1)
+        # ax.plot(nb + 1, 0)
+        ax.plot(1, result[0][0] * 100, 'o', label=" BS", color='red')
+        ax.plot(1, result[1][0] * 100, 'o', label=" TS", color='b')
+        ax.legend()
+        self.BladeTableWidget.setItem(0, 3, QtGui.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% BS, '+str(result[1][0] * 100)[:4]+'% TS'))
+        ax.grid(True)
+        self.bladeEffCanvas.draw()
+
+    def optimize_thickness_same(self):
+        max = np.array(self.thickVsEff[1]).argmax()
+        c = 0
+        max = self.thickVsEff[0][max]
+        for b in self.detector.blades:
+            b.backscatter = max
+            self.detector.blades[c] = b
+        self.calculate_total_efficiency()

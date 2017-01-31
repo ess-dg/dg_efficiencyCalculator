@@ -128,8 +128,6 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 		eff = []
 
 	# random data
-	'''
-	'''
 	return efftotal
 	# create an axis
 	ax = window.figure.add_subplot(111)
@@ -153,6 +151,7 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 	# refresh canvas
 
 	window.canvas.draw()
+
 
 def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 	if blades[0].substrate == 0:
@@ -181,10 +180,8 @@ def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 	return efftotal, sinsub, sub
 
 
-
-
 def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
-	"""calculates efficiency for configuration of multi grid with blades of same thickness, doesn't considerate aluminium.
+	"""gets metadata for plotting effVSthick of multi grid with blades of same thickness, doesn't considerate aluminium.
 
 	Args:
 		sigma_eq (int):
@@ -211,6 +208,28 @@ def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
 	for sigma in sigmaeq:
 		eff.append(mg_same_thick(sigma, ranges, thickness, nb))
 	return eff
+
+def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
+	"""gets metadata for plotting effVSthick of single layer, doesn't considerate aluminium.
+
+	Args:
+		sigma_eq (int):
+		ranges (array[4]):  array of ranges of particles
+		nb (int): number of blades
+	returns:
+		thicklist (list):  x axis
+		eff  (list): y axis
+
+
+
+	..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/MultiGrid_Optimization/MG1_Calc4monoch_sameThickBlades_VS_ThickAndNb.m?at=default&fileviewer=file-view-default
+
+	"""
+	thicklist = np.arange(0.0011, 5, 0.05)
+	eff = []
+	for n in thicklist:
+		eff.append(efficiency4boron(ranges[0], ranges[1], ranges[2], ranges[3], sigma_eq, n)[0][0])
+	return thicklist, eff,
 
 def efficparam(thickness,sigma_eq,ranges,varargin):
 	"""calculates efficiency of a double layer blade (back and transmission) with the sabe thickness of bs and t
