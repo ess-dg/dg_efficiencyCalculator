@@ -1,20 +1,13 @@
-
-
-import os
-import sys
-import Models.B10 as B10
-import efftools
-from PyQt4 import QtGui, QtCore, uic
-import Models.Detector as Detector
-import Models.Blade as Blade
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib
 import matplotlib.figure
-import numpy
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import numpy as np
-import efficiencyCalculator
+from PyQt4 import QtGui, QtCore, uic
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+
+import Models.B10 as B10
+import Models.Blade as Blade
+from Models import efftools
 
 
 class detectorDialog( QtGui.QDialog):
@@ -248,17 +241,18 @@ class detectorDialog( QtGui.QDialog):
         if len(self.detector.blades) >= 1:
             if len(self.detector.wavelength) >= 1:
                 print ''
+                self.detector.angle = self.angleSpinBox.value()
+                self.detector.threshold = self.thresholdSpinBox.value()
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
+                result = self.detector.calculate_eff()
                 if self.detector.single:
                     print 'Boron single layer calculation '
-                    result = efftools.efficiency2particles(self.detector.blades[0].backscatter, ranges[0], ranges[1], sigma)
                     self.totalEfflabel.setText(
                         '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;"> BS: ' + str(result[0][0] * 100)[:4] + '% Ts: ' + str(result[1][0] * 100)[:4])
                     self.plot_blade_figure_single(result)
                 else:
                     print 'Boron multi-blade double coated calculation '
-                    result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.detector.blades)
                     self.totalEfflabel.setText(
                         '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] * 100)[:4] + '%')
                     self.plot_blade_figure(result)
@@ -311,6 +305,8 @@ class detectorDialog( QtGui.QDialog):
         else:
             line2 = bx.plot([0, self.detector.blades[0].backscatter], [result[1], result[1]], '--')
         plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
+        ticks = bx.get_yticks() * 100
+        bx.set_yticklabels(ticks)
         self.thickVsEffCanvas.draw()
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
@@ -330,6 +326,8 @@ class detectorDialog( QtGui.QDialog):
         cx.grid(True)
         cx.set_xlabel('Neutron wavelength (Angstrom)')
         cx.set_ylabel('Blade detection efficiency (%)')
+        ticks = cx.get_yticks() * 100
+        cx.set_yticklabels(ticks)
         self.waveVsEffCanvas.draw()
 
     def plot_blade_figure(self, result):

@@ -1,19 +1,20 @@
 #!/usr/bin/env python
+import copy
 import os
 import sys
-import Models.B10 as B10
-import Models.Detector as Detector
-import efftools
-from PyQt4 import QtGui, QtCore, uic
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+
 import matplotlib
 import matplotlib.figure
-import numpy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import numpy
 import numpy as np
+from PyQt4 import QtGui, uic
+
+import Models.B10 as B10
+import Models.Detector as Detector
 import detectorDialog
-import copy
+from Models import efftools
 
 base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 

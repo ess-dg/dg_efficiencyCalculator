@@ -1,8 +1,8 @@
+import numpy
 
 from efficiencyCalculator.Models import B10
-from efficiencyCalculator.efftools import mg_same_thick
-from efficiencyCalculator.efftools import efficiency4boron
-import numpy
+from efficiencyCalculator.Models.efftools import efficiency4boron
+from efficiencyCalculator.Models.efftools import mg_same_thick
 
 
 class B10_test:
