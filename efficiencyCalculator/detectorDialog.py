@@ -92,6 +92,7 @@ class detectorDialog( QtGui.QDialog):
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
         self.optimizeThicknessSameButton.clicked.connect(lambda: self.optimize_thickness_same())
+        self.exportButton.clicked.connect(lambda: self.export())
         self.calculateTotalEffButton.setDefault(True)
 
     def returnDetector(self):
@@ -304,3 +305,8 @@ class detectorDialog( QtGui.QDialog):
         self.refresh_blades()
         self.calculate_total_efficiency()
 
+    def export(self):
+        filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+        file = open(str(filepath)+'/detector.txt', "w")
+        file.write(str(self.detector))
+        file.close()

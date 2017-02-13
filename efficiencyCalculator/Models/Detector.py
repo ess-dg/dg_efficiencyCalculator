@@ -7,21 +7,28 @@ import matplotlib.pyplot as plt
 from scipy import interpolate
 import B10
 import efftools
+import Blade
+import copy
+import json
 
 class Detector:
 
-    def __init__(self, name, blades=[], wavelength=[], angle=90, threshold=100, single=False):
+    def __init__(self, name='Detector', angle=90, threshold=100, single=False):
         self.converter = B10.B10()
         self.name = name
-        self.blades = blades
-        self.wavelength = wavelength
+        self.wavelength = []
         self.angle = angle
         self.threshold = threshold
         self.single = single
         self.metadata = {}
+        self.blades = []
 
     def add_blade(self,blade):
         self.blades.append(blade)
+
+    def add_blades(self, nb, thick):
+        for i in nb:
+            self.blades.append
 
     def add_wavelength(self, wavelength):
         self.wavelength.append(wavelength)
@@ -164,8 +171,11 @@ class Detector:
         	plotted figure
             reference: figure 3.13 On Francesco's Thesis
         """
-        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges,
-                                                len(blades))
+        if sigmaeq == None:
+            sigmaeq = self.calculate_sigma()
+        if ranges == None:
+            sigmaeq = self.calculate_ranges()
+        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
         cx = figure.add_subplot(111)
         cx.plot(sigmalist, y, color='g')
         if self.single:
@@ -207,6 +217,33 @@ class Detector:
             self.blades[c] = b
             c += 1
 
-class Blade:
-    backscatter = 0.0
-    transmission = 0.0
+    @staticmethod
+    def build_multigrid_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold):
+        bladelist = []
+        blade = Blade.Blade(converterThickness,converterThickness,substrateThickness,0)
+        for x in range(0,nb):
+            bladelist.append(copy.deepcopy(blade))
+        detector = Detector()
+        detector.blades = bladelist
+        detector.wavelength = wavelength
+        detector.angle = angle
+        detector.threshold = threshold
+        return detector
+
+    @staticmethod
+    def json_parser(path):
+        try:
+            with open(path) as data_file:
+                data = json.load(data_file)
+            print(data)
+            wave =[]
+            for w in data.get('wavelength'):
+                wave.append([w.get('angstrom'), w.get('%')])
+            detector = Detector.build_multigrid_detector(len(data.get('blades')),data.get('blades')[0].get('backscatter'),data.get('blades')[0].get('substrate'),wave, data.get('angle'), data.get('threshold'))
+            # Access data
+            return detector
+        except (ValueError, KeyError, TypeError):
+            print "JSON format error"
+
+if __name__ == '__main__':
+   Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')

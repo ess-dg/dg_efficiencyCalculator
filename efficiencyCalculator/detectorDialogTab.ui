@@ -92,7 +92,7 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Detector configuration&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="exportButton">
        <property name="geometry">
         <rect>
          <x>770</x>
@@ -102,7 +102,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Export config</string>
+        <string>Export</string>
        </property>
       </widget>
       <widget class="QWidget" name="verticalLayoutWidget">
@@ -361,7 +361,7 @@
         </rect>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -671,7 +671,7 @@
          <x>410</x>
          <y>270</y>
          <width>259</width>
-         <height>105</height>
+         <height>136</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">

@@ -40,6 +40,7 @@ class Window(QtGui.QMainWindow):
         self.addButton.clicked.connect(lambda: self.create_detector())
         self.editButton.clicked.connect(lambda: self.edit_detector())
         self.duplicateButton.clicked.connect(lambda: self.duplicate_detector())
+        self.importButton.clicked.connect(lambda: self.import_detector())
         self.show()
 
     def create_detector(self):
@@ -353,6 +354,12 @@ class Window(QtGui.QMainWindow):
         # plt.legend()
         # plt.legend()
         self.canvas.draw_idle()
+
+    def import_detector(self):
+        filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+        detector = Detector.Detector.json_parser(filepath)
+        self.detectorList.append(detector)
+        self.update_detector_list()
 
 
 
