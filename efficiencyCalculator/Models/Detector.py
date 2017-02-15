@@ -177,6 +177,7 @@ class Detector:
             sigmaeq = self.calculate_ranges()
         y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
         cx = figure.add_subplot(111)
+        self.metadata.update({'effVsWave': [sigmalist, y]})
         cx.plot(sigmalist, y, color='g')
         if self.single:
             cx.plot([wavelength[0][0], wavelength[0][0]], [0, result[1][0]], '--',
@@ -245,5 +246,33 @@ class Detector:
         except (ValueError, KeyError, TypeError):
             print "JSON format error"
 
+    def to_json(self):
+        d = {}
+        d["name"] = self.name
+        d["converter"] = '10B4C 2.24g/cm3'
+        d["angle"] = self.angle
+        d["threshold"] = self.threshold
+        blades = []
+        for b in self.blades:
+            bdict = {}
+            bdict["backscatter"] = b.backscatter
+            bdict["transmission"] = b.transmission
+            bdict["substrate"] = b.substrate
+            bdict["inclination"] = b.inclination
+            blades.append(bdict)
+        wavelength = []
+        for w in self.wavelength:
+            wdict = {}
+            wdict["%"] = w[1]
+            wdict["angstrom"] = w[0]
+            wavelength.append(wdict)
+        d["blades"] = blades
+        d["single"] = self.single
+        d["wavelength"] = wavelength
+        return d
+
+
 if __name__ == '__main__':
-   Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+   #Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+   detector = Detector.build_multigrid_detector(10,1,0,[[1.8,100]], 90, 100)
+   detector.to_json()

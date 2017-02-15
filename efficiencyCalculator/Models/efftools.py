@@ -199,14 +199,14 @@ def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
 	for n in thicklist:
-		eff.append(mg_same_thick(sigma_eq, ranges, n, nb))
+		eff.append(mg_same_thick(sigma_eq, ranges, n, nb)[0])
 	return thicklist, eff,
 
 
 def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
 	eff = []
 	for sigma in sigmaeq:
-		eff.append(mg_same_thick(sigma, ranges, thickness, nb))
+		eff.append(mg_same_thick(sigma, ranges, thickness, nb)[0])
 	return eff
 
 def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):

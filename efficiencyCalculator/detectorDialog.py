@@ -1,5 +1,6 @@
 import matplotlib
 import matplotlib.figure
+import json
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt4 import QtGui, QtCore, uic
@@ -93,6 +94,8 @@ class detectorDialog( QtGui.QDialog):
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
         self.optimizeThicknessSameButton.clicked.connect(lambda: self.optimize_thickness_same())
         self.exportButton.clicked.connect(lambda: self.export())
+        self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
+        self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
         self.calculateTotalEffButton.setDefault(True)
 
     def returnDetector(self):
@@ -305,8 +308,28 @@ class detectorDialog( QtGui.QDialog):
         self.refresh_blades()
         self.calculate_total_efficiency()
 
+    def export_plot_file(self, plot):
+        """writes a two column file with x and y values of selected plots
+
+        Args:
+        	plot (String): key for metadata dict of desired plot
+
+        """
+        filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+        if plot == 'effvsthick':
+            meta = self.detector.metadata.get('thickVsEff')
+            datafile_id = open(filepath + '/'+self.detector.name+'thickVsEff.txt', 'w+')
+        if plot == 'effVsWave':
+            datafile_id = open(filepath + '/'+self.detector.name+'effVsWave.txt', 'w+')
+            meta = self.detector.metadata.get('effVsWave')
+        data = np.array([meta[0], meta[1]])
+        for a, am in zip(data[0], data[1]):
+            datafile_id.write("{}\t{}\n".format(a, am))
+        datafile_id.close()
+
     def export(self):
         filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-        file = open(str(filepath)+'/detector.txt', "w")
-        file.write(str(self.detector))
-        file.close()
+        with open(str(filepath)+'/detector_'+self.detector.name+'_.json', "w") as outfile:
+            outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
+            outfile.close()
+        print('Export')
