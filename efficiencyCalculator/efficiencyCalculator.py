@@ -356,10 +356,14 @@ class Window(QtGui.QMainWindow):
         self.canvas.draw_idle()
 
     def import_detector(self):
-        filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
-        detector = Detector.Detector.json_parser(filepath)
-        self.detectorList.append(detector)
-        self.update_detector_list()
+        try:
+            print "Import config"
+            filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+            detector = Detector.Detector.json_parser(filepath)
+            self.detectorList.append(detector)
+            self.update_detector_list()
+        except IOError:
+            print "Path error"
 
 
 

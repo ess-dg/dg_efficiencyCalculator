@@ -236,7 +236,6 @@ class Detector:
         try:
             with open(path) as data_file:
                 data = json.load(data_file)
-            print(data)
             wave =[]
             for w in data.get('wavelength'):
                 wave.append([w.get('angstrom'), w.get('%')])

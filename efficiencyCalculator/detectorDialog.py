@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.figure
 import json
+import  sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt4 import QtGui, QtCore, uic
@@ -96,7 +97,18 @@ class detectorDialog( QtGui.QDialog):
         self.exportButton.clicked.connect(lambda: self.export())
         self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
+        self.exportThickvseffImageButton.clicked.connect(lambda: self.export_plot_image('effvsthick'))
+        self.exportEffVsWaveImageButton.clicked.connect(lambda: self.export_plot_image('effVsWave'))
+        #Button disable
         self.calculateTotalEffButton.setDefault(True)
+        self.exportThickvseffButton.setEnabled(False)
+        self.exportEffVsWaveButton.setEnabled(False)
+        self.exportEffVsWaveImageButton.setEnabled(False)
+        self.exportThickvseffImageButton.setEnabled(False)
+        #validation for name line edit
+        reg_ex = QtCore.QRegExp("[A-Za-z0-9_]{0,255}")
+        name_validator = QtGui.QRegExpValidator(reg_ex, self.nameLineEdit)
+        self.nameLineEdit.setValidator(name_validator)
 
     def returnDetector(self):
         self.detector.name = str(self.nameLineEdit.text())
@@ -267,6 +279,10 @@ class detectorDialog( QtGui.QDialog):
                     sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                 self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
                 self.optimizeThicknessSameButton.setEnabled(True)
+                self.exportThickvseffButton.setEnabled(True)
+                self.exportEffVsWaveButton.setEnabled(True)
+                self.exportEffVsWaveImageButton.setEnabled(True)
+                self.exportThickvseffImageButton.setEnabled(True)
             else:
                 msg = QtGui.QMessageBox()
                 msg.setIcon(QtGui.QMessageBox.Warning)
@@ -315,21 +331,37 @@ class detectorDialog( QtGui.QDialog):
         	plot (String): key for metadata dict of desired plot
 
         """
-        filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-        if plot == 'effvsthick':
-            meta = self.detector.metadata.get('thickVsEff')
-            datafile_id = open(filepath + '/'+self.detector.name+'thickVsEff.txt', 'w+')
-        if plot == 'effVsWave':
-            datafile_id = open(filepath + '/'+self.detector.name+'effVsWave.txt', 'w+')
-            meta = self.detector.metadata.get('effVsWave')
-        data = np.array([meta[0], meta[1]])
-        for a, am in zip(data[0], data[1]):
-            datafile_id.write("{}\t{}\n".format(a, am))
-        datafile_id.close()
+        try:
+            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+            if plot == 'effvsthick':
+                meta = self.detector.metadata.get('thickVsEff')
+                datafile_id = open(filepath + '/'+self.detector.name+'thickVsEff.txt', 'w+')
+            if plot == 'effVsWave':
+                datafile_id = open(filepath + '/'+self.detector.name+'effVsWave.txt', 'w+')
+                meta = self.detector.metadata.get('effVsWave')
+            data = np.array([meta[0], meta[1]])
+            for a, am in zip(data[0], data[1]):
+                datafile_id.write("{}\t{}\n".format(a, am))
+            datafile_id.close()
+        except IOError:
+            print "Path error"
+
+    def export_plot_image(self, plot):
+        try:
+            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+            if plot == 'effvsthick':
+                self.thickVsEffFigure.savefig(filepath + '/' +self.detector.name +'effvsthick.png')
+            if plot == 'effVsWave':
+                self.waveVsEffFigure.savefig(filepath + '/' +self.detector.name + 'effVsWave.png')
+        except IOError:
+            print "Path error"
 
     def export(self):
-        filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-        with open(str(filepath)+'/detector_'+self.detector.name+'_.json', "w") as outfile:
-            outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
-            outfile.close()
-        print('Export')
+        try:
+            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+            with open(str(filepath)+'/detector_'+self.detector.name+'_.json', "w") as outfile:
+                outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
+                outfile.close()
+            print('Export')
+        except IOError:
+            print "Path error"
