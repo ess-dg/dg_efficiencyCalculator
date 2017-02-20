@@ -153,8 +153,8 @@ class Detector:
         else:
             line2 = bx.plot([0, self.blades[0].backscatter], [result[1], result[1]], '--')
         plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
-        ticks = bx.get_yticks() * 100
-        bx.set_yticklabels(ticks)
+      #  ticks = bx.get_yticks() * 100
+       # bx.set_yticklabels(ticks)
         return bx
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength, figure):
@@ -190,8 +190,8 @@ class Detector:
         cx.grid(True)
         cx.set_xlabel('Neutron wavelength (Angstrom)')
         cx.set_ylabel('Blade detection efficiency (%)')
-        ticks = cx.get_yticks() * 100
-        cx.set_yticklabels(ticks)
+      #  ticks = cx.get_yticks() * 100
+       # cx.set_yticklabels(ticks)
         return cx
 
     def optimize_thickness_same(self):

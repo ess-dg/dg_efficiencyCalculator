@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PyQt4 import QtGui, QtCore, uic
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from random import randint
 
 import Models.B10 as B10
 import Models.Blade as Blade
@@ -41,7 +43,11 @@ class detectorDialog( QtGui.QDialog):
         self.waveVsEffFigure = matplotlib.figure.Figure()
         self.waveVsEffCanvas = FigureCanvas(self.waveVsEffFigure)
         self.waveVsEffPlotLayout.addWidget(self.waveVsEffCanvas)
-
+        self.toolbar = NavigationToolbar(self.thickVsEffCanvas, self)
+        self.toolbar2 = NavigationToolbar(self.waveVsEffCanvas, self)
+        self.thickToolLayout.addWidget(self.toolbar)
+        self.waveToolLayout.addWidget(self.toolbar2)
+        # self.toolbar.hide()
         if self.action == 'create':
             self.deleteButton.setEnabled(False)
         # List widget update
@@ -97,18 +103,21 @@ class detectorDialog( QtGui.QDialog):
         self.exportButton.clicked.connect(lambda: self.export())
         self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
-        self.exportThickvseffImageButton.clicked.connect(lambda: self.export_plot_image('effvsthick'))
-        self.exportEffVsWaveImageButton.clicked.connect(lambda: self.export_plot_image('effVsWave'))
+        self.nameLineEdit.textChanged.connect(lambda: self.updateDetector())
         #Button disable
+        self.exportButton.setEnabled(False)
         self.calculateTotalEffButton.setDefault(True)
         self.exportThickvseffButton.setEnabled(False)
         self.exportEffVsWaveButton.setEnabled(False)
-        self.exportEffVsWaveImageButton.setEnabled(False)
-        self.exportThickvseffImageButton.setEnabled(False)
         #validation for name line edit
         reg_ex = QtCore.QRegExp("[A-Za-z0-9_]{0,255}")
         name_validator = QtGui.QRegExpValidator(reg_ex, self.nameLineEdit)
         self.nameLineEdit.setValidator(name_validator)
+
+    def updateDetector(self):
+        self.detector.name = str(self.nameLineEdit.text())
+        self.detector.threshold = self.thresholdSpinBox.value()
+        self.detector.angle = self.angleSpinBox.value()
 
     def returnDetector(self):
         self.detector.name = str(self.nameLineEdit.text())
@@ -281,8 +290,7 @@ class detectorDialog( QtGui.QDialog):
                 self.optimizeThicknessSameButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
                 self.exportEffVsWaveButton.setEnabled(True)
-                self.exportEffVsWaveImageButton.setEnabled(True)
-                self.exportThickvseffImageButton.setEnabled(True)
+                self.exportButton.setEnabled(True)
             else:
                 msg = QtGui.QMessageBox()
                 msg.setIcon(QtGui.QMessageBox.Warning)
@@ -332,12 +340,13 @@ class detectorDialog( QtGui.QDialog):
 
         """
         try:
+            random = str(randint(0,100))
             filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
             if plot == 'effvsthick':
                 meta = self.detector.metadata.get('thickVsEff')
-                datafile_id = open(filepath + '/'+self.detector.name+'thickVsEff.txt', 'w+')
+                datafile_id = open(filepath + '/'+self.detector.name+random+'thickVsEff.txt', 'w+')
             if plot == 'effVsWave':
-                datafile_id = open(filepath + '/'+self.detector.name+'effVsWave.txt', 'w+')
+                datafile_id = open(filepath + '/'+self.detector.name+random+'effVsWave.txt', 'w+')
                 meta = self.detector.metadata.get('effVsWave')
             data = np.array([meta[0], meta[1]])
             for a, am in zip(data[0], data[1]):
@@ -346,20 +355,11 @@ class detectorDialog( QtGui.QDialog):
         except IOError:
             print "Path error"
 
-    def export_plot_image(self, plot):
-        try:
-            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-            if plot == 'effvsthick':
-                self.thickVsEffFigure.savefig(filepath + '/' +self.detector.name +'effvsthick.png')
-            if plot == 'effVsWave':
-                self.waveVsEffFigure.savefig(filepath + '/' +self.detector.name + 'effVsWave.png')
-        except IOError:
-            print "Path error"
 
     def export(self):
         try:
             filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-            with open(str(filepath)+'/detector_'+self.detector.name+'_.json', "w") as outfile:
+            with open(str(filepath)+'/'+self.detector.name+'config.json', "w") as outfile:
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
             print('Export')
