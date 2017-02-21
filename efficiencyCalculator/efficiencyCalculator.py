@@ -360,8 +360,12 @@ class Window(QtGui.QMainWindow):
             print "Import config"
             filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
             detector = Detector.Detector.json_parser(filepath)
-            self.detectorList.append(detector)
-            self.update_detector_list()
+            detector = detectorDialog.detectorDialog.getDetector(detector, 'edit')
+            if detector[1]:
+                if detector[2] == 'edit':
+                    self.detectorList.append(detector[0])
+                    self.update_detector_list()
+
         except IOError:
             print "Path error"
 
