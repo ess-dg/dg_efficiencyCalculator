@@ -23,7 +23,7 @@ class Detector:
         self.metadata = {}
         self.blades = []
 
-    def add_blade(self,blade):
+    def add_blade(self, blade):
         self.blades.append(blade)
 
     def add_blades(self, nb, thick):
@@ -157,6 +157,54 @@ class Detector:
        # bx.set_yticklabels(ticks)
         return bx
 
+    def plot_thick_vs_eff2(self):
+        """plots the efficiency function for a set of thicknesses,
+
+        Args:
+            sigma: Full sigma calculation fo the detector
+            ranges: Ranges calculation
+            blades: detector blades
+            result: Efficiency
+            figure: figure to plot in
+
+        Returns:
+        	plotted figure
+            reference: figure 3.12 On Francesco's Thesis
+        """
+        sigma = self.calculate_sigma()
+        ranges = self.calculate_ranges()
+        blades = self.blades
+        result = self.calculate_eff()
+        bx = plt.figure(1)
+        plt.subplot(111)
+        if self.single:
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
+            plt.plot(thickVsEff[0], thickVsEff[1])
+            plt.grid(True)
+            plt.xlabel('Blade thickness')
+            plt.ylabel('Blade efficiency (%)')
+            line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter],
+                           [0, result[1][0] * 100], '--')
+            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+        else:
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
+            self.metadata.update({'thickVsEff': thickVsEff})
+            plt.plot(thickVsEff[0], thickVsEff[1])
+            plt.grid(True)
+            plt.xlabel('Blade thickness')
+            plt.ylabel('Blade efficiency (%)')
+            line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter], [0, result[1]],
+                           '--')
+            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+        if self.single:
+            line2 = plt.plot([0, self.blades[0].backscatter], [result[1][0], result[1][0]], '--')
+        else:
+            line2 = plt.plot([0, self.blades[0].backscatter], [result[1], result[1]], '--')
+        plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
+      #  ticks = bx.get_yticks() * 100
+       # bx.set_yticklabels(ticks)
+        return bx
+
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength, figure):
         """plots the efficiency for a set of wavelengths,
 
@@ -194,6 +242,50 @@ class Detector:
        # cx.set_yticklabels(ticks)
         return cx
 
+    def plot_eff_vs_wave(self):
+        """plots the efficiency for a set of wavelengths,
+
+        Args:
+            sigma: Full sigma calculation fo the detector
+            ranges: Ranges calculation
+            blades: detector blades
+            result: Efficiency
+            figure: figure to plot in
+
+        Returns:
+        	plotted figure
+            reference: figure 3.13 On Francesco's Thesis
+        """
+        sigmalist = np.arange(0.0011, 20, 0.1)
+        sigmaeq = []
+        for sigma in sigmalist:
+            # transformation for meeting requirements of functions
+            sigma = [[sigma], ]
+            sigmaeq.append(B10.B10().full_sigma_calculation(sigma, self.angle))
+        ranges = self.calculate_ranges()
+        blades = self.blades
+        result = self.calculate_eff()
+        wavelength = self.wavelength
+        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
+        cx = plt.figure(1)
+        plt.subplot(111)
+        self.metadata.update({'effVsWave': [sigmalist, y]})
+        plt.plot(sigmalist, y, color='g')
+        if self.single:
+            plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1][0]], '--',
+                    color='k')
+            plt.plot([0, wavelength[0][0]], [result[1][0], result[1][0]], '--', color='k')
+        else:
+            plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1]], '--',
+                    color='k')
+            plt.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
+        plt.grid(True)
+        plt.xlabel('Neutron wavelength (Angstrom)')
+        plt.ylabel('Blade detection efficiency (%)')
+      #  ticks = cx.get_yticks() * 100
+       # cx.set_yticklabels(ticks)
+        return cx
+
     def optimize_thickness_same(self):
         """sets the thickness of all blades to the most optimal,
 
@@ -208,7 +300,8 @@ class Detector:
         	plotted figure
             reference: figure 3.13 On Francesco's Thesis
         """
-        meta = self.metadata.get('thickVsEff')
+        #meta = self.metadata.get('thickVsEff')
+        meta = efftools.metadata_samethick_vs_thickandnb(self.calculate_sigma(), self.calculate_ranges(), len(self.blades))
         max = np.array(meta[1]).argmax()
         c = 0
         max = meta[0][max]
