@@ -223,7 +223,10 @@ class Detector:
             sigmaeq = self.calculate_sigma()
         if ranges == None:
             sigmaeq = self.calculate_ranges()
-        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
+        if self.single:
+            y = efftools.metadata_singleLayer_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
+        else:
+            y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
         cx = figure.add_subplot(111)
         self.metadata.update({'effVsWave': [sigmalist, y]})
         cx.plot(sigmalist, y, color='g')

@@ -209,6 +209,12 @@ def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
 		eff.append(mg_same_thick(sigma, ranges, thickness, nb)[0])
 	return eff
 
+def metadata_singleLayer_vs_wave(sigmaeq, thickness, ranges, nb):
+	eff = []
+	for sigma in sigmaeq:
+		eff.append(efficiency2particles(thickness, ranges[0], ranges[1],  sigma)[0][0])
+	return eff
+
 def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 	"""gets metadata for plotting effVSthick of single layer, doesn't considerate aluminium.
 
@@ -228,7 +234,7 @@ def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
 	for n in thicklist:
-		eff.append(efficiency4boron(ranges[0], ranges[1], ranges[2], ranges[3], sigma_eq, n)[0][0])
+		eff.append(efficiency2particles(n, ranges[0], ranges[1], sigma_eq)[0][0])
 	return thicklist, eff,
 
 def efficparam(thickness,sigma_eq,ranges,varargin):

@@ -41,6 +41,7 @@ class Window(QtGui.QMainWindow):
         self.editButton.clicked.connect(lambda: self.edit_detector())
         self.duplicateButton.clicked.connect(lambda: self.duplicate_detector())
         self.importButton.clicked.connect(lambda: self.import_detector())
+        self.detectorTableWidget.itemDoubleClicked.connect(lambda: self.edit_detector())
         self.show()
 
     def create_detector(self):
