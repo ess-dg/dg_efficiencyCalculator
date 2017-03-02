@@ -134,7 +134,7 @@ class Detector:
             bx.plot(thickVsEff[0], thickVsEff[1])
             bx.grid(True)
             bx.set_xlabel('Blade thickness')
-            bx.set_ylabel('Blade efficiency (%)')
+            bx.set_ylabel('Detector efficiency (%)')
             line = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter],
                            [0, result[1][0] * 100], '--')
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
@@ -144,7 +144,7 @@ class Detector:
             bx.plot(thickVsEff[0], thickVsEff[1])
             bx.grid(True)
             bx.set_xlabel('Blade thickness')
-            bx.set_ylabel('Blade efficiency (%)')
+            bx.set_ylabel('Detector efficiency (%)')
             line = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter], [0, result[1]],
                            '--')
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
@@ -182,7 +182,7 @@ class Detector:
             plt.plot(thickVsEff[0], thickVsEff[1])
             plt.grid(True)
             plt.xlabel('Blade thickness')
-            plt.ylabel('Blade efficiency (%)')
+            plt.ylabel('Detector efficiency (%)')
             line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter],
                            [0, result[1][0] * 100], '--')
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
@@ -192,7 +192,7 @@ class Detector:
             plt.plot(thickVsEff[0], thickVsEff[1])
             plt.grid(True)
             plt.xlabel('Blade thickness')
-            plt.ylabel('Blade efficiency (%)')
+            plt.ylabel('Detector efficiency (%)')
             line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter], [0, result[1]],
                            '--')
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
@@ -240,7 +240,7 @@ class Detector:
             cx.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
         cx.grid(True)
         cx.set_xlabel('Neutron wavelength (Angstrom)')
-        cx.set_ylabel('Blade detection efficiency (%)')
+        cx.set_ylabel('Detector efficiency (%)')
       #  ticks = cx.get_yticks() * 100
        # cx.set_yticklabels(ticks)
         return cx
@@ -284,7 +284,7 @@ class Detector:
             plt.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
         plt.grid(True)
         plt.xlabel('Neutron wavelength (Angstrom)')
-        plt.ylabel('Blade detection efficiency (%)')
+        plt.ylabel('Detector efficiency (%)')
       #  ticks = cx.get_yticks() * 100
        # cx.set_yticklabels(ticks)
         return cx
