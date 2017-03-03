@@ -394,6 +394,13 @@ class detectorDialog( QtGui.QDialog):
             print "Path error"
 
     def tableEdited(self, item):
+        """signal triggered every time the blade table is updated, used to check the manual input from user to set up a specific thickness in a blade.
+            checks that the input is a number and maximum of 8. Shows a message when the input is wrong.
+
+        Args:
+        	item: edited item
+
+        """
         if self.state == '':
             try:
                 itemText = float(item.text())

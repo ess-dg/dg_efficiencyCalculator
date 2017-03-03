@@ -153,7 +153,20 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 	window.canvas.draw()
 
 
+
 def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
+	"""calculates efficiency for configuration of multi grid with blades of any thickness
+
+	Args:
+		sigma_eq (int):
+		ranges (array[4]):  array of ranges of particles
+		nb (int): number of blades
+		blades (list): list of blades
+
+	Returns:
+		eff: total efficiency result
+
+	"""
 	if blades[0].substrate == 0:
 		#transparent substrate
 		delta = 1
@@ -202,12 +215,23 @@ def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
 		eff.append(mg_same_thick(sigma_eq, ranges, n, nb)[0])
 	return thicklist, eff,
 
-
-def metadata_samethick_vs_wave(sigmaeq, thickness, ranges, nb):
+#TODO Different thicknesses
+def metadata_samethick_vs_wave(sigmaeq, blades, ranges, nb):
 	eff = []
 	for sigma in sigmaeq:
-		eff.append(mg_same_thick(sigma, ranges, thickness, nb)[0])
+		eff.append(mg_same_thick(sigma, ranges, blades[0].backscatter, nb)[0])
 	return eff
+
+def metadata_diffthick_vs_wave(sigmaeq, blades, ranges, nb):
+	eff = []
+	#intermediate variable for calculating eff sumatory
+	effd = 0
+	c = 0
+	for sigma in sigmaeq:
+			effd = data_samethick_vs_thickandnb_depth(sigma, ranges, blades)[1]
+			eff.append(effd)
+	return eff
+
 
 def metadata_singleLayer_vs_wave(sigmaeq, thickness, ranges, nb):
 	eff = []
