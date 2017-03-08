@@ -115,10 +115,12 @@ class detectorDialog( QtGui.QDialog):
         self.addBladeButton.clicked.connect(lambda: self.add_blades())
         self.addSingleBladeButton.clicked.connect(lambda: self.add_layer())
         self.addWavelengthButton.clicked.connect(lambda: self.add_wavelength())
+        self.addPoliWavelengthButton.clicked.connect(lambda: self.add_poli_wavelength())
         self.deleteBladeButton.clicked.connect(lambda: self.delete_blades())
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
         self.calculateTotalEffButton.clicked.connect(lambda: self.calculate_total_efficiency())
         self.optimizeThicknessSameButton.clicked.connect(lambda: self.optimize_thickness_same())
+        self.optimizeThicknessDiffButton.clicked.connect(lambda: self.optimize_thickness_diff())
         self.exportButton.clicked.connect(lambda: self.export())
         self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
@@ -158,14 +160,29 @@ class detectorDialog( QtGui.QDialog):
         self.addWavelengthButton.setEnabled(False)
         self.deleteWaveButton.setEnabled(True)
 
+    def add_poli_wavelength(self):
+        self.detector.wavelength.append([self.wavePoliSpinBox.value(), self.percentPoliSpinBox.value()])
+        rowPosition = self.lambdaTableWidget.rowCount()
+        self.lambdaTableWidget.insertRow(rowPosition)
+        self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(self.wavePoliSpinBox.value())))
+        self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(self.percentPoliSpinBox.value())))
+        self.percentPoliSpinBox.setMaximum(self.percentPoliSpinBox.maximum() - self.percentPoliSpinBox.value())
+        # self.addPoliWavelengthButton.setEnabled(False)
+        self.deleteWaveButton.setEnabled(True)
+        if self.percentPoliSpinBox.maximum() == 0:
+            self.addPoliWavelengthButton.setEnabled(False)
+
     def delete_wavelength(self):
         self.detector.wavelength = []
         self.lambdaTableWidget.setRowCount(0)
         self.addWavelengthButton.setEnabled(True)
+        self.addPoliWavelengthButton.setEnabled(True)
         self.deleteWaveButton.setEnabled(False)
         self.bladeEffFigure.clear()
         self.bladeEffCanvas.draw()
         self.totalEfflabel.setText('unknown')
+        self.percentPoliSpinBox.setMaximum(100)
+        self.percentPoliSpinBox.setValue(100)
 
     def refresh_blades(self):
         self.state = 'RefressB'
@@ -319,6 +336,7 @@ class detectorDialog( QtGui.QDialog):
                     sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                 self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
                 self.optimizeThicknessSameButton.setEnabled(True)
+                self.optimizeThicknessDiffButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
                 self.exportEffVsWaveButton.setEnabled(True)
                 self.exportButton.setEnabled(True)
@@ -367,6 +385,11 @@ class detectorDialog( QtGui.QDialog):
 
     def optimize_thickness_same(self):
         self.detector.optimize_thickness_same()
+        self.refresh_blades()
+        self.calculate_total_efficiency()
+
+    def optimize_thickness_diff(self):
+        self.detector.optimize_thickness_diff()
         self.refresh_blades()
         self.calculate_total_efficiency()
 

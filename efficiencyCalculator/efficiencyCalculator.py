@@ -45,7 +45,7 @@ class Window(QtGui.QMainWindow):
         self.show()
 
     def create_detector(self):
-        detector = Detector.Detector('Detector '+str(len(self.detectorList)+1))
+        detector = Detector.Detector('Detector ' + str(len(self.detectorList) + 1))
         detector = detectorDialog.detectorDialog.getDetector(detector, 'create')
         if detector[1]:
             self.detectorList.append(detector[0])
@@ -54,7 +54,7 @@ class Window(QtGui.QMainWindow):
     def duplicate_detector(self):
         try:
             detector = copy.deepcopy(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()])
-            detector.name = 'Copy of'+detector.name
+            detector.name = 'Copy of' + detector.name
             self.detectorList.append(detector)
             self.update_detector_list()
 
@@ -67,7 +67,8 @@ class Window(QtGui.QMainWindow):
 
     def edit_detector(self):
         try:
-            detector = detectorDialog.detectorDialog.getDetector(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()],'edit')
+            detector = detectorDialog.detectorDialog.getDetector(
+                self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()], 'edit')
             if detector[1]:
                 if detector[2] == 'edit':
                     self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()] = detector[0]
@@ -85,7 +86,7 @@ class Window(QtGui.QMainWindow):
 
     def update_detector_list(self):
         self.detectorTableWidget.setRowCount(0)
-        c=0
+        c = 0
         for d in self.detectorList:
             rowPosition = c
             self.detectorTableWidget.insertRow(rowPosition)
@@ -148,12 +149,13 @@ class Window(QtGui.QMainWindow):
                     self.varComboBox.setEnabled(False)
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigmalist = np.arange(0.0011, 20, 0.1)
-                sigmaeq=[]
+                sigmaeq = []
                 sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
                 eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
                 for sigma in sigmalist:
                     sigmaeq.append(self.Boron.full_sigma_calculation([sigma], self.angleSpinBox.value()))
-                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.BSpinBox.value(), ranges, self.bladeSpinBox.value())
+                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.BSpinBox.value(), ranges,
+                                                        self.bladeSpinBox.value())
                 metadata = [sigmalist, y]
                 newplot = {str(len(self.plotlist)): {
                     'thickness': self.BSpinBox.value(),
@@ -174,7 +176,7 @@ class Window(QtGui.QMainWindow):
         print ''
         print 'calculate'
         sys.stdout.write("Thickness of Substrate: ")
-        print self.substrateTSpinBox.value()+self.substrateBSpinBox.value()
+        print self.substrateTSpinBox.value() + self.substrateBSpinBox.value()
         sys.stdout.write("Thickness of B10: ")
         print self.BSpinBox.value()
         sys.stdout.write("N of blades: ")
@@ -211,7 +213,7 @@ class Window(QtGui.QMainWindow):
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         # discards the old graph
-        #ax.hold(False)
+        # ax.hold(False)
 
         for plot in self.plotlist:
             data = self.plotlist.get(plot).get('meta')
@@ -233,7 +235,8 @@ class Window(QtGui.QMainWindow):
         self.plotTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(newplot.get(key).get('angle'))))
         self.plotTableWidget.setItem(rowPosition, 5, QtGui.QTableWidgetItem(str(newplot.get(key).get('threshold'))))
         self.plotTableWidget.setItem(rowPosition, 6, QtGui.QTableWidgetItem(str(newplot.get(key).get('eff'))))
-        self.plotTableWidget.setItem(rowPosition, 7, QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
+        self.plotTableWidget.setItem(rowPosition, 7,
+                                     QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
 
     def clear_plots(self):
         self.plotTableWidget.setRowCount(0)
@@ -248,7 +251,8 @@ class Window(QtGui.QMainWindow):
         self.xAxisComboBox.setEnabled(True)
         self.yAxisComboBox.setEnabled(True)
         self.varComboBox.setEnabled(True)
-        self.plotTitleLAbel.setText('<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
+        self.plotTitleLAbel.setText(
+            '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
 
     def eff_boron_singleblade_doublecoated(self):
         print ''
@@ -261,9 +265,9 @@ class Window(QtGui.QMainWindow):
         self.rli94ResultLabel.setText(str(ranges[1]))
         self.ra6ResultLabel.setText(str(ranges[2]))
         self.rli6ResultLabel.setText(str(ranges[3]))
-        self.totalResultLabel.setText(str(result[0][0]*100)+'%')
-        self.bsResultLabel.setText(str(result[1][0]*100)+'%')
-        self.tResultLabel.setText(str(result[2][0]*100)+'%')
+        self.totalResultLabel.setText(str(result[0][0] * 100) + '%')
+        self.bsResultLabel.setText(str(result[1][0] * 100) + '%')
+        self.tResultLabel.setText(str(result[2][0] * 100) + '%')
 
     def eff_boron_multiblade_doublecoated(self):
         print ''
@@ -277,7 +281,8 @@ class Window(QtGui.QMainWindow):
 
     def plotstoppingpower(self):
         figure1 = matplotlib.figure.Figure()
-        names = ["IONIZ_Linkoping_Alpha06.txt","IONIZ_Linkoping_Alpha94.txt","IONIZ_Linkoping_Li06.txt","IONIZ_Linkoping_Li94.txt"]
+        names = ["IONIZ_Linkoping_Alpha06.txt", "IONIZ_Linkoping_Alpha94.txt", "IONIZ_Linkoping_Li06.txt",
+                 "IONIZ_Linkoping_Li94.txt"]
         threshold = 200000
         x = 0
         for name in names:
@@ -369,7 +374,6 @@ class Window(QtGui.QMainWindow):
 
         except IOError:
             print "Path error"
-
 
 
 if __name__ == '__main__':

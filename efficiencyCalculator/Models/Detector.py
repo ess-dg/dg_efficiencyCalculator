@@ -290,18 +290,7 @@ class Detector:
         return cx
 
     def optimize_thickness_same(self):
-        """sets the thickness of all blades to the most optimal,
-
-        Args:
-            sigma: Full sigma calculation fo the detector
-            ranges: Ranges calculation
-            blades: detector blades
-            result: Efficiency
-            figure: figure to plot in
-
-        Returns:
-        	plotted figure
-            reference: figure 3.13 On Francesco's Thesis
+        """sets the thickness of all blades to the most optimal for all the blades with same thickness.
         """
         #meta = self.metadata.get('thickVsEff')
         meta = efftools.metadata_samethick_vs_thickandnb(self.calculate_sigma(), self.calculate_ranges(), len(self.blades))
@@ -313,6 +302,29 @@ class Detector:
             b.backscatter = max
             self.blades[c] = b
             c += 1
+
+    def optimize_thickness_diff(self):
+        """sets the thickness of all blades to the most optimal,
+
+        Args:
+            sigma: Full sigma calculation fo the detector
+            ranges: Ranges calculation
+            blades: detector blades
+            result: Efficiency
+            figure: figure to plot in
+
+        Returns:
+            plotted figure
+            reference: figure 3.13 On Francesco's Thesis
+        """
+        # meta = self.metadata.get('thickVsEff')
+        c = len(self.blades)-1
+        for b in self.blades:
+            meta = efftools.metadata_samethick_vs_thickandnb(self.calculate_sigma(), self.calculate_ranges(), c+1)
+            max = np.array(meta[1]).argmax()
+            max = meta[0][max]
+            self.blades[c].backscatter = max
+            c -= 1
 
     @staticmethod
     def build_multigrid_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold):
