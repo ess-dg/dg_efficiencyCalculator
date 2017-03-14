@@ -2,6 +2,7 @@ import os
 import sys
 import math
 import numpy as np
+import pylab as pl
 from bisect import bisect_left
 import matplotlib.pyplot as plt
 from scipy import interpolate
@@ -81,7 +82,7 @@ class Detector:
             eff = self.calculate_eff()
         ax = figure.add_subplot(111)
         ax.set_xlabel('Blade Number')
-        ax.set_ylabel('Blade efficiency (%)')
+        ax.set_ylabel('Blade efficiency ')
         ax.set_ylim([0, (eff[1] * 100 + 1)])
         ax.set_xlim([0, len(eff[0]) + 1])
         ax.plot(0, 0)
@@ -304,27 +305,25 @@ class Detector:
             c += 1
 
     def optimize_thickness_diff(self):
-        """sets the thickness of all blades to the most optimal,
-
-        Args:
-            sigma: Full sigma calculation fo the detector
-            ranges: Ranges calculation
-            blades: detector blades
-            result: Efficiency
-            figure: figure to plot in
-
-        Returns:
-            plotted figure
-            reference: figure 3.13 On Francesco's Thesis
+        """sets the thickness of all blades to the most optimal with different thickness
         """
-        # meta = self.metadata.get('thickVsEff')
-        c = len(self.blades)-1
-        for b in self.blades:
-            meta = efftools.metadata_samethick_vs_thickandnb(self.calculate_sigma(), self.calculate_ranges(), c+1)
-            max = np.array(meta[1]).argmax()
-            max = meta[0][max]
-            self.blades[c].backscatter = max
-            c -= 1
+        thickrange = np.arange(0.00, 5, 0.025)
+        sigma = self.calculate_sigma()
+        ranges = self.calculate_ranges()
+        eff1 = []
+        effopt = [None] * (len(self.blades))
+        alpha = 0
+        dopt = [None] * (len(self.blades))
+        for t in thickrange:
+            temp = efftools.efficparam(t,sigma,ranges,1)
+            eff1.append(temp[3])  #no substrate
+        for i in range(len(self.blades)-1, -1, -1):
+            tempeff = []
+            for j, t in enumerate(thickrange):
+                tempeff.append(eff1[j] + (pl.exp(-(2*t*sigma)))*alpha)
+            effopt[i] = max(tempeff)
+            alpha = effopt[i]
+            self.blades[i].backscatter = thickrange[np.array(tempeff).argmax()]
 
     @staticmethod
     def build_multigrid_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold):
@@ -382,4 +381,4 @@ class Detector:
 if __name__ == '__main__':
    #Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
    detector = Detector.build_multigrid_detector(10,1,0,[[1.8,100]], 90, 100)
-   detector.to_json()
+   detector.optimize_thickness_diff()
