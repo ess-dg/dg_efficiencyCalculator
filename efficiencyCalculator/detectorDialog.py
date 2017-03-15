@@ -445,7 +445,6 @@ class detectorDialog( QtGui.QDialog):
                 msg.setStandardButtons(QtGui.QMessageBox.Ok)
                 retval = msg.exec_()
 
-
     def export(self):
         try:
             filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))

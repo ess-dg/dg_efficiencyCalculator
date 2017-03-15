@@ -155,7 +155,7 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 
 
 def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
-	"""calculates efficiency for configuration of multi grid with blades of any thickness
+	"""calculates efficiency for configuration of multi grid with blades of same thickness
 
 	Args:
 		sigma_eq (int):
@@ -164,7 +164,9 @@ def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 		blades (list): list of blades
 
 	Returns:
-		eff: total efficiency result
+		eff[0]: total efficiency result
+		eff[1]: list of efficiency per blade without substrate
+		eff[2]:  list of efficiency per blade with substrate
 
 	"""
 	if blades[0].substrate == 0:
@@ -249,8 +251,11 @@ def metadata_diffthick_vs_wave(sigmaeq, blades, ranges, nb):
 	#intermediate variable for calculating eff sumatory
 	effd = 0
 	c = 0
+	thickness = []
+	for b in blades:
+		thickness.append(b.backscatter)
 	for sigma in sigmaeq:
-			effd = data_samethick_vs_thickandnb_depth(sigma, ranges, blades)[1]
+			effd = mgeff_depth_profile(thickness, ranges, sigma, 1)[1]
 			eff.append(effd)
 	return eff
 
@@ -283,8 +288,31 @@ def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 		eff.append(efficiency2particles(n, ranges[0], ranges[1], sigma_eq)[0][0])
 	return thicklist, eff,
 
+
+def mgeff_depth_profile(thickness, ranges, sigma, varargin):
+	if varargin is None:
+		# transparent substrate
+		delta = 1
+	else:
+		delta = varargin
+	cumthick = 0
+	eff1blade = []
+	for i, t in enumerate(thickness):
+		temp = efficparam(thickness[i], sigma, ranges, varargin)
+		eff1blade.append([temp[3], temp[4]])
+	eff =[]
+	efftotal = 0
+	for i, t in enumerate(thickness):
+		expi = pl.exp(-2*sigma*cumthick)
+		eff.append([eff1blade[i][0]*expi, eff1blade[i][1]*(delta**i)])
+		efftotal = efftotal + eff[i][0]
+		cumthick = cumthick+t
+	return eff, efftotal
+
+
+
 def efficparam(thickness,sigma_eq,ranges,varargin):
-	"""calculates efficiency of a double layer blade (back and transmission) with the sabe thickness of bs and t
+	"""calculates efficiency of a double layer blade (back and transmission) with the same thickness of bs and t
 
     Args:
         sigma_eq (int):

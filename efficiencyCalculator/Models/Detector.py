@@ -44,7 +44,11 @@ class Detector:
             result = efftools.efficiency2particles(self.blades[0].backscatter, ranges[0], ranges[1], sigma)
         else:
             print 'Boron multi-blade double coated calculation '
-            result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.blades)
+            thickness = []
+            for b in self.blades:
+               thickness.append(b.backscatter)
+            #result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.blades)
+            result = efftools.mgeff_depth_profile(thickness, ranges, sigma, 1)
         return result
 
     def calculate_ranges(self):
@@ -307,7 +311,7 @@ class Detector:
     def optimize_thickness_diff(self):
         """sets the thickness of all blades to the most optimal with different thickness
         """
-        thickrange = np.arange(0.00, 5, 0.025)
+        thickrange = np.arange(0.00, 5, 0.01)
         sigma = self.calculate_sigma()
         ranges = self.calculate_ranges()
         eff1 = []
@@ -320,10 +324,12 @@ class Detector:
         for i in range(len(self.blades)-1, -1, -1):
             tempeff = []
             for j, t in enumerate(thickrange):
-                tempeff.append(eff1[j] + (pl.exp(-(2*t*sigma)))*alpha)
+                tempeff.append(eff1[j] + (pl.exp(((-1)*(2*thickrange[j]*sigma))))*alpha)
             effopt[i] = max(tempeff)
             alpha = effopt[i]
-            self.blades[i].backscatter = thickrange[np.array(tempeff).argmax()]
+            dopt[i] = thickrange[np.array(tempeff).argmax()]
+            self.blades[i].backscatter = dopt[i]
+        totaleff = sum(effopt)
 
     @staticmethod
     def build_multigrid_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold):
@@ -380,5 +386,5 @@ class Detector:
 
 if __name__ == '__main__':
    #Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
-   detector = Detector.build_multigrid_detector(10,1,0,[[1.8,100]], 90, 100)
+   detector = Detector.build_multigrid_detector(15,1,0,[[10,100]], 90, 100)
    detector.optimize_thickness_diff()
