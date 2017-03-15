@@ -369,7 +369,7 @@ class detectorDialog( QtGui.QDialog):
         self.bladeEffFigure.clear()
         self.detector.plot_blade_figure(result, self.bladeEffFigure)
         for n in range(0, len(result[0])):
-            item = QtGui.QTableWidgetItem(str(result[0][n][1] * 100)[:4] + '%')
+            item = QtGui.QTableWidgetItem(str(result[0][n][0] * 100)[:4] + '%')
             item.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(item))
         self.bladeEffCanvas.draw()

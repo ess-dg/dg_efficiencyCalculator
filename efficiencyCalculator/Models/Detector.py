@@ -86,15 +86,15 @@ class Detector:
             eff = self.calculate_eff()
         ax = figure.add_subplot(111)
         ax.set_xlabel('Blade Number')
-        ax.set_ylabel('Blade efficiency ')
-        ax.set_ylim([0, (eff[1] * 100 + 1)])
+        ax.set_ylabel('Blade efficiency %')
+      #  ax.set_ylim([0, (eff[1] * 100 + 1)])
         ax.set_xlim([0, len(eff[0]) + 1])
         ax.plot(0, 0)
         ax.plot(0, len(eff[0]) + 1)
         # ax.plot(nb + 1, 0)
         for n in range(0, len(eff[0])):
             # Note that the plot displayed is the backscattering thickness
-            ax.plot(n + 1, eff[0][n][1] * 100, 'o', color='red')
+            ax.plot(n + 1, eff[0][n][0] * 100, 'o', color='red')
         ax.grid(True)
         return ax
 
