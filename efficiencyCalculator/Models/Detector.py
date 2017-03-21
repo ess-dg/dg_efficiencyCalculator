@@ -39,6 +39,7 @@ class Detector:
         assert len(self.wavelength) >= 1
         ranges = self.calculate_ranges()
         sigma = self.calculate_sigma()
+        result = []
         if self.single:
             print 'Boron single layer calculation '
             result = efftools.efficiency2particles(self.blades[0].backscatter, ranges[0], ranges[1], sigma)
@@ -47,8 +48,17 @@ class Detector:
             thickness = []
             for b in self.blades:
                thickness.append(b.backscatter)
+            resultpoli = []
             #result = efftools.data_samethick_vs_thickandnb_depth(sigma, ranges, self.blades)
-            result = efftools.mgeff_depth_profile(thickness, ranges, sigma, 1)
+            result=[[],0]
+            for n in range(0, len(self.blades)):
+                result[0].append([0, 0])
+            for s in sigma:
+                resultpoli.append(efftools.mgeff_depth_profile(thickness, ranges, s, 1))
+            for i, r in enumerate(resultpoli):
+                for j, ewz in enumerate(resultpoli[i][0]):
+                    result[0][j][0] = result[0][j][0] + ewz[0]*self.wavelength[i][1]*0.01
+                result[1] = result[1] + resultpoli[i][1]*self.wavelength[i][1]*0.01
         return result
 
     def calculate_ranges(self):
@@ -134,7 +144,13 @@ class Detector:
             reference: figure 3.12 On Francesco's Thesis
         """
         bx = figure.add_subplot(111)
+        sigmalist = []
+        c = 0
+        for s in sigma:
+            sigmalist.append([s, self.wavelength[c][1]])
+            c += 1
         if self.single:
+            #TODO Poli sigma
             thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
             bx.plot(thickVsEff[0], thickVsEff[1])
             bx.grid(True)
@@ -144,7 +160,8 @@ class Detector:
                            [0, result[1][0] * 100], '--')
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         else:
-            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
+
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigmalist, ranges, len(blades))
             self.metadata.update({'thickVsEff': thickVsEff})
             bx.plot(thickVsEff[0], thickVsEff[1])
             bx.grid(True)
@@ -298,7 +315,13 @@ class Detector:
         """sets the thickness of all blades to the most optimal for all the blades with same thickness.
         """
         #meta = self.metadata.get('thickVsEff')
-        meta = efftools.metadata_samethick_vs_thickandnb(self.calculate_sigma(), self.calculate_ranges(), len(self.blades))
+        sigma = self.calculate_sigma()
+        sigmalist =[]
+        c = 0
+        for s in sigma:
+            sigmalist.append([s, self.wavelength[c][1]])
+            c += 1
+        meta = efftools.metadata_samethick_vs_thickandnb(sigmalist, self.calculate_ranges(), len(self.blades))
         max = np.array(meta[1]).argmax()
         c = 0
         max = meta[0][max]

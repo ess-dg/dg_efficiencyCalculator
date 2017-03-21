@@ -327,14 +327,17 @@ class detectorDialog( QtGui.QDialog):
                         '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] * 100)[:4] + '%')
                     self.plot_blade_figure(result)
                 self.plot_thick_vs_eff(sigma, ranges, self.detector.blades, result)
-                self.waveVsEffFigure.clear()
-                sigmalist = np.arange(0.0011, 20, 0.1)
-                sigmaeq = []
-                for sigma in sigmalist:
-                    # transformation for meeting requirements of functions
-                    sigma = [[sigma],]
-                    sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
-                self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
+
+                if len(sigma) == 1:
+                    self.waveVsEffFigure.clear()
+                    sigmalist = np.arange(0.0011, 20, 0.1)
+                    sigmaeq = []
+                    for sigma in sigmalist:
+                        # transformation for meeting requirements of functions
+                        sigma = [[sigma],]
+                        sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
+                    self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
+
                 self.optimizeThicknessSameButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
@@ -361,8 +364,10 @@ class detectorDialog( QtGui.QDialog):
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
         self.waveVsEffFigure.clear()
+        print('   Monochromatic PLOT')
         self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, blades, result, wavelength,self.waveVsEffFigure)
         self.waveVsEffCanvas.draw()
+
 
     def plot_blade_figure(self, result):
         self.state = 'PlotBFigure'

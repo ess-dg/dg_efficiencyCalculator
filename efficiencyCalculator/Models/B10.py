@@ -102,9 +102,9 @@ class B10:
         """calculates macro sigma for a sigma infinitesimal
 
         Args:
-            sigmainfin (float): cross section value of B10
+            sigmainfin (list): cross section list for lambda list
         Returns:
-            sigma(List): cross section list for lambda list
+            sigma(List):
 
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
 
@@ -116,8 +116,9 @@ class B10:
         suma = math.fsum(composition[0])
         mmol = np.dot(composition[0], composition[1])
         b10perc = composition[0][0]
-        sigma = (density*6.022e23/mmol)*b10perc*sigmainfin*1e-24*1e-4
-
+        sigma = []
+        for s in sigmainfin:
+            sigma.append((density*6.022e23/mmol)*b10perc*s*1e-24*1e-4)
         return sigma
 
     @staticmethod
@@ -133,11 +134,13 @@ class B10:
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
 
         """
-        sigmaeq = macrosigma/math.sin(math.radians(theta))
+        sigmaeq = []
+        for m in macrosigma:
+            sigmaeq.append(m/math.sin(math.radians(theta)))
         return sigmaeq
 
     def full_sigma_calculation(self, lambd, theta):
-        sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)[0]), theta)
+        sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)), theta)
         return sigma
 
 
