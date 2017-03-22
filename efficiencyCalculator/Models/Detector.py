@@ -42,7 +42,12 @@ class Detector:
         result = []
         if self.single:
             print 'Boron single layer calculation '
-            result = efftools.efficiency2particles(self.blades[0].backscatter, ranges[0], ranges[1], sigma)
+            result=[[0,0],[0,0]]
+            c=0
+            for s in sigma:
+                resultTemp = efftools.efficiency2particles(self.blades[0].backscatter, ranges[0], ranges[1], s)
+                result[0][0] = result[0][0] + resultTemp[0][0]*self.wavelength[c][1]*0.01
+                result[1][0] = result[1][0] + resultTemp[1][0]*self.wavelength[c][1]*0.01
         else:
             print 'Boron multi-blade double coated calculation '
             thickness = []
@@ -117,8 +122,8 @@ class Detector:
         ax = figure.add_subplot(111)
         ax.set_xlabel('Blade Number')
         ax.set_ylabel('Blade efficiency (%)')
-        ax.set_ylim([0, (result[1] * 100 + 1)])
-        ax.set_xlim([0, len(result[0]) + 1])
+        ax.set_ylim([0, (result[1][0] * 100 + 1)])
+        ax.set_xlim([0, 2] )
         ax.plot(0, 0)
         ax.plot(0, len(result[0]) + 1)
         # ax.plot(nb + 1, 0)
@@ -151,7 +156,7 @@ class Detector:
             c += 1
         if self.single:
             #TODO Poli sigma
-            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigmalist, ranges, len(blades))
             bx.plot(thickVsEff[0], thickVsEff[1])
             bx.grid(True)
             bx.set_xlabel('Blade thickness')
@@ -331,11 +336,12 @@ class Detector:
             self.blades[c] = b
             c += 1
 
-    def optimize_thickness_diff(self):
+    def optimize_thickness_diff_mono(self):
         """sets the thickness of all blades to the most optimal with different thickness
         """
         thickrange = np.arange(0.00, 5, 0.01)
         sigma = self.calculate_sigma()
+        sigma = sigma[0]
         ranges = self.calculate_ranges()
         eff1 = []
         effopt = [None] * (len(self.blades))

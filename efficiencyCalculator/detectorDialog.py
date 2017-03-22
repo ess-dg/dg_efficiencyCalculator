@@ -394,9 +394,17 @@ class detectorDialog( QtGui.QDialog):
         self.calculate_total_efficiency()
 
     def optimize_thickness_diff(self):
-        self.detector.optimize_thickness_diff()
-        self.refresh_blades()
-        self.calculate_total_efficiency()
+        if len(self.detector.wavelength) == 1:
+            self.detector.optimize_thickness_diff_mono()
+            self.refresh_blades()
+            self.calculate_total_efficiency()
+        else:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("This optimization is only available with monochromatic neutron beam")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            retval = msg.exec_()
+
 
     def export_plot_file(self, plot):
         """writes a two column file with x and y values of selected plots

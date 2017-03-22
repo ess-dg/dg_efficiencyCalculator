@@ -273,7 +273,7 @@ def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 	"""gets metadata for plotting effVSthick of single layer, doesn't considerate aluminium.
 
 	Args:
-		sigma_eq (int):
+		sigma_eq (list):
 		ranges (array[4]):  array of ranges of particles
 		nb (int): number of blades
 	returns:
@@ -287,8 +287,14 @@ def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 	"""
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
+	efftemp = 0
 	for n in thicklist:
-		eff.append(efficiency2particles(n, ranges[0], ranges[1], sigma_eq)[0][0])
+		c = 0
+		efftemp = 0
+		for s in sigma_eq:
+			efftemp = efftemp + efficiency2particles(n, ranges[0], ranges[1], s[0])[0][0]*s[1] * 0.01
+			c += 1
+		eff.append(efftemp)
 	return thicklist, eff,
 
 
