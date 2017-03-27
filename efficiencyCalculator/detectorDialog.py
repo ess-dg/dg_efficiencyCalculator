@@ -135,6 +135,7 @@ class detectorDialog( QtGui.QDialog):
         self.calculateTotalEffButton.setDefault(True)
         self.exportThickvseffButton.setEnabled(False)
         self.exportEffVsWaveButton.setEnabled(False)
+        self.optimizeThicknessDiffButton.setEnabled(False)
         #validation for name line edit
         reg_ex = QtCore.QRegExp("[A-Za-z0-9_]{0,255}")
         name_validator = QtGui.QRegExpValidator(reg_ex, self.nameLineEdit)
@@ -343,6 +344,7 @@ class detectorDialog( QtGui.QDialog):
                 self.exportThickvseffButton.setEnabled(True)
                 self.exportEffVsWaveButton.setEnabled(True)
                 self.exportButton.setEnabled(True)
+                self.optimizeThicknessDiffButton.setEnabled(True)
             else:
                 msg = QtGui.QMessageBox()
                 msg.setIcon(QtGui.QMessageBox.Warning)

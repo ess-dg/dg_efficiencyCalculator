@@ -9,7 +9,8 @@
     "%": 100
   }
   ],
-  "blades": [{
+  "blades": [
+    {
     "backscatter": 1.3,
     "transmission": 1.3,
     "substrate": 0,

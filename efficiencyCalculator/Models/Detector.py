@@ -45,9 +45,10 @@ class Detector:
             result=[[0,0],[0,0]]
             c=0
             for s in sigma:
-                resultTemp = efftools.efficiency2particles(self.blades[0].backscatter, ranges[0], ranges[1], s)
-                result[0][0] = result[0][0] + resultTemp[0][0]*self.wavelength[c][1]*0.01
-                result[1][0] = result[1][0] + resultTemp[1][0]*self.wavelength[c][1]*0.01
+                resultTemp = efftools.efficiency4boron(self.blades[0].backscatter, ranges[0], ranges[1], ranges[2], ranges[3], s)
+                result[0][0] = result[0][0] + resultTemp[1][0]*self.wavelength[c][1]*0.01
+                result[1][0] = result[1][0] + resultTemp[2][0]*self.wavelength[c][1]*0.01
+                c+=1
         else:
             print 'Boron multi-blade double coated calculation '
             thickness = []
@@ -157,13 +158,15 @@ class Detector:
         if self.single:
             #TODO Poli sigma
             thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigmalist, ranges, len(blades))
-            bx.plot(thickVsEff[0], thickVsEff[1])
+            bx.plot(thickVsEff[0], thickVsEff[1], label=" BS")
+            bx.plot(thickVsEff[0], thickVsEff[2], label=" T")
+            bx.legend(numpoints=1)
             bx.grid(True)
             bx.set_xlabel('Blade thickness')
             bx.set_ylabel('Detector efficiency (%)')
-            line = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter],
-                           [0, result[1][0] * 100], '--')
-            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+          #  line = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter],
+           #                [0, result[1][0] * 100], '--')
+           # plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         else:
 
             thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigmalist, ranges, len(blades))
@@ -177,6 +180,12 @@ class Detector:
             plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         if self.single:
             line2 = bx.plot([0, self.blades[0].backscatter], [result[1][0], result[1][0]], '--')
+            line3 = bx.plot([0, self.blades[0].backscatter], [result[0][0], result[0][0]], '--')
+            line4 = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter], [result[0][0], 0], '--')
+            line5 = bx.plot([self.blades[0].backscatter, self.blades[0].backscatter], [result[1][0], 0], '--')
+            plt.setp(line3, 'color', 'k', 'linewidth', 0.5)
+            plt.setp(line4, 'color', 'k', 'linewidth', 0.5)
+            plt.setp(line5, 'color', 'k', 'linewidth', 0.5)
         else:
             line2 = bx.plot([0, self.blades[0].backscatter], [result[1], result[1]], '--')
         plt.setp(line2, 'color', 'k', 'linewidth', 0.5)
@@ -207,12 +216,13 @@ class Detector:
         if self.single:
             thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
             plt.plot(thickVsEff[0], thickVsEff[1])
+            plt.plot(thickVsEff[0], thickVsEff[2])
             plt.grid(True)
             plt.xlabel('Blade thickness')
             plt.ylabel('Detector efficiency (%)')
-            line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter],
-                           [0, result[1][0] * 100], '--')
-            plt.setp(line, 'color', 'k', 'linewidth', 0.5)
+          #  line = plt.plot([self.blades[0].backscatter, self.blades[0].backscatter],
+           #                [0, result[1][0] * 100], '--')
+            #plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         else:
             thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
             self.metadata.update({'thickVsEff': thickVsEff})

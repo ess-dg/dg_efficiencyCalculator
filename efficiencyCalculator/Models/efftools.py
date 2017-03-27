@@ -266,7 +266,9 @@ def metadata_diffthick_vs_wave(sigmaeq, blades, ranges, nb):
 def metadata_singleLayer_vs_wave(sigmaeq, thickness, ranges, nb):
 	eff = []
 	for sigma in sigmaeq:
-		eff.append(efficiency2particles(thickness, ranges[0], ranges[1],  sigma)[0][0])
+		#TODO Set up a way to differenciate selection of trans or back data
+		#back data
+		eff.append(efficiency4boron(thickness, ranges[0], ranges[1],ranges[2],ranges[3], sigma[0])[1][0])
 	return eff
 
 def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
@@ -285,17 +287,19 @@ def metadata_samethick_vs_thickandnb_single(sigma_eq, ranges, nb):
 	..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/MultiGrid_Optimization/MG1_Calc4monoch_sameThickBlades_VS_ThickAndNb.m?at=default&fileviewer=file-view-default
 
 	"""
-	thicklist = np.arange(0.0011, 5, 0.05)
-	eff = []
-	efftemp = 0
+	thicklist = np.arange(0.0011, 10, 0.05)
+	effback = []
+	efftrans = []
 	for n in thicklist:
 		c = 0
-		efftemp = 0
+		efftemp = [0,0]
 		for s in sigma_eq:
-			efftemp = efftemp + efficiency2particles(n, ranges[0], ranges[1], s[0])[0][0]*s[1] * 0.01
+			efftemp[0] = efftemp[0] + efficiency4boron(n, ranges[0], ranges[1], ranges[2], ranges[3], s[0])[1][0]*s[1] * 0.01
+			efftemp[1] = efftemp[1] + efficiency4boron(n, ranges[0], ranges[1], ranges[2], ranges[3], s[0])[2][0] * s[1] * 0.01
 			c += 1
-		eff.append(efftemp)
-	return thicklist, eff,
+		effback.append(efftemp[0])
+		efftrans.append(efftemp[1])
+	return thicklist, effback, efftrans
 
 
 def mgeff_depth_profile(thickness, ranges, sigma, varargin):
