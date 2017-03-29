@@ -1,2 +1,5 @@
-.idea
+.idea/*
 .Python
+/exports
+/*.pyc
+DS_Store
