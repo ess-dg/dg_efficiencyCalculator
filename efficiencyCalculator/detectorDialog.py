@@ -210,6 +210,7 @@ class detectorDialog( QtGui.QDialog):
     def add_blades(self):
         if self.bsSpinBox.value() > 0:
             self.state = 'AddB'
+            self.tabWidget_2.setCurrentIndex(0)
             nb = self.nbspinBox.value()
             bs = self.bsSpinBox.value()
             ts = self.bsSpinBox.value()
@@ -249,6 +250,7 @@ class detectorDialog( QtGui.QDialog):
         self.state = 'addLayer'
         bs =0
         ts=0
+        self.tabWidget_2.setCurrentIndex(0)
         if self.bsSingleSpinBox.value() > 0:
 
             ax = self.bladeInfoFigure.add_subplot(111)
@@ -282,6 +284,7 @@ class detectorDialog( QtGui.QDialog):
         self.state = ''
 
     def delete_blades(self):
+        self.tabWidget_2.setCurrentIndex(0)
         self.bladeInfoCanvas.figure.clear()
         self.bladeInfoCanvas.draw()
         self.detector.blades = []
@@ -338,7 +341,7 @@ class detectorDialog( QtGui.QDialog):
                         sigma = [[sigma],]
                         sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                     self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
-
+                self.tabWidget_2.setCurrentIndex(2)
                 self.optimizeThicknessSameButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
