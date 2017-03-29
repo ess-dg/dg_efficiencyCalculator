@@ -7,8 +7,9 @@ from bisect import bisect_left
 import matplotlib.pyplot as plt
 from scipy import interpolate
 
-class B10:
+class Converter:
     configurations = {}
+    files = {}
 
     def __init__(self, parent=None):
         self.configurations = {'10B4C 2.24g/cm3': {
@@ -77,7 +78,7 @@ class B10:
         sigma = []
         c0 = 0
         for l in lambdalist:
-            lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l[0] ** 2)) * 1e20 * 6.24e18)
+            lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l ** 2)) * 1e20 * 6.24e18)
         x, y = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/B10/B10CrossSect_(n,a).txt", delimiter=',', unpack=True)
         xlog = []
         ylog = []
@@ -102,9 +103,9 @@ class B10:
         """calculates macro sigma for a sigma infinitesimal
 
         Args:
-            sigmainfin (list): cross section list for lambda list
+            sigmainfin (float): cross section value of B10
         Returns:
-            sigma(List):
+            sigma(List): cross section list for lambda list
 
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
 
@@ -116,9 +117,8 @@ class B10:
         suma = math.fsum(composition[0])
         mmol = np.dot(composition[0], composition[1])
         b10perc = composition[0][0]
-        sigma = []
-        for s in sigmainfin:
-            sigma.append((density*6.022e23/mmol)*b10perc*s*1e-24*1e-4)
+        sigma = (density*6.022e23/mmol)*b10perc*sigmainfin*1e-24*1e-4
+
         return sigma
 
     @staticmethod
@@ -134,16 +134,16 @@ class B10:
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/macroB10sigma.m?at=default&fileviewer=file-view-default
 
         """
-        sigmaeq = []
-        for m in macrosigma:
-            sigmaeq.append(m/math.sin(math.radians(theta)))
+        sigmaeq = macrosigma/math.sin(math.radians(theta))
         return sigmaeq
 
     def full_sigma_calculation(self, lambd, theta):
-        sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)), theta)
+        sigma = self.sigma_eq(self.macro_sigma(self.read_cross_section(lambd)[0]), theta)
         return sigma
 
-
+    @staticmethod
+    def load_converters(self):
+        return 1
 
 
 

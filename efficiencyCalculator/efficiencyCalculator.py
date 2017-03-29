@@ -1,53 +1,182 @@
 #!/usr/bin/env python
+import copy
 import os
 import sys
-import Models.B10 as B10
-import efftools
-from PyQt4 import QtGui, QtCore, uic
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+
 import matplotlib
 import matplotlib.figure
-import numpy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import random
+import numpy
+import numpy as np
+from PyQt4 import QtGui, uic
 
-base, form = uic.loadUiType("efficiencyMainwindow.ui")
+import Models.B10 as B10
+import Models.Detector as Detector
+import detectorDialog
+from Models import efftools
+
+base, form = uic.loadUiType("efficiencyMainwindow2.ui")
 
 
-class Window(base, form):
+class Window(QtGui.QMainWindow):
     converters = {}
+    plotlist = {}
+    detectorList = []
 
-    def __init__(self,  parent=None):
-        super(base, self).__init__(parent)
+    def __init__(self):
+        super(Window, self).__init__()
+        uic.loadUi("efficiencyMainwindow2.ui", self)
+        self.setWindowTitle("Detector efficiency calculator")
         # init list of converter materials, load data and add to converter dict
-        self.converter_list()
+        # self.setupUi(self)
         self.start_window()
-        sys.exit(app.exec_())
 
     def converter_list(self):
         self.Boron = B10.B10()
         self.converters.update(self.Boron.configurations)
 
     def start_window(self):
-        self.setupUi(self)
-        # Read from converter dict and place a selector in converterComboBox
-        for c in self.converters:
-            self.converterComboBox.addItem(c)
-        # connect calculation functionality to the button
-        self.calculatePushButton.clicked.connect(lambda: self.calculate_efficiency())
-        # Include figure to place the plot
-        self.figure = matplotlib.figure.Figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.plotLayout.addWidget(self.canvas)
+        self.addButton.clicked.connect(lambda: self.create_detector())
+        self.editButton.clicked.connect(lambda: self.edit_detector())
+        self.duplicateButton.clicked.connect(lambda: self.duplicate_detector())
+        self.importButton.clicked.connect(lambda: self.import_detector())
+        self.detectorTableWidget.itemDoubleClicked.connect(lambda: self.edit_detector())
         self.show()
+
+    def create_detector(self):
+        detector = Detector.Detector('Detector ' + str(len(self.detectorList) + 1))
+        detector = detectorDialog.detectorDialog.getDetector(detector, 'create')
+        if detector[1]:
+            self.detectorList.append(detector[0])
+            self.update_detector_list()
+
+    def duplicate_detector(self):
+        try:
+            detector = copy.deepcopy(self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()])
+            detector.name = 'Copy of' + detector.name
+            self.detectorList.append(detector)
+            self.update_detector_list()
+
+        except IndexError:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please select a detector of the list")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.exec_()
+
+    def edit_detector(self):
+        try:
+            detector = detectorDialog.detectorDialog.getDetector(
+                self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()], 'edit')
+            if detector[1]:
+                if detector[2] == 'edit':
+                    self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()] = detector[0]
+                    self.update_detector_list()
+                elif detector[2] == 'delete':
+                    self.detectorList.pop(self.detectorTableWidget.selectedIndexes()[0].row())
+                    self.update_detector_list()
+
+        except IndexError:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("Please select a detector of the list")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.exec_()
+
+    def update_detector_list(self):
+        self.detectorTableWidget.setRowCount(0)
+        c = 0
+        for d in self.detectorList:
+            rowPosition = c
+            self.detectorTableWidget.insertRow(rowPosition)
+            if d.name is not None:
+                self.detectorTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(d.name)))
+            if d.blades is not None:
+                self.detectorTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(len(d.blades))))
+            if d.angle is not None:
+                self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
+            if len(d.wavelength) is not 0:
+                self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
+            if d.threshold is not None:
+                self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
+            c += 1
+
+    def plotview(self):
+        """This method is called when the plot button is pushed"""
+        if self.yAxisComboBox.currentText() == 'Efficiency':
+            if self.xAxisComboBox.currentText() == 'Thickness':
+                if self.varComboBox.currentText() == 'Number of blades':
+                    if len(self.plotlist) < 1:
+                        self.plotTitleLAbel.setText(
+                            '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Efficiency VS Thickness with different Number of blades</span></p></body></html>')
+                        self.thresholdSpinBox.setEnabled(False)
+                        self.converterComboBox.setEnabled(False)
+                        self.angleSpinBox.setEnabled(False)
+                        self.lambdaSpinBox.setEnabled(False)
+                        self.BSpinBox.setEnabled(False)
+                        self.xAxisComboBox.setEnabled(False)
+                        self.yAxisComboBox.setEnabled(False)
+                        self.varComboBox.setEnabled(False)
+                    ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+                    sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+                    eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
+                    metadata = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, self.bladeSpinBox.value())
+                    newplot = {str(len(self.plotlist)): {
+                        'thickness': self.BSpinBox.value(),
+                        'nb': self.bladeSpinBox.value(),
+                        'wavelength': self.lambdaSpinBox.value(),
+                        'angle': self.angleSpinBox.value(),
+                        'threshold': self.thresholdSpinBox.value(),
+                        'eff': eff,
+                        'meta': metadata}
+                    }
+                    self.add_new_plot(newplot)
+                    # id = newplot.keys()[0]
+                    self.plotlist.update(newplot)
+                    self.plot_list('d (um)', 'Efficiency')
+            elif self.xAxisComboBox.currentText() == 'Wavelength':
+                if len(self.plotlist) < 1:
+                    self.plotTitleLAbel.setText(
+                        '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Efficiency VS Thickness with different Number of blades</span></p></body></html>')
+                    self.thresholdSpinBox.setEnabled(False)
+                    self.converterComboBox.setEnabled(False)
+                    self.angleSpinBox.setEnabled(False)
+                    self.lambdaSpinBox.setEnabled(False)
+                    self.BSpinBox.setEnabled(False)
+                    self.xAxisComboBox.setEnabled(False)
+                    self.yAxisComboBox.setEnabled(False)
+                    self.varComboBox.setEnabled(False)
+                ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
+                sigmalist = np.arange(0.0011, 20, 0.1)
+                sigmaeq = []
+                sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+                eff = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())[0]
+                for sigma in sigmalist:
+                    sigmaeq.append(self.Boron.full_sigma_calculation([sigma], self.angleSpinBox.value()))
+                y = efftools.metadata_samethick_vs_wave(sigmaeq, self.BSpinBox.value(), ranges,
+                                                        self.bladeSpinBox.value())
+                metadata = [sigmalist, y]
+                newplot = {str(len(self.plotlist)): {
+                    'thickness': self.BSpinBox.value(),
+                    'nb': self.bladeSpinBox.value(),
+                    'wavelength': self.lambdaSpinBox.value(),
+                    'angle': self.angleSpinBox.value(),
+                    'threshold': self.thresholdSpinBox.value(),
+                    'eff': eff,
+                    'meta': metadata}
+                }
+                self.add_new_plot(newplot)
+                # id = newplot.keys()[0]
+                self.plotlist.update(newplot)
+                self.plot_list('Wavelength', 'Efficiency')
 
     def calculate_efficiency(self):
         self.figure.clf()
         print ''
         print 'calculate'
         sys.stdout.write("Thickness of Substrate: ")
-        print self.substrateTSpinBox.value()+self.substrateBSpinBox.value()
+        print self.substrateTSpinBox.value() + self.substrateBSpinBox.value()
         sys.stdout.write("Thickness of B10: ")
         print self.BSpinBox.value()
         sys.stdout.write("N of blades: ")
@@ -75,6 +204,56 @@ class Window(base, form):
             elif self.bladeSpinBox.value() > 1:
                 self.eff_boron_multiblade_doublecoated()
 
+    def plot_list(self, xlabel, ylabel):
+        ''' plot some random stuff '''
+
+        # create an axis
+
+        ax = self.figure.add_subplot(111)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        # discards the old graph
+        # ax.hold(False)
+
+        for plot in self.plotlist:
+            data = self.plotlist.get(plot).get('meta')
+            ax.plot(data[0], data[1], '-')
+        # plot data
+
+        # refresh canvas
+        ax.grid(True)
+        self.canvas.draw()
+
+    def add_new_plot(self, newplot):
+        key = newplot.keys()[0]
+        self.plotlist.update(newplot)
+        rowPosition = self.plotTableWidget.rowCount()
+        self.plotTableWidget.insertRow(rowPosition)
+        self.plotTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(newplot.get(key).get('thickness'))))
+        self.plotTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(newplot.get(key).get('nb'))))
+        self.plotTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(newplot.get(key).get('wavelength'))))
+        self.plotTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(newplot.get(key).get('angle'))))
+        self.plotTableWidget.setItem(rowPosition, 5, QtGui.QTableWidgetItem(str(newplot.get(key).get('threshold'))))
+        self.plotTableWidget.setItem(rowPosition, 6, QtGui.QTableWidgetItem(str(newplot.get(key).get('eff'))))
+        self.plotTableWidget.setItem(rowPosition, 7,
+                                     QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
+
+    def clear_plots(self):
+        self.plotTableWidget.setRowCount(0)
+        self.canvas.figure.clear()
+        self.canvas.draw()
+        self.plotlist = {}
+        self.thresholdSpinBox.setEnabled(True)
+        self.converterComboBox.setEnabled(True)
+        self.angleSpinBox.setEnabled(True)
+        self.lambdaSpinBox.setEnabled(True)
+        self.BSpinBox.setEnabled(True)
+        self.xAxisComboBox.setEnabled(True)
+        self.yAxisComboBox.setEnabled(True)
+        self.varComboBox.setEnabled(True)
+        self.plotTitleLAbel.setText(
+            '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
+
     def eff_boron_singleblade_doublecoated(self):
         print ''
         print 'Boron single blade double coated calculation '
@@ -86,9 +265,9 @@ class Window(base, form):
         self.rli94ResultLabel.setText(str(ranges[1]))
         self.ra6ResultLabel.setText(str(ranges[2]))
         self.rli6ResultLabel.setText(str(ranges[3]))
-        self.totalResultLabel.setText(str(result[0][0]*100)+'%')
-        self.bsResultLabel.setText(str(result[1][0]*100)+'%')
-        self.tResultLabel.setText(str(result[2][0]*100)+'%')
+        self.totalResultLabel.setText(str(result[0][0] * 100) + '%')
+        self.bsResultLabel.setText(str(result[1][0] * 100) + '%')
+        self.tResultLabel.setText(str(result[2][0] * 100) + '%')
 
     def eff_boron_multiblade_doublecoated(self):
         print ''
@@ -97,37 +276,13 @@ class Window(base, form):
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())
         self.plotTitleLAbel.setText('Multi blade plots')
-        data = efftools.data_samethick_vs_thickandnb(sigma,ranges, [self.bladeSpinBox.value()], self)
-        #self.plotstoppingpower()
-        #self.plot_samethick_vs_thickandnb()
-        #self.plot(data)
-        self.ra94ResultLabel.setText(str(ranges[0]))
-        self.rli94ResultLabel.setText(str(ranges[1]))
-        self.ra6ResultLabel.setText(str(ranges[2]))
-        self.rli6ResultLabel.setText(str(ranges[3]))
-        self.totalResultLabel.setText(str(result[0]*100)+'%')
-
-      #  self.plotstoppingpower()
-
-    def plot(self, data):
-        ''' plot some random stuff '''
-        # random data
-
-        # create an axis
-        ax = self.figure.add_subplot(111)
-        # discards the old graph
-        ax.hold(False)
-
-        # plot data
-        ax.plot(data[1], data[0], '-')
-
-        # refresh canvas
-        ax.grid()
-        self.canvas.draw()
+        self.figure.clf()
+        data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [self.bladeSpinBox.value()], self)
 
     def plotstoppingpower(self):
         figure1 = matplotlib.figure.Figure()
-        names = ["IONIZ_Linkoping_Alpha06.txt","IONIZ_Linkoping_Alpha94.txt","IONIZ_Linkoping_Li06.txt","IONIZ_Linkoping_Li94.txt"]
+        names = ["IONIZ_Linkoping_Alpha06.txt", "IONIZ_Linkoping_Alpha94.txt", "IONIZ_Linkoping_Li06.txt",
+                 "IONIZ_Linkoping_Li94.txt"]
         threshold = 200000
         x = 0
         for name in names:
@@ -206,16 +361,24 @@ class Window(base, form):
         # plt.legend()
         self.canvas.draw_idle()
 
+    def import_detector(self):
+        try:
+            print "Import config"
+            filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+            detector = Detector.Detector.json_parser(filepath)
+            detector = detectorDialog.detectorDialog.getDetector(detector, 'edit')
+            if detector[1]:
+                if detector[2] == 'edit':
+                    self.detectorList.append(detector[0])
+                    self.update_detector_list()
 
-    def plot_samethick_vs_thickandnb(self):
-        self.figure.clf()
-        plt.grid(True)
-        plt.xlabel('x (um)')
-        plt.ylabel('dE/dx (keV/um)')
-        self.canvas.draw_idle()
+        except IOError:
+            print "Path error"
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     # initialize app's main controller
     # controller = MainController()
-    Window()
+    window = Window()
+    sys.exit(app.exec_())
