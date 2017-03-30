@@ -306,19 +306,21 @@ class Detector:
         blades = self.blades
         result = self.calculate_eff()
         wavelength = self.wavelength
-        y = efftools.metadata_samethick_vs_wave(sigmaeq, blades[0].backscatter, ranges, len(blades))
+        y = efftools.metadata_diffthick_vs_wave(sigmaeq, blades, ranges, len(blades))
         cx = plt.figure(1)
         plt.subplot(111)
         self.metadata.update({'effVsWave': [sigmalist, y]})
         plt.plot(sigmalist, y, color='g')
-        if self.single:
-            plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1][0]], '--',
-                    color='k')
-            plt.plot([0, wavelength[0][0]], [result[1][0], result[1][0]], '--', color='k')
-        else:
-            plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1]], '--',
-                    color='k')
-            plt.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
+        if len(self.wavelength) == 1:
+            if self.single:
+                plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1][0]], '--',
+                        color='k')
+                plt.plot([0, wavelength[0][0]], [result[1][0], result[1][0]], '--', color='k')
+            else:
+                plt.plot([wavelength[0][0], wavelength[0][0]], [0, result[1]], '--',
+                        color='k')
+                plt.plot([0, wavelength[0][0]], [result[1], result[1]], '--', color='k')
+
         plt.grid(True)
         plt.xlabel('Neutron wavelength (Angstrom)')
         plt.ylabel('Detector efficiency (%)')

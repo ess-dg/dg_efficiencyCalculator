@@ -23,7 +23,6 @@ def plot_eff_vs_thick(path):
     detector.plot_thick_vs_eff2()
     plt.show()
 
-#TODO fix this function (crashes after enable polichromatic calculation)
 def plot_eff_vs_wave(path):
     detector = Detector.Detector.json_parser(path)
     detector.plot_eff_vs_wave()
@@ -50,4 +49,7 @@ if __name__ == '__main__':
    # print calculate_eff_json('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
    # plot_eff_vs_thick('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
    # optimize_config('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json', '/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports')
-    plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+   #    plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+    plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/PolicromPolidconfig.json')
+plot_eff_vs_wave(
+    '/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json')
