@@ -208,15 +208,21 @@ class Detector:
             reference: figure 3.12 On Francesco's Thesis
         """
         sigma = self.calculate_sigma()
+        sigmalist = []
+        c = 0
+        for s in sigma:
+            sigmalist.append([s, self.wavelength[c][1]])
+            c += 1
         ranges = self.calculate_ranges()
         blades = self.blades
         result = self.calculate_eff()
         bx = plt.figure(1)
         plt.subplot(111)
         if self.single:
-            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigma, ranges, len(blades))
-            plt.plot(thickVsEff[0], thickVsEff[1])
-            plt.plot(thickVsEff[0], thickVsEff[2])
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb_single(sigmalist, ranges, len(blades))
+            plt.plot(thickVsEff[0], thickVsEff[1], label=" BS")
+            plt.plot(thickVsEff[0], thickVsEff[2], label=" T")
+            plt.legend(numpoints=1)
             plt.grid(True)
             plt.xlabel('Blade thickness')
             plt.ylabel('Detector efficiency (%)')
@@ -224,7 +230,7 @@ class Detector:
            #                [0, result[1][0] * 100], '--')
             #plt.setp(line, 'color', 'k', 'linewidth', 0.5)
         else:
-            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigma, ranges, len(blades))
+            thickVsEff = efftools.metadata_samethick_vs_thickandnb(sigmalist, ranges, len(blades))
             self.metadata.update({'thickVsEff': thickVsEff})
             plt.plot(thickVsEff[0], thickVsEff[1])
             plt.grid(True)
@@ -373,7 +379,7 @@ class Detector:
         totaleff = sum(effopt)
 
     @staticmethod
-    def build_multigrid_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold):
+    def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single):
         bladelist = []
         blade = Blade.Blade(converterThickness,converterThickness,substrateThickness,0)
         for x in range(0,nb):
@@ -383,7 +389,9 @@ class Detector:
         detector.wavelength = wavelength
         detector.angle = angle
         detector.threshold = threshold
+        detector.single = single
         return detector
+
 
     @staticmethod
     def json_parser(path):
@@ -393,7 +401,7 @@ class Detector:
             wave =[]
             for w in data.get('wavelength'):
                 wave.append([w.get('angstrom'), w.get('%')])
-            detector = Detector.build_multigrid_detector(len(data.get('blades')),data.get('blades')[0].get('backscatter'),data.get('blades')[0].get('substrate'),wave, data.get('angle'), data.get('threshold'))
+            detector = Detector.build_detector(len(data.get('blades')),data.get('blades')[0].get('backscatter'),data.get('blades')[0].get('substrate'),wave, data.get('angle'), data.get('threshold'), data.get('single'))
             # Access data
             return detector
         except (ValueError, KeyError, TypeError):
@@ -427,5 +435,5 @@ class Detector:
 
 if __name__ == '__main__':
    #Detector.json_parser('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
-   detector = Detector.build_multigrid_detector(15,1,0,[[10,100]], 90, 100)
+   detector = Detector.detector(15,1,0,[[10,100]], 90, 100)
    detector.optimize_thickness_diff()
