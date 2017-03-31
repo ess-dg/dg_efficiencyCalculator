@@ -97,7 +97,6 @@ class detectorDialog( QtGui.QDialog):
         else:
             self.deleteBladeButton.setEnabled(False)
         if len(self.detector.wavelength) > 0:
-            self.addWavelengthButton.setEnabled(False)
             try:
                 c = 0
                 for b in self.detector.wavelength:
@@ -114,7 +113,6 @@ class detectorDialog( QtGui.QDialog):
         self.deleteWaveButton.clicked.connect(lambda: self.delete_wavelength())
         self.addBladeButton.clicked.connect(lambda: self.add_blades())
         self.addSingleBladeButton.clicked.connect(lambda: self.add_layer())
-        self.addWavelengthButton.clicked.connect(lambda: self.add_wavelength())
         self.addPoliWavelengthButton.clicked.connect(lambda: self.add_poli_wavelength())
         self.deleteBladeButton.clicked.connect(lambda: self.delete_blades())
         self.deleteButton.clicked.connect(lambda: self.delete_detector())
@@ -158,7 +156,6 @@ class detectorDialog( QtGui.QDialog):
         self.lambdaTableWidget.insertRow(rowPosition)
         self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(self.waveSpinBox.value())))
         self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(self.percentSpinBox.value())))
-        self.addWavelengthButton.setEnabled(False)
         self.deleteWaveButton.setEnabled(True)
 
     def add_poli_wavelength(self):
@@ -176,7 +173,6 @@ class detectorDialog( QtGui.QDialog):
     def delete_wavelength(self):
         self.detector.wavelength = []
         self.lambdaTableWidget.setRowCount(0)
-        self.addWavelengthButton.setEnabled(True)
         self.addPoliWavelengthButton.setEnabled(True)
         self.deleteWaveButton.setEnabled(False)
         self.bladeEffFigure.clear()
