@@ -24,16 +24,6 @@ class Detector:
         self.metadata = {}
         self.blades = []
 
-    def add_blade(self, blade):
-        self.blades.append(blade)
-
-    def add_blades(self, nb, thick):
-        for i in nb:
-            self.blades.append
-
-    def add_wavelength(self, wavelength):
-        self.wavelength.append(wavelength)
-
     def calculate_eff(self):
         assert len(self.blades) >= 1
         assert len(self.wavelength) >= 1
@@ -378,10 +368,13 @@ class Detector:
             self.blades[i].backscatter = dopt[i]
         totaleff = sum(effopt)
 
+
     @staticmethod
     def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single):
         bladelist = []
         blade = Blade.Blade(converterThickness,converterThickness,substrateThickness,0)
+        if single:
+            nb = 1
         for x in range(0,nb):
             bladelist.append(copy.deepcopy(blade))
         detector = Detector()

@@ -31,7 +31,6 @@ def plot_eff_vs_wave(path):
 def optimize_config_same_thick(originPath, destinyPath):
     detector = Detector.Detector.json_parser(originPath)
     detector.optimize_thickness_same()
-    detector.to_json()
     try:
         filepath = destinyPath
         with open(str(filepath) + '/' + detector.name + '_optimized_config_same.json', "w") as outfile:

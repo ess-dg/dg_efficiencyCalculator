@@ -364,12 +364,14 @@ class detectorDialog( QtGui.QDialog):
 
     def plot_thick_vs_eff(self, sigma, ranges, blades, result):
         self.thickVsEffFigure.clear()
+        #TODO change to plot_thick_vs_eff2
         self.detector.plot_thick_vs_eff(sigma, ranges, blades, result, self.thickVsEffFigure)
         self.thickVsEffCanvas.draw()
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
         self.waveVsEffFigure.clear()
         print('   Monochromatic PLOT')
+        # TODO change to plot_eff_vs_wave
         self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, blades, result, wavelength,self.waveVsEffFigure)
         self.waveVsEffCanvas.draw()
 

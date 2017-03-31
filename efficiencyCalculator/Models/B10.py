@@ -126,7 +126,7 @@ class B10:
         """calculates sigma equivalent of Boron for a macro sigma and an angle
 
         Args:
-            macrosigma (float): macro sigma of B10
+            macrosigma (list): macro sigma of B10
             theta (int): incident angle of neutron in degrees
         Returns:
 
