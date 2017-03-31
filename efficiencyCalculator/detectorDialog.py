@@ -467,8 +467,8 @@ class detectorDialog( QtGui.QDialog):
 
     def export(self):
         try:
-            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-            with open(str(filepath)+'/'+self.detector.name+'config.json', "w") as outfile:
+            filepath = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
+            with open(str(filepath)+'.json', "w") as outfile:
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
             print('Export')

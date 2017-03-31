@@ -97,7 +97,10 @@ class Window(QtGui.QMainWindow):
             if d.angle is not None:
                 self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
             if len(d.wavelength) is not 0:
-                self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
+                if len(d.wavelength) > 1:
+                    self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem('Polichromatic'))
+                else:
+                    self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
             if d.threshold is not None:
                 self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
             c += 1
