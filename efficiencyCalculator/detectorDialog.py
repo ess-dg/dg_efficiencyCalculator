@@ -1,7 +1,7 @@
 import matplotlib
 import matplotlib.figure
 import json
-import  sys
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt4 import QtGui, QtCore, uic, Qt
@@ -18,7 +18,7 @@ class detectorDialog( QtGui.QDialog):
 
     def __init__(self, detector, action, parent = None):
         super(detectorDialog, self).__init__(parent)
-        uic.loadUi("detectorDialogTab.ui", self)
+        uic.loadUi(os.path.dirname(os.path.abspath(__file__))+"/detectorDialogTab.ui", self)
 
         self.state = ''
         self.Boron = B10.B10()

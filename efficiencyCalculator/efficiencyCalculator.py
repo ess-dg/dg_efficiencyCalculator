@@ -16,7 +16,7 @@ import Models.Detector as Detector
 import detectorDialog
 from Models import efftools
 
-base, form = uic.loadUiType("efficiencyMainwindow2.ui")
+base, form = uic.loadUiType(os.path.dirname(os.path.abspath(__file__))+"/efficiencyMainwindow2.ui")
 
 
 class Window(QtGui.QMainWindow):
@@ -26,7 +26,7 @@ class Window(QtGui.QMainWindow):
 
     def __init__(self):
         super(Window, self).__init__()
-        uic.loadUi("efficiencyMainwindow2.ui", self)
+        uic.loadUi(os.path.dirname(os.path.abspath(__file__))+"/efficiencyMainwindow2.ui", self)
         self.setWindowTitle("Detector efficiency calculator")
         # init list of converter materials, load data and add to converter dict
         # self.setupUi(self)

@@ -10,3 +10,6 @@ gen
 /exports
 *pyc
 *.json
+/dist
+/build
+log.txt
