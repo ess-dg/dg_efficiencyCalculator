@@ -152,8 +152,6 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 
 	window.canvas.draw()
 
-
-
 def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 	"""calculates efficiency for configuration of multi grid with blades of same thickness
 
@@ -193,7 +191,6 @@ def data_samethick_vs_thickandnb_depth(sigma_eq, ranges, blades):
 		sinsub = sinsub + e[0]
 		sub = sub + e[1]
 	return efftotal, sinsub, sub
-
 
 def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
 	"""gets metadata for plotting effVSthick of multi grid with blades of same thickness, doesn't considerate aluminium.
@@ -321,8 +318,6 @@ def mgeff_depth_profile(thickness, ranges, sigma, varargin):
 		efftotal = efftotal + eff[i][0]
 		cumthick = cumthick+t
 	return eff, efftotal
-
-
 
 def efficparam(thickness,sigma_eq,ranges,varargin):
 	"""calculates efficiency of a double layer blade (back and transmission) with the same thickness of bs and t

@@ -25,6 +25,10 @@ class detectorDialog( QtGui.QDialog):
         self.action = action
         self.detector = detector
         self.setWindowTitle("Detector configurator")
+        if detector.converterConfiguration != '':
+            if detector.converterConfiguration is not None:
+                index = self.converterComboBox.findText(detector.converterConfiguration)
+                self.converterComboBox.setCurrentIndex(index);
         self.detector.delete = False
         self.nameLineEdit.setText(detector.name)
         self.angleSpinBox.setValue(detector.angle)
@@ -140,6 +144,7 @@ class detectorDialog( QtGui.QDialog):
         self.nameLineEdit.setValidator(name_validator)
 
     def updateDetector(self):
+        self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         self.detector.name = str(self.nameLineEdit.text())
         self.detector.threshold = self.thresholdSpinBox.value()
         self.detector.angle = self.angleSpinBox.value()
@@ -148,6 +153,7 @@ class detectorDialog( QtGui.QDialog):
         self.detector.name = str(self.nameLineEdit.text())
         self.detector.threshold = self.thresholdSpinBox.value()
         self.detector.angle = self.angleSpinBox.value()
+        self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         return self.detector, self.action
 
     def add_wavelength(self):
@@ -308,6 +314,7 @@ class detectorDialog( QtGui.QDialog):
         return detector, result == QtGui.QDialog.Accepted, action
 
     def calculate_total_efficiency(self):
+        self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         print 'CalculateTotalEff'
         if len(self.detector.blades) >= 1:
             if len(self.detector.wavelength) >= 1:
@@ -462,6 +469,9 @@ class detectorDialog( QtGui.QDialog):
                 retval = msg.exec_()
 
     def export(self):
+        self.detector.angle = self.angleSpinBox.value()
+        self.detector.threshold = self.thresholdSpinBox.value()
+        self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         try:
             filepath = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
             with open(str(filepath)+'.json', "w") as outfile:

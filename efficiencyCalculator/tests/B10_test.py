@@ -11,8 +11,10 @@ class B10_test:
         self.b = B10.B10()
 
     def configurations_test(self):
-        assert len(self.b.configurations) == 1
+        assert len(self.b.configurations) == 2
         conf = self.b.configurations.get('10B4C 2.24g/cm3')
+        assert len(conf) == 4
+        conf = self.b.configurations.get('10B4C 2.20g/cm3')
         assert len(conf) == 4
 
     def ranges_test(self):

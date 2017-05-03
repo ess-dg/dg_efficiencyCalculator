@@ -12,6 +12,7 @@ import Blade
 import copy
 import json
 
+
 class Detector:
 
     def __init__(self, name='Detector', angle=90, threshold=100, single=False):
@@ -23,6 +24,8 @@ class Detector:
         self.single = single
         self.metadata = {}
         self.blades = []
+        self.converterConfiguration = ''
+
 
     def calculate_eff(self):
         assert len(self.blades) >= 1
@@ -71,7 +74,7 @@ class Detector:
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/rangesMAT.m?at=default&fileviewer=file-view-default
 
         """
-        return self.converter.ranges(self.threshold, '10B4C 2.24g/cm3')
+        return self.converter.ranges(self.threshold, self.converterConfiguration)
 
     def calculate_sigma(self):
         """calculates sigma equivalent of Boron depending on sigma and angle
@@ -370,7 +373,8 @@ class Detector:
 
 
     @staticmethod
-    def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single):
+    def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single, converter):
+
         bladelist = []
         blade = Blade.Blade(converterThickness,converterThickness,substrateThickness,0)
         if single:
@@ -378,6 +382,8 @@ class Detector:
         for x in range(0,nb):
             bladelist.append(copy.deepcopy(blade))
         detector = Detector()
+        #TODO check existing converter
+        detector.converterConfiguration = converter
         detector.blades = bladelist
         detector.wavelength = wavelength
         detector.angle = angle
@@ -394,7 +400,7 @@ class Detector:
             wave =[]
             for w in data.get('wavelength'):
                 wave.append([w.get('angstrom'), w.get('%')])
-            detector = Detector.build_detector(len(data.get('blades')),data.get('blades')[0].get('backscatter'),data.get('blades')[0].get('substrate'),wave, data.get('angle'), data.get('threshold'), data.get('single'))
+            detector = Detector.build_detector(len(data.get('blades')),data.get('blades')[0].get('backscatter'),data.get('blades')[0].get('substrate'),wave, data.get('angle'), data.get('threshold'), data.get('single'), data.get('converterConfiguration'))
             # Access data
             return detector
         except (ValueError, KeyError, TypeError):
@@ -403,7 +409,7 @@ class Detector:
     def to_json(self):
         d = {}
         d["name"] = self.name
-        d["converter"] = '10B4C 2.24g/cm3'
+        d["converterConfiguration"] = self.converterConfiguration
         d["angle"] = self.angle
         d["threshold"] = self.threshold
         blades = []

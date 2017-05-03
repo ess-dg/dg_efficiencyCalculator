@@ -125,6 +125,11 @@
                <string>10B4C 2.24g/cm3</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>10B4C 2.20g/cm3</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
