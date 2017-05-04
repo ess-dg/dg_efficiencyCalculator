@@ -35,8 +35,16 @@ class detectorDialog( QtGui.QDialog):
         self.thresholdSpinBox.setValue(detector.threshold)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
+
+        self.waveTabWidget.hide()
+        self.waveFormWidget.show()
+        self.effWidget.hide()
+        self.bladeTabWidget.show()
         self.thickVsEff = []
         # Add plots layouts
+        self.waveInfoFigure = matplotlib.figure.Figure()
+        self.waveInfoCanvas = FigureCanvas(self.waveInfoFigure)
+        self.wavePlotLayout.addWidget(self.waveInfoCanvas)
         self.bladeInfoFigure = matplotlib.figure.Figure()
         self.bladeInfoCanvas = FigureCanvas(self.bladeInfoFigure)
         self.bladePlotLayout.addWidget(self.bladeInfoCanvas)
@@ -95,6 +103,8 @@ class detectorDialog( QtGui.QDialog):
                     self.BladeTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(item))
                     c += 1
                 ax.grid(True)
+                self.effWidget.show()
+                self.bladeTabWidget.hide()
                 self.bladeInfoCanvas.draw()
             except IndexError:
                 print 'no blades'
@@ -103,6 +113,30 @@ class detectorDialog( QtGui.QDialog):
         if len(self.detector.wavelength) > 0:
             try:
                 c = 0
+                self.waveTabWidget.show()
+                self.waveFormWidget.hide()
+                if len(self.detector.wavelength) > 1:
+                    ax = self.waveInfoFigure.add_subplot(111)
+                    ax.set_xlabel('Wavelength')
+                    ax.set_ylabel('weight')
+                    # ax.set_xlim([0, len(wave)])
+                    # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
+                    # ax.plot(a, 'ro')
+                    # ax.plot(wave)
+                    ax.plot(self.detector.wavelength, color='b')
+                    ax.grid()
+                else:
+                    ax = self.waveInfoFigure.add_subplot(111)
+                    ax.set_xlabel('Wavelength')
+                    ax.set_ylabel('weight')
+                    # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
+                    # ax.plot(a, 'ro')
+                    # ax.plot(wave)
+                    x = self.wavePoliSpinBox.value()
+                    y = self.percentPoliSpinBox.value()
+                    ax.plot([x, x], [0, 100], color='b')
+                    ax.set_xlim([0, x + x])
+                    ax.grid()
                 for b in self.detector.wavelength:
                     rowPosition = c
                     self.lambdaTableWidget.insertRow(rowPosition)
@@ -127,6 +161,8 @@ class detectorDialog( QtGui.QDialog):
         self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
         self.nameLineEdit.textChanged.connect(lambda: self.updateDetector())
+        self.importWaveButton.clicked.connect(lambda: self.importWave())
+
 
         #table edit signal
 
@@ -157,6 +193,11 @@ class detectorDialog( QtGui.QDialog):
         return self.detector, self.action
 
     def add_wavelength(self):
+        """
+        Deprecated
+        """
+        self.waveTabWidget.show()
+        self.waveFormWidget.hide()
         self.detector.wavelength.append([self.waveSpinBox.value(), self.percentSpinBox.value()])
         rowPosition = self.lambdaTableWidget.rowCount()
         self.lambdaTableWidget.insertRow(rowPosition)
@@ -173,10 +214,26 @@ class detectorDialog( QtGui.QDialog):
         self.percentPoliSpinBox.setMaximum(self.percentPoliSpinBox.maximum() - self.percentPoliSpinBox.value())
         # self.addPoliWavelengthButton.setEnabled(False)
         self.deleteWaveButton.setEnabled(True)
+        self.waveTabWidget.show()
+        ax = self.waveInfoFigure.add_subplot(111)
+        ax.set_xlabel('Wavelength')
+        ax.set_ylabel('weight')
+        # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
+        # ax.plot(a, 'ro')
+        # ax.plot(wave)
+        x = self.wavePoliSpinBox.value()
+        y = self.percentPoliSpinBox.value()
+        ax.plot([x, x],[0,100], color='b')
+        ax.set_xlim([0, x+x])
+        ax.grid()
         if self.percentPoliSpinBox.maximum() == 0:
+            self.waveFormWidget.hide()
             self.addPoliWavelengthButton.setEnabled(False)
 
     def delete_wavelength(self):
+        self.waveInfoFigure.clear()
+        self.waveTabWidget.hide()
+        self.waveFormWidget.show()
         self.detector.wavelength = []
         self.lambdaTableWidget.setRowCount(0)
         self.addPoliWavelengthButton.setEnabled(True)
@@ -211,6 +268,9 @@ class detectorDialog( QtGui.QDialog):
 
     def add_blades(self):
         if self.bsSpinBox.value() > 0:
+
+            self.effWidget.show()
+            self.bladeTabWidget.hide()
             self.state = 'AddB'
             self.tabWidget_2.setCurrentIndex(0)
             nb = self.nbspinBox.value()
@@ -223,6 +283,7 @@ class detectorDialog( QtGui.QDialog):
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
             ax.plot(nb+1,0)
+            self.bladeClassLabel.setText("Multigrid with " +str(nb)+ " blades")
             for n in range(0, nb):
                 # Note that the plot displayed is the backscattering thickness
                 ax.plot(n + 1, bs, 'd', color='black')
@@ -253,8 +314,10 @@ class detectorDialog( QtGui.QDialog):
         bs =0
         ts=0
         self.tabWidget_2.setCurrentIndex(0)
+        self.bladeClassLabel.setText("Single coated blade")
         if self.bsSingleSpinBox.value() > 0:
-
+            self.effWidget.show()
+            self.bladeTabWidget.hide()
             ax = self.bladeInfoFigure.add_subplot(111)
             ax.set_xlabel('Blade Number')
             ax.set_ylabel('Blade thickness ($\mu$)')
@@ -286,6 +349,8 @@ class detectorDialog( QtGui.QDialog):
         self.state = ''
 
     def delete_blades(self):
+        self.effWidget.hide()
+        self.bladeTabWidget.show()
         self.tabWidget_2.setCurrentIndex(0)
         self.bladeInfoCanvas.figure.clear()
         self.bladeInfoCanvas.draw()
@@ -478,5 +543,45 @@ class detectorDialog( QtGui.QDialog):
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
             print('Export')
+        except IOError:
+            print "Path error"
+
+    def importWave(self):
+        try:
+            print "Import wavelength"
+            filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+            wave = np.loadtxt(filepath)
+            weight = np.sum(np.loadtxt(filepath), axis=0)[1]
+            try:
+                if np.isclose(weight, 1):
+                    self.waveTabWidget.show()
+                    self.waveFormWidget.hide()
+                    ax = self.waveInfoFigure.add_subplot(111)
+                    ax.set_xlabel('Wavelength')
+                    ax.set_ylabel('weight')
+                    #ax.set_xlim([0, len(wave)])
+                   # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
+                   # ax.plot(a, 'ro')
+                    #ax.plot(wave)
+                    x = wave[:,0]
+                    y = wave[:, 1]
+                    ax.plot(x,y*100,color='b')
+                    ax.grid()
+                    for w in wave:
+                        self.detector.wavelength.append([w[0], w[1]*100])
+                        rowPosition = self.lambdaTableWidget.rowCount()
+                        self.lambdaTableWidget.insertRow(rowPosition)
+                        self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(w[0])))
+                        self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(w[1]*100)))
+                    self.deleteWaveButton.setEnabled(True)
+                else:
+                    raise Exception('Total Weight has to be 1, it is: '+ str(weight))
+            except Exception as e:
+                print('caught this error: ' + repr(e))
+                msg = QtGui.QMessageBox()
+                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg.setText('Total Weight has to be 1, it is: ' + str(weight))
+                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                retval = msg.exec_()
         except IOError:
             print "Path error"
