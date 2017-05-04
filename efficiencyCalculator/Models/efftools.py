@@ -7,6 +7,7 @@ import pylab as pl
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def efficiency2particles(d,R1,R2,sigma):
 	"""This script is the implementation of Equations from 3.11 to 3.16 from page 63 on Francesco's PhD thesis (download from twiki). The output is efficiency for a BS layer and a T layer,
 	varibles must be scalar, d is the thickness of the coating, R1 and R2 effective ranges of the two partciles emitted back-to-back (as defined at page 60 according to an energy threshold),
@@ -318,6 +319,7 @@ def mgeff_depth_profile(thickness, ranges, sigma, varargin):
 		efftotal = efftotal + eff[i][0]
 		cumthick = cumthick+t
 	return eff, efftotal
+
 
 def efficparam(thickness,sigma_eq,ranges,varargin):
 	"""calculates efficiency of a double layer blade (back and transmission) with the same thickness of bs and t

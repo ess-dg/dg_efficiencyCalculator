@@ -40,6 +40,7 @@ class detectorDialog( QtGui.QDialog):
         self.waveFormWidget.show()
         self.effWidget.hide()
         self.bladeTabWidget.show()
+        self.bladePlotWidget.hide()
         self.thickVsEff = []
         # Add plots layouts
         self.waveInfoFigure = matplotlib.figure.Figure()
@@ -57,10 +58,24 @@ class detectorDialog( QtGui.QDialog):
         self.waveVsEffFigure = matplotlib.figure.Figure()
         self.waveVsEffCanvas = FigureCanvas(self.waveVsEffFigure)
         self.waveVsEffPlotLayout.addWidget(self.waveVsEffCanvas)
+
+        #Interaction plot toolbars
         self.toolbar = NavigationToolbar(self.thickVsEffCanvas, self)
         self.toolbar2 = NavigationToolbar(self.waveVsEffCanvas, self)
+        self.toolbar3 = NavigationToolbar(self.bladeEffCanvas, self)
+        self.toolbar4 = NavigationToolbar(self.bladeInfoCanvas, self)
+        self.toolbar5 = NavigationToolbar(self.waveInfoCanvas, self)
         self.thickToolLayout.addWidget(self.toolbar)
         self.waveToolLayout.addWidget(self.toolbar2)
+        self.wavePlotLayout.addWidget(self.toolbar5)
+        self.bladePlotLayout.addWidget(self.toolbar4)
+        self.bladeEfficiencyPlotLayout.addWidget(self.toolbar3)
+
+
+        self.BladeTableWidget.setColumnWidth(0, 70)
+        self.BladeTableWidget.setColumnWidth(1, 80)
+        self.BladeTableWidget.setColumnWidth(2, 80)
+        self.BladeTableWidget.setColumnWidth(3, 70)
         # self.toolbar.hide()
         if self.action == 'create':
             self.deleteButton.setEnabled(False)
@@ -103,7 +118,12 @@ class detectorDialog( QtGui.QDialog):
                     self.BladeTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(item))
                     c += 1
                 ax.grid(True)
+                if self.detector.single:
+                    self.bladeClassLabel.setText("Single coated blade")
+                else:
+                    self.bladeClassLabel.setText("Multigrid with " + str(len(self.detector.blades)) + " blades")
                 self.effWidget.show()
+                self.bladePlotWidget.show()
                 self.bladeTabWidget.hide()
                 self.bladeInfoCanvas.draw()
             except IndexError:
@@ -271,6 +291,7 @@ class detectorDialog( QtGui.QDialog):
 
             self.effWidget.show()
             self.bladeTabWidget.hide()
+            self.bladePlotWidget.show()
             self.state = 'AddB'
             self.tabWidget_2.setCurrentIndex(0)
             nb = self.nbspinBox.value()
@@ -318,6 +339,7 @@ class detectorDialog( QtGui.QDialog):
         if self.bsSingleSpinBox.value() > 0:
             self.effWidget.show()
             self.bladeTabWidget.hide()
+            self.bladePlotWidget.show()
             ax = self.bladeInfoFigure.add_subplot(111)
             ax.set_xlabel('Blade Number')
             ax.set_ylabel('Blade thickness ($\mu$)')
@@ -351,6 +373,7 @@ class detectorDialog( QtGui.QDialog):
     def delete_blades(self):
         self.effWidget.hide()
         self.bladeTabWidget.show()
+        self.bladePlotWidget.hide()
         self.tabWidget_2.setCurrentIndex(0)
         self.bladeInfoCanvas.figure.clear()
         self.bladeInfoCanvas.draw()

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1356</width>
-    <height>781</height>
+    <width>1443</width>
+    <height>765</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -73,6 +73,12 @@
            </item>
            <item row="1" column="1">
             <widget class="QLineEdit" name="nameLineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="inputMask">
               <string notr="true"/>
              </property>
@@ -138,328 +144,6 @@
           </layout>
          </item>
          <item>
-          <widget class="Line" name="line_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Neutron Beam configuration&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <layout class="QFormLayout" name="formLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="algleLabel">
-                 <property name="text">
-                  <string>Incident angle θ (°)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QSpinBox" name="angleSpinBox">
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="maximum">
-                  <number>90</number>
-                 </property>
-                 <property name="value">
-                  <number>90</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_14">
-               <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Wavelength:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QWidget" name="waveFormWidget" native="true">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_18">
-                <item>
-                 <layout class="QVBoxLayout" name="waveFormLayout">
-                  <item>
-                   <layout class="QFormLayout" name="formLayout_4">
-                    <property name="fieldGrowthPolicy">
-                     <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-                    </property>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_15">
-                      <property name="text">
-                       <string>Wavelength</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QDoubleSpinBox" name="wavePoliSpinBox">
-                      <property name="value">
-                       <double>1.800000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_16">
-                      <property name="text">
-                       <string>%</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QSpinBox" name="percentPoliSpinBox">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>100</number>
-                      </property>
-                      <property name="value">
-                       <number>100</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="addPoliWavelengthButton">
-                    <property name="text">
-                     <string>Add Wavelength</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="importWaveButton">
-                    <property name="text">
-                     <string>import wavelength</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="deleteWaveButton">
-               <property name="text">
-                <string>Delete Wavelength</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTabWidget" name="waveTabWidget">
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <widget class="QWidget" name="tab_8">
-                <attribute name="title">
-                 <string>Plot</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_20">
-                 <item>
-                  <layout class="QVBoxLayout" name="wavePlotLayout"/>
-                 </item>
-                </layout>
-                <zorder>lambdaTableWidget</zorder>
-                <zorder>layoutWidget</zorder>
-               </widget>
-               <widget class="QWidget" name="tab_9">
-                <attribute name="title">
-                 <string>List</string>
-                </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_19">
-                 <item>
-                  <widget class="QTableWidget" name="lambdaTableWidget">
-                   <property name="minimumSize">
-                    <size>
-                     <width>260</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>260</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="editTriggers">
-                    <set>QAbstractItemView::NoEditTriggers</set>
-                   </property>
-                   <property name="selectionBehavior">
-                    <enum>QAbstractItemView::SelectRows</enum>
-                   </property>
-                   <column>
-                    <property name="text">
-                     <string>lambda</string>
-                    </property>
-                   </column>
-                   <column>
-                    <property name="text">
-                     <string>%</string>
-                    </property>
-                   </column>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_8">
-         <item>
-          <widget class="QWidget" name="effWidget" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_23">
-            <item>
-             <widget class="QLabel" name="bladeClassLabel">
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTabWidget" name="tabWidget">
-              <property name="currentIndex">
-               <number>0</number>
-              </property>
-              <widget class="QWidget" name="tab_10">
-               <attribute name="title">
-                <string>Blade List</string>
-               </attribute>
-               <layout class="QVBoxLayout" name="verticalLayout_21">
-                <item>
-                 <widget class="QTableWidget" name="BladeTableWidget">
-                  <property name="editTriggers">
-                   <set>QAbstractItemView::DoubleClicked</set>
-                  </property>
-                  <property name="selectionBehavior">
-                   <enum>QAbstractItemView::SelectRows</enum>
-                  </property>
-                  <column>
-                   <property name="text">
-                    <string>N</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Conv thick</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Substrate thick</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Efficiency</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="tab_11">
-               <attribute name="title">
-                <string>Blade plot</string>
-               </attribute>
-               <layout class="QVBoxLayout" name="verticalLayout_22">
-                <item>
-                 <layout class="QVBoxLayout" name="bladePlotLayout"/>
-                </item>
-               </layout>
-              </widget>
-             </widget>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <widget class="QPushButton" name="deleteBladeButton">
-                <property name="text">
-                 <string>Delete Blades</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="calculateTotalEffButton">
-                <property name="text">
-                 <string>Calculate efficiency</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="optimizeThicknessSameButton">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Optimize same thickness</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="optimizeThicknessDiffButton">
-                <property name="text">
-                 <string>Optimize diff thickness</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QLabel" name="totaltEfflabel">
-              <property name="text">
-               <string>Total efficiency:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="totalEfflabel">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Unknown&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
           <widget class="QTabWidget" name="bladeTabWidget">
            <property name="minimumSize">
             <size>
@@ -470,7 +154,7 @@
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>290</height>
+             <height>200</height>
             </size>
            </property>
            <property name="currentIndex">
@@ -601,15 +285,423 @@
            </widget>
           </widget>
          </item>
+         <item>
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="bladePlotWidget" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QLabel" name="bladeClassLabel">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTabWidget" name="tabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="tab_10">
+                 <attribute name="title">
+                  <string>Blade List</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_21">
+                  <item>
+                   <widget class="QTableWidget" name="BladeTableWidget">
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::DoubleClicked</set>
+                    </property>
+                    <property name="selectionBehavior">
+                     <enum>QAbstractItemView::SelectRows</enum>
+                    </property>
+                    <attribute name="verticalHeaderDefaultSectionSize">
+                     <number>20</number>
+                    </attribute>
+                    <column>
+                     <property name="text">
+                      <string>N</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Conv thick</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Substrate thick</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Efficiency</string>
+                     </property>
+                    </column>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="tab_11">
+                 <attribute name="title">
+                  <string>Blade plot</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_22">
+                  <item>
+                   <layout class="QVBoxLayout" name="bladePlotLayout"/>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="deleteBladeButton">
+                <property name="toolTip">
+                 <string>Sets blades to 0</string>
+                </property>
+                <property name="text">
+                 <string>Delete Blades</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
         </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="1" column="0">
+                <widget class="QLabel" name="algleLabel">
+                 <property name="text">
+                  <string>Incident angle θ (°)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="angleSpinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>90</number>
+                 </property>
+                 <property name="value">
+                  <number>90</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;Neutron Beam configuration&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Wavelength:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="waveFormWidget" native="true">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>150</height>
+                </size>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_18">
+                <item>
+                 <layout class="QVBoxLayout" name="waveFormLayout">
+                  <item>
+                   <layout class="QFormLayout" name="formLayout_4">
+                    <property name="fieldGrowthPolicy">
+                     <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_15">
+                      <property name="text">
+                       <string>Wavelength</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="wavePoliSpinBox">
+                      <property name="value">
+                       <double>1.800000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_16">
+                      <property name="text">
+                       <string>%</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QSpinBox" name="percentPoliSpinBox">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="maximum">
+                       <number>100</number>
+                      </property>
+                      <property name="value">
+                       <number>100</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="addPoliWavelengthButton">
+                    <property name="toolTip">
+                     <string>Adds a monochromatic wavelength</string>
+                    </property>
+                    <property name="text">
+                     <string>Add Wavelength</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="importWaveButton">
+                    <property name="toolTip">
+                     <string>Imports a 2 column file with values of wavelength in angston and weight</string>
+                    </property>
+                    <property name="text">
+                     <string>import wavelength</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="waveTabWidget" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QPushButton" name="deleteWaveButton">
+                  <property name="text">
+                   <string>Delete Wavelength</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTabWidget" name="waveTabWidget2">
+                  <property name="currentIndex">
+                   <number>0</number>
+                  </property>
+                  <widget class="QWidget" name="tab_8">
+                   <attribute name="title">
+                    <string>Plot</string>
+                   </attribute>
+                   <layout class="QVBoxLayout" name="verticalLayout_20">
+                    <item>
+                     <layout class="QVBoxLayout" name="wavePlotLayout"/>
+                    </item>
+                   </layout>
+                   <zorder>lambdaTableWidget</zorder>
+                   <zorder>layoutWidget</zorder>
+                  </widget>
+                  <widget class="QWidget" name="tab_9">
+                   <attribute name="title">
+                    <string>List</string>
+                   </attribute>
+                   <layout class="QVBoxLayout" name="verticalLayout_19">
+                    <item>
+                     <widget class="QTableWidget" name="lambdaTableWidget">
+                      <property name="minimumSize">
+                       <size>
+                        <width>260</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>260</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="editTriggers">
+                       <set>QAbstractItemView::NoEditTriggers</set>
+                      </property>
+                      <property name="selectionBehavior">
+                       <enum>QAbstractItemView::SelectRows</enum>
+                      </property>
+                      <column>
+                       <property name="text">
+                        <string>lambda</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>%</string>
+                       </property>
+                      </column>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="effWidget" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>140</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>150</height>
+                </size>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_23">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <widget class="QPushButton" name="calculateTotalEffButton">
+                    <property name="toolTip">
+                     <string>Calculate total efficiency for this detector</string>
+                    </property>
+                    <property name="text">
+                     <string>Calculate efficiency</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="optimizeThicknessSameButton">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="toolTip">
+                     <string>Set thickness of blades to its most efficient thickness. All blades have the same converter thickness</string>
+                    </property>
+                    <property name="text">
+                     <string>Optimize same thickness</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="optimizeThicknessDiffButton">
+                    <property name="toolTip">
+                     <string>Set thickness of blades to its most efficient thickness. All blades have the different converter thickness</string>
+                    </property>
+                    <property name="text">
+                     <string>Optimize diff thickness</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QLabel" name="totaltEfflabel">
+                  <property name="text">
+                   <string>Total efficiency:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="totalEfflabel">
+                  <property name="toolTip">
+                   <string>Total efficiency of current detector</string>
+                  </property>
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Unknown&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="minimumSize">
           <size>
-           <width>530</width>
+           <width>450</width>
            <height>500</height>
           </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>600</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Generate a 2 column file with the data from the plot</string>
          </property>
          <property name="currentIndex">
           <number>0</number>
@@ -660,6 +752,9 @@
                 </property>
                 <item>
                  <widget class="QPushButton" name="exportThickvseffButton">
+                  <property name="toolTip">
+                   <string>Generate a 2 column file with the data from the plot</string>
+                  </property>
                   <property name="text">
                    <string>Export Data</string>
                   </property>
@@ -705,6 +800,9 @@
                <layout class="QHBoxLayout" name="waveToolLayout">
                 <item>
                  <widget class="QPushButton" name="exportEffVsWaveButton">
+                  <property name="toolTip">
+                   <string>Generate a 2 column file with the data from the plot</string>
+                  </property>
                   <property name="text">
                    <string>Export Data</string>
                   </property>
@@ -739,6 +837,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="exportButton">
+         <property name="toolTip">
+          <string>Generates a file with this detector settings for later use in the app</string>
+         </property>
+         <property name="whatsThis">
+          <string extracomment="Generates a file for later use"/>
+         </property>
          <property name="text">
           <string>Export Configuration</string>
          </property>
@@ -746,6 +850,9 @@
        </item>
        <item>
         <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="toolTip">
+          <string>closes window and saves parameters for later use</string>
+         </property>
          <property name="standardButtons">
           <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
          </property>
