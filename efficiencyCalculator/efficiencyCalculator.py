@@ -242,6 +242,7 @@ class Window(QtGui.QMainWindow):
                                      QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
 
     def clear_plots(self):
+        print 'clear plots'
         self.plotTableWidget.setRowCount(0)
         self.canvas.figure.clear()
         self.canvas.draw()

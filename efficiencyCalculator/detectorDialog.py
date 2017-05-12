@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import matplotlib
 import matplotlib.figure
 import json
@@ -28,7 +29,7 @@ class detectorDialog( QtGui.QDialog):
         if detector.converterConfiguration != '':
             if detector.converterConfiguration is not None:
                 index = self.converterComboBox.findText(detector.converterConfiguration)
-                self.converterComboBox.setCurrentIndex(index);
+                self.converterComboBox.setCurrentIndex(index)
         self.detector.delete = False
         self.nameLineEdit.setText(detector.name)
         self.angleSpinBox.setValue(detector.angle)
@@ -76,16 +77,23 @@ class detectorDialog( QtGui.QDialog):
         self.BladeTableWidget.setColumnWidth(1, 80)
         self.BladeTableWidget.setColumnWidth(2, 80)
         self.BladeTableWidget.setColumnWidth(3, 70)
+
+        self.verticalLayout_8.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        self.verticalLayout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+
+
+
         # self.toolbar.hide()
         if self.action == 'create':
             self.deleteButton.setEnabled(False)
         # List widget update
         if len(self.detector.blades) > 0:
+            print 'loading blade'
             self.addBladeButton.setEnabled(False)
             try:
                 c = 0
                 ax = self.bladeInfoFigure.add_subplot(111)
-                ax.set_xlabel('Blade Number')
+                ax.set_xlabel('Depth')
                 ax.set_ylabel('Blade thickness')
                 ax.set_ylim([0,8])
                 ax.plot(0, 0)
@@ -131,14 +139,15 @@ class detectorDialog( QtGui.QDialog):
         else:
             self.deleteBladeButton.setEnabled(False)
         if len(self.detector.wavelength) > 0:
+            print 'loading wavelength'
             try:
                 c = 0
                 self.waveTabWidget.show()
                 self.waveFormWidget.hide()
                 if len(self.detector.wavelength) > 1:
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength')
-                    ax.set_ylabel('weight')
+                    ax.set_xlabel('Wavelength (Angstrom)')
+                    ax.set_ylabel('weight (%)')
                     # ax.set_xlim([0, len(wave)])
                     # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
                     # ax.plot(a, 'ro')
@@ -147,8 +156,8 @@ class detectorDialog( QtGui.QDialog):
                     ax.grid()
                 else:
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength')
-                    ax.set_ylabel('weight')
+                    ax.set_xlabel('Wavelength (Angstrom)')
+                    ax.set_ylabel('weight (%)')
                     # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
                     # ax.plot(a, 'ro')
                     # ax.plot(wave)
@@ -200,6 +209,7 @@ class detectorDialog( QtGui.QDialog):
         self.nameLineEdit.setValidator(name_validator)
 
     def updateDetector(self):
+        print 'parameter changed'
         self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         self.detector.name = str(self.nameLineEdit.text())
         self.detector.threshold = self.thresholdSpinBox.value()
@@ -216,6 +226,7 @@ class detectorDialog( QtGui.QDialog):
         """
         Deprecated
         """
+        print 'add wavelength'
         self.waveTabWidget.show()
         self.waveFormWidget.hide()
         self.detector.wavelength.append([self.waveSpinBox.value(), self.percentSpinBox.value()])
@@ -226,6 +237,10 @@ class detectorDialog( QtGui.QDialog):
         self.deleteWaveButton.setEnabled(True)
 
     def add_poli_wavelength(self):
+        """
+        adds a wavelength with lambda and % and plots it
+        """
+        print 'add wavelength'
         self.detector.wavelength.append([self.wavePoliSpinBox.value(), self.percentPoliSpinBox.value()])
         rowPosition = self.lambdaTableWidget.rowCount()
         self.lambdaTableWidget.insertRow(rowPosition)
@@ -236,8 +251,8 @@ class detectorDialog( QtGui.QDialog):
         self.deleteWaveButton.setEnabled(True)
         self.waveTabWidget.show()
         ax = self.waveInfoFigure.add_subplot(111)
-        ax.set_xlabel('Wavelength')
-        ax.set_ylabel('weight')
+        ax.set_xlabel('Wavelength (angstrom)')
+        ax.set_ylabel('weight (%)')
         # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
         # ax.plot(a, 'ro')
         # ax.plot(wave)
@@ -251,6 +266,10 @@ class detectorDialog( QtGui.QDialog):
             self.addPoliWavelengthButton.setEnabled(False)
 
     def delete_wavelength(self):
+        """
+        Deletes all wavelengths from current configuration
+        """
+        print 'clear wavelength'
         self.waveInfoFigure.clear()
         self.waveTabWidget.hide()
         self.waveFormWidget.show()
@@ -265,10 +284,14 @@ class detectorDialog( QtGui.QDialog):
         self.percentPoliSpinBox.setValue(100)
 
     def refresh_blades(self):
+        """
+        Updates blade list and plots to current configuration
+        """
+        print 'Refresh blade list and plot'
         self.state = 'RefressB'
         self.bladeInfoFigure.clear()
         ax = self.bladeInfoFigure.add_subplot(111)
-        ax.set_xlabel('Blade Number')
+        ax.set_xlabel('Depth')
         ax.set_ylabel('Blade thickness ($\mu$)')
         ax.set_ylim([0, 8])
         ax.plot(0, 0)
@@ -287,8 +310,11 @@ class detectorDialog( QtGui.QDialog):
         self.state = ''
 
     def add_blades(self):
+        """
+        adds blades to configuration, updates blade list and plots
+        """
         if self.bsSpinBox.value() > 0:
-
+            print 'add blades to current configuration'
             self.effWidget.show()
             self.bladeTabWidget.hide()
             self.bladePlotWidget.show()
@@ -299,7 +325,7 @@ class detectorDialog( QtGui.QDialog):
             ts = self.bsSpinBox.value()
             sub = self.subSpinBox.value()
             ax = self.bladeInfoFigure.add_subplot(111)
-            ax.set_xlabel('Blade Number')
+            ax.set_xlabel('Depth')
             ax.set_ylabel('Blade thickness ($\mu$)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
@@ -331,17 +357,21 @@ class detectorDialog( QtGui.QDialog):
             retval = msg.exec_()
 
     def add_layer(self):
+        """
+         adds single coated blade to configuration
+        """
         self.state = 'addLayer'
         bs =0
         ts=0
         self.tabWidget_2.setCurrentIndex(0)
         self.bladeClassLabel.setText("Single coated blade")
         if self.bsSingleSpinBox.value() > 0:
+            print 'Add single coated blade'
             self.effWidget.show()
             self.bladeTabWidget.hide()
             self.bladePlotWidget.show()
             ax = self.bladeInfoFigure.add_subplot(111)
-            ax.set_xlabel('Blade Number')
+            ax.set_xlabel('Depth')
             ax.set_ylabel('Blade thickness ($\mu$)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
@@ -371,6 +401,10 @@ class detectorDialog( QtGui.QDialog):
         self.state = ''
 
     def delete_blades(self):
+        """
+        Clears blades from current configuration
+        """
+        print 'clear blades'
         self.effWidget.hide()
         self.bladeTabWidget.show()
         self.bladePlotWidget.hide()
@@ -389,6 +423,7 @@ class detectorDialog( QtGui.QDialog):
     def delete_detector(self):
         reply = QtGui.QMessageBox.question(self, 'delete', 'Are you sure you want to delete this detector?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
+            print 'delete detector'
             self.action = 'delete'
             self.accept()
 
@@ -398,7 +433,7 @@ class detectorDialog( QtGui.QDialog):
         dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         result = dialog.exec_()
         detector, action = dialog.returnDetector()
-
+        print 'close dialog'
         return detector, result == QtGui.QDialog.Accepted, action
 
     def calculate_total_efficiency(self):
@@ -432,7 +467,7 @@ class detectorDialog( QtGui.QDialog):
                         sigma = [[sigma],]
                         sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                     self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
-                self.tabWidget_2.setCurrentIndex(2)
+                self.tabWidget_2.setCurrentIndex(0)
                 self.optimizeThicknessSameButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
@@ -461,11 +496,10 @@ class detectorDialog( QtGui.QDialog):
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
         self.waveVsEffFigure.clear()
-        print('   Monochromatic PLOT')
+        print('Monochromatic PLOT')
         # TODO change to plot_eff_vs_wave
         self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, blades, result, wavelength,self.waveVsEffFigure)
         self.waveVsEffCanvas.draw()
-
 
     def plot_blade_figure(self, result):
         self.state = 'PlotBFigure'
@@ -477,25 +511,29 @@ class detectorDialog( QtGui.QDialog):
             self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(item))
         self.bladeEffCanvas.draw()
         self.state = ''
+        print 'plot blade figure multi blade'
 
     def plot_blade_figure_single(self, result):
         self.state = 'PlotBladeFigureSingle'
         self.bladeEffFigure.clear()
         self.detector.plot_blade_figure_single(result, self.bladeEffFigure)
-        self.BladeTableWidget.setItem(0, 3, QtGui.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% BS, '+str(result[1][0] * 100)[:4]+'% TS'))
+        self.BladeTableWidget.setItem(0, 3, QtGui.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% Backscattering, '+str(result[1][0] * 100)[:4]+'% Transmission'))
         self.bladeEffCanvas.draw()
         self.state = ''
+        print 'Plot blade figure single coated blade'
 
     def optimize_thickness_same(self):
         self.detector.optimize_thickness_same()
         self.refresh_blades()
         self.calculate_total_efficiency()
+        print 'Blade optimization with same thicknesses'
 
     def optimize_thickness_diff(self):
         if len(self.detector.wavelength) == 1:
             self.detector.optimize_thickness_diff_mono()
             self.refresh_blades()
             self.calculate_total_efficiency()
+            print 'Blade optimization with different thicknesses'
         else:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
@@ -524,6 +562,7 @@ class detectorDialog( QtGui.QDialog):
             for a, am in zip(data[0], data[1]):
                 datafile_id.write("{}\t{}\n".format(a, am))
             datafile_id.close()
+            print 'export plot file'
         except IOError:
             print "Path error"
 
@@ -565,7 +604,7 @@ class detectorDialog( QtGui.QDialog):
             with open(str(filepath)+'.json', "w") as outfile:
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
-            print('Export')
+            print('Export JSON')
         except IOError:
             print "Path error"
 
@@ -580,7 +619,7 @@ class detectorDialog( QtGui.QDialog):
                     self.waveTabWidget.show()
                     self.waveFormWidget.hide()
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength')
+                    ax.set_xlabel('Wavelength ')
                     ax.set_ylabel('weight')
                     #ax.set_xlim([0, len(wave)])
                    # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
