@@ -94,16 +94,21 @@ class Detector:
         if eff is None:
             eff = self.calculate_eff()
         ax = figure.add_subplot(111)
-        ax.set_xlabel('Blade Number')
+        ax.set_xlabel('Blade Depth')
         ax.set_ylabel('Blade efficiency %')
       #  ax.set_ylim([0, (eff[1] * 100 + 1)])
         ax.set_xlim([0, len(eff[0]) + 1])
         ax.plot(0, 0)
         ax.plot(0, len(eff[0]) + 1)
         # ax.plot(nb + 1, 0)
+        meta = []
+        nlist = []
         for n in range(0, len(eff[0])):
             # Note that the plot displayed is the backscattering thickness
             ax.plot(n + 1, eff[0][n][0] * 100, 'o', color='red')
+            meta.append(eff[0][n][0] * 100)
+            nlist.append(n+1)
+        self.metadata.update({'effvsdepth': [nlist,meta]})
         ax.grid(True)
         return ax
 
@@ -390,6 +395,14 @@ class Detector:
         detector.threshold = threshold
         detector.single = single
         return detector
+
+    def calculate_barycenter(self):
+        bari = 0
+        weight = 0
+        for w in self.wavelength:
+            bari=bari+(w[0]*w[1])
+            weight+=w[0]
+        return bari/100
 
 
     @staticmethod

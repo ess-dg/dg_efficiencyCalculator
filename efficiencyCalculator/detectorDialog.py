@@ -69,8 +69,8 @@ class detectorDialog( QtGui.QDialog):
         self.thickToolLayout.addWidget(self.toolbar)
         self.waveToolLayout.addWidget(self.toolbar2)
         self.wavePlotLayout.addWidget(self.toolbar5)
-        self.bladePlotLayout.addWidget(self.toolbar4)
-        self.bladeEfficiencyPlotLayout.addWidget(self.toolbar3)
+        self.bladetoolPlotLayout.addWidget(self.toolbar4)
+        self.effPlotHorizontalLayout.addWidget(self.toolbar3)
 
 
         self.BladeTableWidget.setColumnWidth(0, 70)
@@ -188,6 +188,7 @@ class detectorDialog( QtGui.QDialog):
         self.optimizeThicknessDiffButton.clicked.connect(lambda: self.optimize_thickness_diff())
         self.exportButton.clicked.connect(lambda: self.export())
         self.exportThickvseffButton.clicked.connect(lambda: self.export_plot_file('effvsthick'))
+        self.exportEffVsDepthButton.clicked.connect(lambda: self.export_plot_file('effvsdepth'))
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
         self.nameLineEdit.textChanged.connect(lambda: self.updateDetector())
         self.importWaveButton.clicked.connect(lambda: self.importWave())
@@ -558,6 +559,9 @@ class detectorDialog( QtGui.QDialog):
             if plot == 'effVsWave':
                 datafile_id = open(filepath + '/'+self.detector.name+random+'effVsWave.txt', 'w+')
                 meta = self.detector.metadata.get('effVsWave')
+            if plot == 'effvsdepth':
+                datafile_id = open(filepath + '/'+self.detector.name+random+'effVsDepth.txt', 'w+')
+                meta = self.detector.metadata.get('effvsdepth')
             data = np.array([meta[0], meta[1]])
             for a, am in zip(data[0], data[1]):
                 datafile_id.write("{}\t{}\n".format(a, am))
@@ -636,6 +640,9 @@ class detectorDialog( QtGui.QDialog):
                         self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(w[0])))
                         self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(w[1]*100)))
                     self.deleteWaveButton.setEnabled(True)
+                    print str(self.detector.calculate_barycenter())+'= baricenter'
+                    bari = self.detector.calculate_barycenter()
+                    ax.plot([bari,bari],[0,ax.get_ylim()[1]], color='r')
                 else:
                     raise Exception('Total Weight has to be 1, it is: '+ str(weight))
             except Exception as e:
