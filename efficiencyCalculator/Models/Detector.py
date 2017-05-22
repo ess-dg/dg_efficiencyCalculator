@@ -376,6 +376,32 @@ class Detector:
             self.blades[i].backscatter = dopt[i]
         totaleff = sum(effopt)
 
+    def optimize_thickness_diff_poli(self):
+        """sets the thickness of all blades to the most optimal with different thickness
+        """
+        thickrange = np.arange(0.00, 5, 0.01)
+        wavelength = self.wavelength
+        self.wavelength = [[self.calculate_barycenter(),100]]
+        sigma = self.calculate_sigma()
+        sigma = sigma[0]
+        ranges = self.calculate_ranges()
+        eff1 = []
+        effopt = [None] * (len(self.blades))
+        alpha = 0
+        dopt = [None] * (len(self.blades))
+        for t in thickrange:
+            temp = efftools.efficparam(t, sigma, ranges, 1)
+            eff1.append(temp[3])  # no substrate
+        for i in range(len(self.blades) - 1, -1, -1):
+            tempeff = []
+            for j, t in enumerate(thickrange):
+                tempeff.append(eff1[j] + (pl.exp(((-1) * (2 * thickrange[j] * sigma)))) * alpha)
+            effopt[i] = max(tempeff)
+            alpha = effopt[i]
+            dopt[i] = thickrange[np.array(tempeff).argmax()]
+            self.blades[i].backscatter = dopt[i]
+        totaleff = sum(effopt)
+        self.wavelength=wavelength
 
     @staticmethod
     def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single, converter):

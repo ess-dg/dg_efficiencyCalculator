@@ -7,12 +7,28 @@ import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 def calculate_eff_multiblade(nb,converterThickness, substrateThickness, wavelength, angle, threshold, single, converter):
+    '''
+    :param nb(int): Number of blades
+    :param converterThickness(float): Thickness of converter in microns
+    :param substrateThickness(float) : Thickness of substrate in microns
+    :param wavelength(list): List with tuples [weigth in %, wavelength in angstoms]
+    :param angle(int): Inclination of neutrom beam in degrees
+    :param threshold(int): in KeV
+    :param single (boolean): True if is a detector with a single coated blade
+    :param converter(string):  Converter material, see list of available converters
+    :return: list of values, first list contains the efficiency for each blade in depth order (the last is the deepest), last value si the total efficiency of the detector
+    '''
     assert nb >= 1
     assert len(wavelength) >= 1
-    detector = Detector.Detector.build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, False, converter)
+    detector = Detector.Detector.build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single, converter)
     return detector.calculate_eff()
 
 def calculate_eff_json(path):
+    '''
+
+    :param path: path to a json file containing a configuration
+    :return:
+    '''
     print 'Script eff json'
     detector = Detector.Detector.json_parser(path)
     return detector.calculate_eff()
@@ -57,10 +73,10 @@ def optimize_config_diff_thick(originPath, destinyPath):
 
 if __name__ == '__main__':
    print calculate_eff_multiblade(10,1,0,[[1.8,100]], 90, 100,False, '10B4C 2.24g/cm3')
-   print calculate_eff_json('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
-   plot_eff_vs_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/sinmonoconfig.json')
-   optimize_config_same_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json', '/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports')
-   optimize_config_diff_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json','/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports')
-   plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
-   plot_eff_vs_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/PolicromPolidconfig.json')
-   plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json')
+   #print calculate_eff_json('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+   #plot_eff_vs_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/sinmonoconfig.json')
+   #optimize_config_same_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json', '/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports')
+   #optimize_config_diff_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json','/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports')
+   #plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/dg_efficiencycalculator/efficiencyCalculator/exports/detector1.json')
+   #plot_eff_vs_thick('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/PolicromPolidconfig.json')
+   #plot_eff_vs_wave('/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator/efficiencyCalculator/exports/detector1.json')

@@ -450,7 +450,7 @@ class detectorDialog( QtGui.QDialog):
                 if self.detector.single:
                    # print 'Boron single layer calculation '
                     self.totalEfflabel.setText(
-                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;"> BS: ' + str(result[0][0] * 100)[:4] + '% Ts: ' + str(result[1][0] * 100)[:4])
+                        '<html><head/><body style=" font-size:24pt; font-weight:400;"><p>Backscattering: ' + str(result[0][0] * 100)[:4] + '% </p><p>Transmission: ' + str(result[1][0] * 100)[:4]+'</p>')
                     self.plot_blade_figure_single(result)
                 else:
                    # print 'Boron multi-blade double coated calculation '
@@ -536,11 +536,17 @@ class detectorDialog( QtGui.QDialog):
             self.calculate_total_efficiency()
             print 'Blade optimization with different thicknesses'
         else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
-            msg.setText("This optimization is only available with monochromatic neutron beam")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
-            retval = msg.exec_()
+            if len(self.detector.wavelength) > 1:
+                self.detector.optimize_thickness_diff_poli()
+                self.refresh_blades()
+                self.calculate_total_efficiency()
+                print 'Blade optimization with different thicknesses and polichromatic wavelength'
+            else:
+                msg = QtGui.QMessageBox()
+                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg.setText("This optimization is only available with monochromatic neutron beam")
+                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                retval = msg.exec_()
 
 
     def export_plot_file(self, plot):
