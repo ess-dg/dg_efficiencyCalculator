@@ -55,6 +55,7 @@ class B10_test:
         sigma = self.b.full_sigma_calculation([[2,100]], 3)
         assert numpy.isclose([sigma], [0.845952315849], rtol=1e-05, atol=1e-08, equal_nan=False)
 
+    # TODO add aluminium consideration
     def mg_same_thick_test(self):
         sigma = self.b.full_sigma_calculation([[1.8,100]], 5)
         r1 = self.b.ranges(200, '10B4C 2.24g/cm3')

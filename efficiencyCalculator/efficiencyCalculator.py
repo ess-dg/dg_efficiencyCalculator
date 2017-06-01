@@ -106,7 +106,7 @@ class Window(QtGui.QMainWindow):
             c += 1
 
     def plotview(self):
-        """This method is called when the plot button is pushed"""
+        """Deprecated  This method is called when the plot button is pushed """
         if self.yAxisComboBox.currentText() == 'Efficiency':
             if self.xAxisComboBox.currentText() == 'Thickness':
                 if self.varComboBox.currentText() == 'Number of blades':
@@ -228,6 +228,7 @@ class Window(QtGui.QMainWindow):
         self.canvas.draw()
 
     def add_new_plot(self, newplot):
+        """Deprecated"""
         key = newplot.keys()[0]
         self.plotlist.update(newplot)
         rowPosition = self.plotTableWidget.rowCount()
@@ -242,6 +243,7 @@ class Window(QtGui.QMainWindow):
                                      QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
 
     def clear_plots(self):
+        """Deprecated"""
         print 'clear plots'
         self.plotTableWidget.setRowCount(0)
         self.canvas.figure.clear()
@@ -259,6 +261,7 @@ class Window(QtGui.QMainWindow):
             '<html><head/><body><p><span style=" font-size:14pt; font-weight:600;">Nothing to plot</span></p></body></html>')
 
     def eff_boron_singleblade_doublecoated(self):
+        """Deprecated"""
         print ''
         print 'Boron single blade double coated calculation '
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
@@ -274,16 +277,19 @@ class Window(QtGui.QMainWindow):
         self.tResultLabel.setText(str(result[2][0] * 100) + '%')
 
     def eff_boron_multiblade_doublecoated(self):
+        """Deprecated"""
         print ''
         print 'Boron multi-blade double coated calculation '
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
+        # TODO add aluminium consideration
         result = efftools.mg_same_thick(sigma, ranges, self.BSpinBox.value(), self.bladeSpinBox.value())
         self.plotTitleLAbel.setText('Multi blade plots')
         self.figure.clf()
         data = efftools.data_samethick_vs_thickandnb(sigma, ranges, [self.bladeSpinBox.value()], self)
 
     def plotstoppingpower(self):
+        '''deprecated'''
         figure1 = matplotlib.figure.Figure()
         names = ["IONIZ_Linkoping_Alpha06.txt", "IONIZ_Linkoping_Alpha94.txt", "IONIZ_Linkoping_Li06.txt",
                  "IONIZ_Linkoping_Li94.txt"]

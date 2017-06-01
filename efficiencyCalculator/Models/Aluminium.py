@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy import interpolate
 
 
-def aluminium(substrate, wavelength, inclination, type):
+def aluminium(substrate, wavelength, inclination):
     """calculates delta of aluminium
 
     Args:
@@ -23,7 +23,9 @@ def aluminium(substrate, wavelength, inclination, type):
     densityAl = 2.7
     denAl = (densityAl * 6.022e23 / 26.98) * 1e-4
     temp = read_cross_section(wavelength)
-    sigmaal = denAl * temp * 1e-24
+    sigmaal=[]
+    for t in temp:
+        sigmaal.append(denAl * t * 1e-24)
     delta = []
     for s in sigmaal:
         delta.append(np.exp(-1*(s * substrate) / math.sin(math.radians(inclination))))
@@ -38,7 +40,7 @@ def read_cross_section(lambdalist):
     sigma = []
     c0 = 0
     for l in lambdalist:
-        lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l ** 2)) * 1e20 * 6.24e18)
+        lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l[0] ** 2)) * 1e20 * 6.24e18)
 
     x, y = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/../data/Aluminium/AlCrossSect_(n,g).txt",
                       delimiter=',', unpack=True)
@@ -65,4 +67,4 @@ def read_cross_section(lambdalist):
 
 if __name__ == '__main__':
     # b.ranges(200, '10B4C 2.24g/cm3')
-    print aluminium(200, [1.8], 90, 1)
+    print aluminium(200, [[1.8,100]], 90)

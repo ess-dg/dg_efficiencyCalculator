@@ -97,6 +97,7 @@ def mg_same_thick(sigma_eq, ranges, thickness, nb):
 	temp = efficiency4boron(thickness, ranges[0],  ranges[1], ranges[2], ranges[3], sigma_eq)
 	expi = pl.exp(-2*sigma_eq*thickness)
 	eff.append((temp[0][0]*(1-expi**nb)/(1-expi)))
+	#TODO add aluminium consideration
 	return eff
 
 
@@ -122,6 +123,7 @@ def data_samethick_vs_thickandnb(sigma_eq, ranges, nb, window):
 	nb.append(15)
 	nb.append(20)
 	#nb = list(set(nb) - set(nb))
+	#TODO add aluminium consideration
 	for b in nb:
 		for n in thicklist:
 			eff.append(mg_same_thick(sigma_eq, ranges, n, b))
@@ -209,6 +211,7 @@ def metadata_samethick_vs_thickandnb(sigma_eq, ranges, nb):
 	..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/MultiGrid_Optimization/MG1_Calc4monoch_sameThickBlades_VS_ThickAndNb.m?at=default&fileviewer=file-view-default
 
 	"""
+	#TODO add aluminium consideration
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
 	for n in thicklist:
@@ -236,6 +239,7 @@ def metadata_diffthick_vs_thickandnb(sigma_eq, ranges, nb):
 	"""
 	thicklist = np.arange(0.0011, 5, 0.05)
 	eff = []
+	#TODO add aluminium consideration
 	for n in thicklist:
 		eff.append(mg_same_thick(sigma_eq, ranges, n, nb)[0])
 	return thicklist, eff,
@@ -244,6 +248,7 @@ def metadata_diffthick_vs_thickandnb(sigma_eq, ranges, nb):
 def metadata_samethick_vs_wave(sigmaeq, blades, ranges, nb):
 	eff = []
 	for sigma in sigmaeq:
+		# TODO add aluminium consideration
 		eff.append(mg_same_thick(sigma, ranges, blades[0].backscatter, nb)[0])
 	return eff
 

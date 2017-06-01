@@ -7,6 +7,7 @@ from bisect import bisect_left
 import matplotlib.pyplot as plt
 from scipy import interpolate
 import B10
+import Aluminium
 import efftools
 import Blade
 import copy
@@ -32,6 +33,7 @@ class Detector:
         assert len(self.wavelength) >= 1
         ranges = self.calculate_ranges()
         sigma = self.calculate_sigma()
+        varargin = self.calculate_varargin()
         result = []
         if self.single:
             print 'Boron single layer calculation '
@@ -53,7 +55,7 @@ class Detector:
             for n in range(0, len(self.blades)):
                 result[0].append([0, 0])
             for s in sigma:
-                resultpoli.append(efftools.mgeff_depth_profile(thickness, ranges, s, 1))
+                resultpoli.append(efftools.mgeff_depth_profile(thickness, ranges, s, varargin))
             for i, r in enumerate(resultpoli):
                 for j, ewz in enumerate(resultpoli[i][0]):
                     result[0][j][0] = result[0][j][0] + ewz[0]*self.wavelength[i][1]*0.01
@@ -352,10 +354,15 @@ class Detector:
             self.blades[c] = b
             c += 1
 
-    def optimize_thickness_diff_mono(self):
+    def optimize_thickness_diff(self):
         """sets the thickness of all blades to the most optimal with different thickness
         """
         thickrange = np.arange(0.00, 5, 0.01)
+        wavelength = self.wavelength
+        # check polichromatic wavelength
+        if len(self.wavelength) > 1:
+            print 'optimization for polichromatic wavelength'
+            self.wavelength = [[self.calculate_barycenter(), 100]]
         sigma = self.calculate_sigma()
         sigma = sigma[0]
         ranges = self.calculate_ranges()
@@ -375,33 +382,9 @@ class Detector:
             dopt[i] = thickrange[np.array(tempeff).argmax()]
             self.blades[i].backscatter = dopt[i]
         totaleff = sum(effopt)
+        if len(self.wavelength) > 1:
+            self.wavelength = wavelength
 
-    def optimize_thickness_diff_poli(self):
-        """sets the thickness of all blades to the most optimal with different thickness
-        """
-        thickrange = np.arange(0.00, 5, 0.01)
-        wavelength = self.wavelength
-        self.wavelength = [[self.calculate_barycenter(),100]]
-        sigma = self.calculate_sigma()
-        sigma = sigma[0]
-        ranges = self.calculate_ranges()
-        eff1 = []
-        effopt = [None] * (len(self.blades))
-        alpha = 0
-        dopt = [None] * (len(self.blades))
-        for t in thickrange:
-            temp = efftools.efficparam(t, sigma, ranges, 1)
-            eff1.append(temp[3])  # no substrate
-        for i in range(len(self.blades) - 1, -1, -1):
-            tempeff = []
-            for j, t in enumerate(thickrange):
-                tempeff.append(eff1[j] + (pl.exp(((-1) * (2 * thickrange[j] * sigma)))) * alpha)
-            effopt[i] = max(tempeff)
-            alpha = effopt[i]
-            dopt[i] = thickrange[np.array(tempeff).argmax()]
-            self.blades[i].backscatter = dopt[i]
-        totaleff = sum(effopt)
-        self.wavelength=wavelength
 
     @staticmethod
     def build_detector(nb, converterThickness, substrateThickness, wavelength, angle, threshold, single, converter):
@@ -429,6 +412,11 @@ class Detector:
             bari=bari+(w[0]*w[1])
             weight+=w[0]
         return bari/100
+
+    def calculate_varargin(self):
+        thick = self.blades[0].substrate
+        varargin = Aluminium.aluminium(thick,self.wavelength,self.angle)
+        return varargin[0]
 
 
     @staticmethod

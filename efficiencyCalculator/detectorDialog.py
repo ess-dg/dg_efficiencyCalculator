@@ -530,23 +530,17 @@ class detectorDialog( QtGui.QDialog):
         print 'Blade optimization with same thicknesses'
 
     def optimize_thickness_diff(self):
-        if len(self.detector.wavelength) == 1:
-            self.detector.optimize_thickness_diff_mono()
+        if len(self.detector.wavelength) >= 1:
+            self.detector.optimize_thickness_diff()
             self.refresh_blades()
             self.calculate_total_efficiency()
             print 'Blade optimization with different thicknesses'
         else:
-            if len(self.detector.wavelength) > 1:
-                self.detector.optimize_thickness_diff_poli()
-                self.refresh_blades()
-                self.calculate_total_efficiency()
-                print 'Blade optimization with different thicknesses and polichromatic wavelength'
-            else:
-                msg = QtGui.QMessageBox()
-                msg.setIcon(QtGui.QMessageBox.Warning)
-                msg.setText("This optimization is only available with monochromatic neutron beam")
-                msg.setStandardButtons(QtGui.QMessageBox.Ok)
-                retval = msg.exec_()
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText("This optimization needs wavelength set up")
+            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            retval = msg.exec_()
 
 
     def export_plot_file(self, plot):
