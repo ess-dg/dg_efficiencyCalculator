@@ -402,17 +402,17 @@
                           </column>
                           <column>
                            <property name="text">
-                            <string>Conv thick</string>
+                            <string>Conv thick (µm)</string>
                            </property>
                           </column>
                           <column>
                            <property name="text">
-                            <string>Substrate thick</string>
+                            <string>Substrate thick (µm)</string>
                            </property>
                           </column>
                           <column>
                            <property name="text">
-                            <string>Efficiency</string>
+                            <string>Efficiency (%)</string>
                            </property>
                           </column>
                          </widget>
@@ -669,7 +669,7 @@
                          </property>
                          <column>
                           <property name="text">
-                           <string>lambda</string>
+                           <string>λ (Å)</string>
                           </property>
                          </column>
                          <column>

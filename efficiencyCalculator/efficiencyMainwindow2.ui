@@ -65,17 +65,17 @@
            </column>
            <column>
             <property name="text">
-             <string>Wavelength</string>
+             <string>Wavelength (Å)</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Angle</string>
+             <string>Angle (°)</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Threshold</string>
+             <string>Threshold (KeV)</string>
             </property>
            </column>
           </widget>

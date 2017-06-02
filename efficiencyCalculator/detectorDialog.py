@@ -74,9 +74,9 @@ class detectorDialog( QtGui.QDialog):
 
 
         self.BladeTableWidget.setColumnWidth(0, 70)
-        self.BladeTableWidget.setColumnWidth(1, 80)
-        self.BladeTableWidget.setColumnWidth(2, 80)
-        self.BladeTableWidget.setColumnWidth(3, 70)
+        self.BladeTableWidget.setColumnWidth(1, 85)
+        self.BladeTableWidget.setColumnWidth(2, 115)
+        self.BladeTableWidget.setColumnWidth(3, 75)
 
         self.verticalLayout_8.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.verticalLayout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
@@ -94,7 +94,7 @@ class detectorDialog( QtGui.QDialog):
                 c = 0
                 ax = self.bladeInfoFigure.add_subplot(111)
                 ax.set_xlabel('Depth')
-                ax.set_ylabel('Blade thickness')
+                ax.set_ylabel('Blade thickness (micron)')
                 ax.set_ylim([0,8])
                 ax.plot(0, 0)
                 ax.plot(len(self.detector.blades)+1, 0)
@@ -623,7 +623,7 @@ class detectorDialog( QtGui.QDialog):
                     self.waveTabWidget.show()
                     self.waveFormWidget.hide()
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength ')
+                    ax.set_xlabel('Wavelength (angstrom)')
                     ax.set_ylabel('weight')
                     #ax.set_xlim([0, len(wave)])
                    # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
