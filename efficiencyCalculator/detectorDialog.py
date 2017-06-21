@@ -192,6 +192,7 @@ class detectorDialog( QtGui.QDialog):
         self.exportEffVsWaveButton.clicked.connect(lambda: self.export_plot_file('effVsWave'))
         self.nameLineEdit.textChanged.connect(lambda: self.updateDetector())
         self.importWaveButton.clicked.connect(lambda: self.importWave())
+        self.exportThickDepthButton.clicked.connect(lambda: self.export_plot_file('thickDepth'))
 
 
         #table edit signal
@@ -552,16 +553,24 @@ class detectorDialog( QtGui.QDialog):
         """
         try:
             random = str(randint(0,100))
-            filepath = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+            filepath = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
             if plot == 'effvsthick':
                 meta = self.detector.metadata.get('thickVsEff')
-                datafile_id = open(filepath + '/'+self.detector.name+random+'thickVsEff.txt', 'w+')
+                datafile_id = open(filepath, 'w+')
             if plot == 'effVsWave':
-                datafile_id = open(filepath + '/'+self.detector.name+random+'effVsWave.txt', 'w+')
+                datafile_id = open(filepath, 'w+')
                 meta = self.detector.metadata.get('effVsWave')
             if plot == 'effvsdepth':
-                datafile_id = open(filepath + '/'+self.detector.name+random+'effVsDepth.txt', 'w+')
+                datafile_id = open(filepath, 'w+')
                 meta = self.detector.metadata.get('effvsdepth')
+            if plot == 'thickDepth':
+                datafile_id = open(filepath, 'w+')
+                c = 0
+                meta = [[],[]]
+                for b in self.detector.blades:
+                    meta[0].append(c+1)
+                    meta[1].append(b.backscatter)
+                    c += 1
             data = np.array([meta[0], meta[1]])
             for a, am in zip(data[0], data[1]):
                 datafile_id.write("{}\t{}\n".format(a, am))

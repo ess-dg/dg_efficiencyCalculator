@@ -441,7 +441,7 @@
                              <item>
                               <layout class="QHBoxLayout" name="bladetoolPlotLayout">
                                <item>
-                                <widget class="QPushButton" name="pushButton_2">
+                                <widget class="QPushButton" name="exportThickDepthButton">
                                  <property name="text">
                                   <string>Export data</string>
                                  </property>
