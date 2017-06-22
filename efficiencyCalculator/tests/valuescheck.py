@@ -101,9 +101,9 @@ def test_f():
 
 if __name__=='__main__':
 
-   # test_a()
-   # test_b()
-    #test_c()
-    #test_d()
-    #test_e()
+    test_a()
+    test_b()
+    test_c()
+    test_d()
+    test_e()
     test_f()
