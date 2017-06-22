@@ -27,7 +27,7 @@
     <widget class="QWidget" name="widget_11" native="true">
      <property name="minimumSize">
       <size>
-       <width>30</width>
+       <width>1250</width>
        <height>0</height>
       </size>
      </property>
@@ -377,7 +377,7 @@
                     <item>
                      <widget class="QTabWidget" name="tabWidget">
                       <property name="currentIndex">
-                       <number>0</number>
+                       <number>1</number>
                       </property>
                       <widget class="QWidget" name="tab_10">
                        <attribute name="title">
