@@ -11,11 +11,11 @@ def test_a():
     b = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/a mg10.txt", unpack=True)
     c = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/a mg15.txt", unpack=True)
 
-    plt.plot(a[0],a[1], label='fra 10')
-    plt.plot(b[0],b[1], label='alv 10')
+    plt.plot(a[0],a[1], label='real 10')
+    plt.plot(b[0],b[1], label='software 10')
 
-    plt.plot(a[0],a[2], label='fra 15')
-    plt.plot(c[0],c[1],label='alv 15')
+    plt.plot(a[0],a[2], label='real 15')
+    plt.plot(c[0],c[1],label='software 15')
 
     '''
     plt.plot(a[0],a[3])
@@ -33,8 +33,8 @@ def test_b():
     plt.plot(b[0],b[1])
     '''
 
-    plt.plot(a[0],a[1])
-    plt.plot(b[0], b[1], label='alv 10')
+    plt.plot(a[0],a[1], label='real 10')
+    plt.plot(b[0], b[1], label='software 10')
    # plt.plot(c[0],c[1])
 
     '''
@@ -58,8 +58,8 @@ def test_d():
                    unpack=True)
     b = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/d 10.txt",
                    unpack=True)
-    plt.plot(a[0], a[1])
-    plt.plot(b[0], b[1])
+    plt.plot(a[0], a[1], label='real 10')
+    plt.plot(b[0], b[1], label='software 10')
     plt.legend()
     plt.show()
 
@@ -70,8 +70,8 @@ def test_e():
     b = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/e 10.txt",
                    unpack=True)
     l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    plt.plot(l, a[0], 'o')
-    plt.plot(b[0], b[1]/100, 'o', label='alv')
+    plt.plot(l, a[0], 'o', label='real 10')
+    plt.plot(b[0], b[1]/100, 'o', label='software 10')
     plt.legend()
     plt.show()
 
@@ -80,18 +80,18 @@ def test_f():
     a = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/f MGopt_10_15_20b_th100keV_plotthickindepth_10A",
                    unpack=True)
     l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    b = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/f 10",
-                   unpack=True)
+    #b = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/f 10",
+                   #unpack=True)
     c = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/f 15",
                    unpack=True)
     d = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/datavalues/f 20",
                    unpack=True)
-    plt.plot(l, a[0], 'o', label='fra 10')
-    plt.plot(l, a[1], 'o', label='fra 15')
-    plt.plot(l, a[2], 'o', label='fra 20')
-    plt.plot(b[0], b[1], 'o', label='alv 10')
-    plt.plot(c[0], c[1], 'o', label='alv 15')
-    plt.plot(d[0], d[1], 'o', label='alv 20')
+    plt.plot(l, a[0], 'o', label='real 10')
+    plt.plot(l, a[1], 'o', label='real 15')
+    plt.plot(l, a[2], 'o', label='real 20')
+    #plt.plot(b[0], b[1], 'o', label='software 10')
+    plt.plot(c[0], c[1], 'o', label='software 15')
+    plt.plot(d[0], d[1], 'o', label='software 20')
 
    # plt.plot(l, a[1], 'o')
     #plt.plot(l, a[2], 'o')

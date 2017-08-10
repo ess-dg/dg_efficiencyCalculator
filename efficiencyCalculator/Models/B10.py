@@ -213,5 +213,5 @@ def find_th(array, threshold):
 
 if __name__ == '__main__':
     b = B10()
-    # b.ranges(200, '10B4C 2.24g/cm3')
-    print b.read_cross_section([1.8, 3, 6])
+    print b.ranges(100, '10B4C 2.24g/cm3')
+    #print b.read_cross_section([1.8, 3, 6])

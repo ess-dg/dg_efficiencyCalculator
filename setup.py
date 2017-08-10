@@ -12,7 +12,7 @@ DATA_FILES = []
 OPTIONS = {'argv_emulation': True, 'includes': ['sip', 'PyQt4._qt']}
 
 setup(
-    name='Neutron detector efficiency calculator',
+    name='EffCalculator',
     version="0.0.1",
     app=APP,
     author='Alvaro Carmona',
