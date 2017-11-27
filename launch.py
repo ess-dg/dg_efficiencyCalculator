@@ -1,10 +1,10 @@
 import efficiencyCalculator.efficiencyCalculator as effc
 
 import sys
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     # initialize app's main controller
     # controller = MainController()
     window = effc.Window()

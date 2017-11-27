@@ -47,7 +47,7 @@ class B10:
         """
         if threshold < 2:
             threshold = 2
-            print 'Threshold set to 2 keV, no lower Th. accepted!'
+            print ('Threshold set to 2 keV, no lower Th. accepted!')
 
         if threshold > 779:
             threshold = 779
@@ -213,5 +213,5 @@ def find_th(array, threshold):
 
 if __name__ == '__main__':
     b = B10()
-    print b.ranges(100, '10B4C 2.24g/cm3')
+    print (b.ranges(100, '10B4C 2.24g/cm3'))
     #print b.read_cross_section([1.8, 3, 6])

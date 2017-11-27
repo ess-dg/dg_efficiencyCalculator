@@ -5,23 +5,23 @@ import json
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-from PyQt4 import QtGui, QtCore, uic, Qt
+from PyQt5 import QtGui, QtCore, uic, QtWidgets
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from random import randint
 
-import Models.B10 as B10
-import Models.Blade as Blade
-from Models import efftools
+from .Models import B10
+from .Models import Blade as Blade
+from .Models import efftools
 
 
-class detectorDialog( QtGui.QDialog):
+class detectorDialog( QtWidgets.QDialog):
 
     def __init__(self, detector, action, parent = None):
         super(detectorDialog, self).__init__(parent)
         uic.loadUi(os.path.dirname(os.path.abspath(__file__))+"/detectorDialogTab.ui", self)
 
-        self.state = ''
+        self.state = 'venv'
         self.Boron = B10.B10()
         self.action = action
         self.detector = detector
@@ -88,7 +88,7 @@ class detectorDialog( QtGui.QDialog):
             self.deleteButton.setEnabled(False)
         # List widget update
         if len(self.detector.blades) > 0:
-            print 'loading blade'
+            print ('loading blade')
             self.addBladeButton.setEnabled(False)
             try:
                 c = 0
@@ -105,25 +105,25 @@ class detectorDialog( QtGui.QDialog):
                     # Note that the plot displayed is the backscattering thickness
                     ax.plot(c+1, b.backscatter, 'd', color='black')
 
-                    item = QtGui.QTableWidgetItem('Blade N:'+str(c+1))
+                    item = QtWidgets.QTableWidgetItem('Blade N:'+str(c+1))
                     # execute the line below to every item you need locked
                     item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-                    self.BladeTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(item))
+                    self.BladeTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(item))
 
-                    item = QtGui.QTableWidgetItem(str(b.backscatter))
+                    item = QtWidgets.QTableWidgetItem(str(b.backscatter))
                     item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
                     self.BladeTableWidget.setItem(rowPosition, 1, item)
 
-                  #  self.BladeTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(b.transmission)))
+                  #  self.BladeTableWidget.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(str(b.transmission)))
 
-                    item = QtGui.QTableWidgetItem(str(b.substrate))
+                    item = QtWidgets.QTableWidgetItem(str(b.substrate))
                     item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
-                    self.BladeTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(item))
+                    self.BladeTableWidget.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(item))
 
-                    item = QtGui.QTableWidgetItem('unknown')
+                    item = QtWidgets.QTableWidgetItem('unknown')
                     item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-                    self.BladeTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(item))
+                    self.BladeTableWidget.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(item))
                     c += 1
                 ax.grid(True)
                 if self.detector.single:
@@ -135,11 +135,11 @@ class detectorDialog( QtGui.QDialog):
                 self.bladeTabWidget.hide()
                 self.bladeInfoCanvas.draw()
             except IndexError:
-                print 'no blades'
+                print ('no blades')
         else:
             self.deleteBladeButton.setEnabled(False)
         if len(self.detector.wavelength) > 0:
-            print 'loading wavelength'
+            print ('loading wavelength')
             try:
                 c = 0
                 self.waveTabWidget.show()
@@ -169,11 +169,11 @@ class detectorDialog( QtGui.QDialog):
                 for b in self.detector.wavelength:
                     rowPosition = c
                     self.lambdaTableWidget.insertRow(rowPosition)
-                    self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(b[0])))
-                    self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(b[1])))
+                    self.lambdaTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(b[0])))
+                    self.lambdaTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(b[1])))
                     c += 1
             except IndexError:
-                print 'no wavelength'
+                print ('no wavelength')
         else:
             self.deleteWaveButton.setEnabled(False)
         #Button connections
@@ -211,7 +211,7 @@ class detectorDialog( QtGui.QDialog):
         self.nameLineEdit.setValidator(name_validator)
 
     def updateDetector(self):
-        print 'parameter changed'
+        print ('parameter changed')
         self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         self.detector.name = str(self.nameLineEdit.text())
         self.detector.threshold = self.thresholdSpinBox.value()
@@ -228,26 +228,26 @@ class detectorDialog( QtGui.QDialog):
         """
         Deprecated
         """
-        print 'add wavelength'
+        print ('add wavelength')
         self.waveTabWidget.show()
         self.waveFormWidget.hide()
         self.detector.wavelength.append([self.waveSpinBox.value(), self.percentSpinBox.value()])
         rowPosition = self.lambdaTableWidget.rowCount()
         self.lambdaTableWidget.insertRow(rowPosition)
-        self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(self.waveSpinBox.value())))
-        self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(self.percentSpinBox.value())))
+        self.lambdaTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(self.waveSpinBox.value())))
+        self.lambdaTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(self.percentSpinBox.value())))
         self.deleteWaveButton.setEnabled(True)
 
     def add_poli_wavelength(self):
         """
         adds a wavelength with lambda and % and plots it
         """
-        print 'add wavelength'
+        print ('add wavelength')
         self.detector.wavelength.append([self.wavePoliSpinBox.value(), self.percentPoliSpinBox.value()])
         rowPosition = self.lambdaTableWidget.rowCount()
         self.lambdaTableWidget.insertRow(rowPosition)
-        self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(self.wavePoliSpinBox.value())))
-        self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(self.percentPoliSpinBox.value())))
+        self.lambdaTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(self.wavePoliSpinBox.value())))
+        self.lambdaTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(self.percentPoliSpinBox.value())))
         self.percentPoliSpinBox.setMaximum(self.percentPoliSpinBox.maximum() - self.percentPoliSpinBox.value())
         # self.addPoliWavelengthButton.setEnabled(False)
         self.deleteWaveButton.setEnabled(True)
@@ -271,7 +271,7 @@ class detectorDialog( QtGui.QDialog):
         """
         Deletes all wavelengths from current configuration
         """
-        print 'clear wavelength'
+        print ('clear wavelength')
         self.waveInfoFigure.clear()
         self.waveTabWidget.hide()
         self.waveFormWidget.show()
@@ -289,7 +289,7 @@ class detectorDialog( QtGui.QDialog):
         """
         Updates blade list and plots to current configuration
         """
-        print 'Refresh blade list and plot'
+        print ('Refresh blade list and plot')
         self.state = 'RefressB'
         self.bladeInfoFigure.clear()
         ax = self.bladeInfoFigure.add_subplot(111)
@@ -304,9 +304,9 @@ class detectorDialog( QtGui.QDialog):
             # Note that the plot displayed is the backscattering thickness
             bs = self.detector.blades[n].backscatter
             ax.plot(n + 1, bs, 'd', color='black')
-            self.BladeTableWidget.setItem(n, 0, QtGui.QTableWidgetItem(str(n + 1)))
-            self.BladeTableWidget.setItem(n, 1, QtGui.QTableWidgetItem(str(bs)))
-            self.BladeTableWidget.setItem(n, 2, QtGui.QTableWidgetItem(str(sub)))
+            self.BladeTableWidget.setItem(n, 0, QtWidgets.QTableWidgetItem(str(n + 1)))
+            self.BladeTableWidget.setItem(n, 1, QtWidgets.QTableWidgetItem(str(bs)))
+            self.BladeTableWidget.setItem(n, 2, QtWidgets.QTableWidgetItem(str(sub)))
         ax.grid(True)
         self.bladeInfoCanvas.draw()
         self.state = ''
@@ -316,7 +316,7 @@ class detectorDialog( QtGui.QDialog):
         adds blades to configuration, updates blade list and plots
         """
         if self.bsSpinBox.value() > 0:
-            print 'add blades to current configuration'
+            print ('add blades to current configuration')
             self.effWidget.show()
             self.bladeTabWidget.hide()
             self.bladePlotWidget.show()
@@ -339,11 +339,11 @@ class detectorDialog( QtGui.QDialog):
                 blade = Blade.Blade(bs, ts, sub, 0)
                 self.detector.blades.append(blade)
                 self.BladeTableWidget.insertRow(n)
-                self.BladeTableWidget.setItem(n, 0, QtGui.QTableWidgetItem(str(n+1)))
-                item = QtGui.QTableWidgetItem(str(bs))
+                self.BladeTableWidget.setItem(n, 0, QtWidgets.QTableWidgetItem(str(n+1)))
+                item = QtWidgets.QTableWidgetItem(str(bs))
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsEditable)
                 self.BladeTableWidget.setItem(n, 1, item)
-                self.BladeTableWidget.setItem(n, 2, QtGui.QTableWidgetItem(str(sub)))
+                self.BladeTableWidget.setItem(n, 2, QtWidgets.QTableWidgetItem(str(sub)))
             ax.grid(True)
             self.bladeInfoCanvas.draw()
             self.addBladeButton.setEnabled(False)
@@ -352,10 +352,10 @@ class detectorDialog( QtGui.QDialog):
             self.detector.single = False
             self.state = ''
         else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("Please set thickness")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             retval = msg.exec_()
 
     def add_layer(self):
@@ -368,7 +368,7 @@ class detectorDialog( QtGui.QDialog):
         self.tabWidget_2.setCurrentIndex(0)
         self.bladeClassLabel.setText("Single coated blade")
         if self.bsSingleSpinBox.value() > 0:
-            print 'Add single coated blade'
+            print ('Add single coated blade')
             self.effWidget.show()
             self.bladeTabWidget.hide()
             self.bladePlotWidget.show()
@@ -385,9 +385,9 @@ class detectorDialog( QtGui.QDialog):
             blade = Blade.Blade(bs, ts, sub, 0)
             self.detector.blades.append(blade)
             self.BladeTableWidget.insertRow(0)
-            self.BladeTableWidget.setItem(0, 0, QtGui.QTableWidgetItem(str(1)))
-            self.BladeTableWidget.setItem(0, 1, QtGui.QTableWidgetItem(str(self.bsSingleSpinBox.value())))
-            self.BladeTableWidget.setItem(0, 2, QtGui.QTableWidgetItem(str(sub)))
+            self.BladeTableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(str(1)))
+            self.BladeTableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str(self.bsSingleSpinBox.value())))
+            self.BladeTableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(str(sub)))
             ax.grid(True)
             self.bladeInfoCanvas.draw()
             self.addBladeButton.setEnabled(False)
@@ -395,10 +395,10 @@ class detectorDialog( QtGui.QDialog):
             self.deleteBladeButton.setEnabled(True)
             self.detector.single = True
         else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("Please set thickness")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             retval = msg.exec_()
         self.state = ''
 
@@ -406,7 +406,7 @@ class detectorDialog( QtGui.QDialog):
         """
         Clears blades from current configuration
         """
-        print 'clear blades'
+        print ('clear blades')
         self.effWidget.hide()
         self.bladeTabWidget.show()
         self.bladePlotWidget.hide()
@@ -423,9 +423,9 @@ class detectorDialog( QtGui.QDialog):
         self.totalEfflabel.setText('unknown')
 
     def delete_detector(self):
-        reply = QtGui.QMessageBox.question(self, 'delete', 'Are you sure you want to delete this detector?', QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-        if reply == QtGui.QMessageBox.Yes:
-            print 'delete detector'
+        reply = QtWidgets.QMessageBox.question(self, 'delete', 'Are you sure you want to delete this detector?', QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            print ('delete detector')
             self.action = 'delete'
             self.accept()
 
@@ -435,12 +435,12 @@ class detectorDialog( QtGui.QDialog):
         dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         result = dialog.exec_()
         detector, action = dialog.returnDetector()
-        print 'close dialog'
-        return detector, result == QtGui.QDialog.Accepted, action
+        print ('close dialog')
+        return detector, result == QtWidgets.QDialog.Accepted, action
 
     def calculate_total_efficiency(self):
         self.detector.converterConfiguration = str(self.converterComboBox.currentText())
-        print 'CalculateTotalEff'
+        print ('CalculateTotalEff')
         if len(self.detector.blades) >= 1:
             if len(self.detector.wavelength) >= 1:
                 self.detector.angle = self.angleSpinBox.value()
@@ -477,18 +477,18 @@ class detectorDialog( QtGui.QDialog):
                 self.exportButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
             else:
-                msg = QtGui.QMessageBox()
-                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setText("Please add wavelength")
-                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
                 retval = msg.exec_()
         else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("Please add blades")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             retval = msg.exec_()
-        print ''
+        print ('')
 
     def plot_thick_vs_eff(self, sigma, ranges, blades, result):
         self.thickVsEffFigure.clear()
@@ -508,39 +508,39 @@ class detectorDialog( QtGui.QDialog):
         self.bladeEffFigure.clear()
         self.detector.plot_blade_figure(result, self.bladeEffFigure)
         for n in range(0, len(result[0])):
-            item = QtGui.QTableWidgetItem(str(result[0][n][0] * 100)[:4] + '%')
+            item = QtWidgets.QTableWidgetItem(str(result[0][n][0] * 100)[:4] + '%')
             item.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-            self.BladeTableWidget.setItem(n, 3, QtGui.QTableWidgetItem(item))
+            self.BladeTableWidget.setItem(n, 3, QtWidgets.QTableWidgetItem(item))
         self.bladeEffCanvas.draw()
         self.state = ''
-        print 'plot blade figure multi blade'
+        print ('plot blade figure multi blade')
 
     def plot_blade_figure_single(self, result):
         self.state = 'PlotBladeFigureSingle'
         self.bladeEffFigure.clear()
         self.detector.plot_blade_figure_single(result, self.bladeEffFigure)
-        self.BladeTableWidget.setItem(0, 3, QtGui.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% Backscattering, '+str(result[1][0] * 100)[:4]+'% Transmission'))
+        self.BladeTableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% Backscattering, '+str(result[1][0] * 100)[:4]+'% Transmission'))
         self.bladeEffCanvas.draw()
         self.state = ''
-        print 'Plot blade figure single coated blade'
+        print ('Plot blade figure single coated blade')
 
     def optimize_thickness_same(self):
         self.detector.optimize_thickness_same()
         self.refresh_blades()
         self.calculate_total_efficiency()
-        print 'Blade optimization with same thicknesses'
+        print ('Blade optimization with same thicknesses')
 
     def optimize_thickness_diff(self):
         if len(self.detector.wavelength) >= 1:
             self.detector.optimize_thickness_diff()
             self.refresh_blades()
             self.calculate_total_efficiency()
-            print 'Blade optimization with different thicknesses'
+            print ('Blade optimization with different thicknesses')
         else:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("This optimization needs wavelength set up")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             retval = msg.exec_()
 
 
@@ -553,7 +553,7 @@ class detectorDialog( QtGui.QDialog):
         """
         try:
             random = str(randint(0,100))
-            filepath = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
+            filepath = str(QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory"))
             if plot == 'effvsthick':
                 meta = self.detector.metadata.get('thickVsEff')
                 datafile_id = open(filepath, 'w+')
@@ -575,9 +575,9 @@ class detectorDialog( QtGui.QDialog):
             for a, am in zip(data[0], data[1]):
                 datafile_id.write("{}\t{}\n".format(a, am))
             datafile_id.close()
-            print 'export plot file'
+            print ('export plot file')
         except IOError:
-            print "Path error"
+            print ("Path error")
 
     def tableEdited(self, item):
         """signal triggered every time the blade table is updated, used to check the manual input from user to set up a specific thickness in a blade.
@@ -591,10 +591,10 @@ class detectorDialog( QtGui.QDialog):
             try:
                 itemText = float(item.text())
                 if itemText > 8:
-                    msg = QtGui.QMessageBox()
-                    msg.setIcon(QtGui.QMessageBox.Warning)
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Warning)
                     msg.setText("Maximum thickness is 8")
-                    msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                    msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     retval = msg.exec_()
                     self.refresh_blades()
                 else:
@@ -602,10 +602,10 @@ class detectorDialog( QtGui.QDialog):
                     self.refresh_blades()
             except ValueError:
                 self.refresh_blades()
-                msg = QtGui.QMessageBox()
-                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setText("Wrong input")
-                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
                 retval = msg.exec_()
 
     def export(self):
@@ -613,18 +613,18 @@ class detectorDialog( QtGui.QDialog):
         self.detector.threshold = self.thresholdSpinBox.value()
         self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         try:
-            filepath = str(QtGui.QFileDialog.getSaveFileName(self, "Select Directory"))
+            filepath = str(QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory"))
             with open(str(filepath)+'.json', "w") as outfile:
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
             print('Export JSON')
         except IOError:
-            print "Path error"
+            print ("Path error")
 
     def importWave(self):
         try:
-            print "Import wavelength"
-            filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+            print ("Import wavelength")
+            filepath = str(QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory"))
             wave = np.loadtxt(filepath)
             weight = np.sum(np.loadtxt(filepath), axis=0)[1]
             try:
@@ -646,20 +646,20 @@ class detectorDialog( QtGui.QDialog):
                         self.detector.wavelength.append([w[0], w[1]*100])
                         rowPosition = self.lambdaTableWidget.rowCount()
                         self.lambdaTableWidget.insertRow(rowPosition)
-                        self.lambdaTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(w[0])))
-                        self.lambdaTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(w[1]*100)))
+                        self.lambdaTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(w[0])))
+                        self.lambdaTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(w[1]*100)))
                     self.deleteWaveButton.setEnabled(True)
-                    print str(self.detector.calculate_barycenter())+'= baricenter'
+                    print (str(self.detector.calculate_barycenter())+'= baricenter')
                     bari = self.detector.calculate_barycenter()
                     ax.plot([bari,bari],[0,ax.get_ylim()[1]], color='r')
                 else:
                     raise Exception('Total Weight has to be 1, it is: '+ str(weight))
             except Exception as e:
                 print('caught this error: ' + repr(e))
-                msg = QtGui.QMessageBox()
-                msg.setIcon(QtGui.QMessageBox.Warning)
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
                 msg.setText('Total Weight has to be 1, it is: ' + str(weight))
-                msg.setStandardButtons(QtGui.QMessageBox.Ok)
+                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
                 retval = msg.exec_()
         except IOError:
-            print "Path error"
+            print ("Path error")

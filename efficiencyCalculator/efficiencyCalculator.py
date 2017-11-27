@@ -9,17 +9,17 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy
 import numpy as np
-from PyQt4 import QtGui, uic
+from PyQt5 import QtGui, uic, QtWidgets
 
-import Models.B10 as B10
-import Models.Detector as Detector
-import detectorDialog
-from Models import efftools
+from .Models import B10
+from .Models import Detector
+from .detectorDialog import detectorDialog as detectorDialog
+from .Models import efftools
 
 base, form = uic.loadUiType(os.path.dirname(os.path.abspath(__file__))+"/efficiencyMainwindow2.ui")
 
 
-class Window(QtGui.QMainWindow):
+class Window(QtWidgets.QMainWindow):
     converters = {}
     plotlist = {}
     detectorList = []
@@ -46,7 +46,7 @@ class Window(QtGui.QMainWindow):
 
     def create_detector(self):
         detector = Detector.Detector('Detector ' + str(len(self.detectorList) + 1))
-        detector = detectorDialog.detectorDialog.getDetector(detector, 'create')
+        detector = detectorDialog.getDetector(detector, 'create')
         if detector[1]:
             self.detectorList.append(detector[0])
             self.update_detector_list()
@@ -59,10 +59,10 @@ class Window(QtGui.QMainWindow):
             self.update_detector_list()
 
         except IndexError:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("Please select a detector of the list")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msg.exec_()
 
     def edit_detector(self):
@@ -78,10 +78,10 @@ class Window(QtGui.QMainWindow):
                     self.update_detector_list()
 
         except IndexError:
-            msg = QtGui.QMessageBox()
-            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("Please select a detector of the list")
-            msg.setStandardButtons(QtGui.QMessageBox.Ok)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msg.exec_()
 
     def update_detector_list(self):
@@ -91,18 +91,18 @@ class Window(QtGui.QMainWindow):
             rowPosition = c
             self.detectorTableWidget.insertRow(rowPosition)
             if d.name is not None:
-                self.detectorTableWidget.setItem(rowPosition, 0, QtGui.QTableWidgetItem(str(d.name)))
+                self.detectorTableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(d.name)))
             if d.blades is not None:
-                self.detectorTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(len(d.blades))))
+                self.detectorTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(len(d.blades))))
             if d.angle is not None:
-                self.detectorTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(d.angle)))
+                self.detectorTableWidget.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(str(d.angle)))
             if len(d.wavelength) is not 0:
                 if len(d.wavelength) > 1:
-                    self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem('Polichromatic'))
+                    self.detectorTableWidget.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem('Polichromatic'))
                 else:
-                    self.detectorTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(d.wavelength[0][0])))
+                    self.detectorTableWidget.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(str(d.wavelength[0][0])))
             if d.threshold is not None:
-                self.detectorTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(d.threshold)))
+                self.detectorTableWidget.setItem(rowPosition, 4, QtWidgets.QTableWidgetItem(str(d.threshold)))
             c += 1
 
     def plotview(self):
@@ -176,30 +176,30 @@ class Window(QtGui.QMainWindow):
 
     def calculate_efficiency(self):
         self.figure.clf()
-        print ''
-        print 'calculate'
+        print ('')
+        print ('calculate')
         sys.stdout.write("Thickness of Substrate: ")
-        print self.substrateTSpinBox.value() + self.substrateBSpinBox.value()
+        print (self.substrateTSpinBox.value() + self.substrateBSpinBox.value())
         sys.stdout.write("Thickness of B10: ")
-        print self.BSpinBox.value()
+        print (self.BSpinBox.value())
         sys.stdout.write("N of blades: ")
-        print self.bladeSpinBox.value()
+        print (self.bladeSpinBox.value())
         if self.geometricalARadioButton.isChecked():
-            print "Geometrical Arrangement: Single Coated "
+            print ("Geometrical Arrangement: Single Coated ")
         else:
-            print "Geometrical Arrangement: Double Coated "
+            print ("Geometrical Arrangement: Double Coated ")
         sys.stdout.write("Material of substrate: ")
-        print self.materialComboBox.currentText()
+        print (self.materialComboBox.currentText())
         sys.stdout.write("Incident angle: ")
-        print self.angleSpinBox.value()
+        print (self.angleSpinBox.value())
         sys.stdout.write("Gas selected: ")
-        print self.gasSelectorComboBox.currentText()
+        print (self.gasSelectorComboBox.currentText())
         sys.stdout.write("Pressure of gas: ")
-        print self.pressureSpinBox.value()
+        print (self.pressureSpinBox.value())
         sys.stdout.write("Lambda of Neutron: ")
-        print self.lambdaSpinBox.value()
+        print (self.lambdaSpinBox.value())
         sys.stdout.write("Threshold of Neutron: ")
-        print self.thresholdSpinBox.value()
+        print (self.thresholdSpinBox.value())
         # Calculation celection logic
         if not self.geometricalARadioButton.isChecked():
             if self.bladeSpinBox.value() == 1:
@@ -233,18 +233,18 @@ class Window(QtGui.QMainWindow):
         self.plotlist.update(newplot)
         rowPosition = self.plotTableWidget.rowCount()
         self.plotTableWidget.insertRow(rowPosition)
-        self.plotTableWidget.setItem(rowPosition, 1, QtGui.QTableWidgetItem(str(newplot.get(key).get('thickness'))))
-        self.plotTableWidget.setItem(rowPosition, 2, QtGui.QTableWidgetItem(str(newplot.get(key).get('nb'))))
-        self.plotTableWidget.setItem(rowPosition, 3, QtGui.QTableWidgetItem(str(newplot.get(key).get('wavelength'))))
-        self.plotTableWidget.setItem(rowPosition, 4, QtGui.QTableWidgetItem(str(newplot.get(key).get('angle'))))
-        self.plotTableWidget.setItem(rowPosition, 5, QtGui.QTableWidgetItem(str(newplot.get(key).get('threshold'))))
-        self.plotTableWidget.setItem(rowPosition, 6, QtGui.QTableWidgetItem(str(newplot.get(key).get('eff'))))
+        self.plotTableWidget.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('thickness'))))
+        self.plotTableWidget.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('nb'))))
+        self.plotTableWidget.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('wavelength'))))
+        self.plotTableWidget.setItem(rowPosition, 4, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('angle'))))
+        self.plotTableWidget.setItem(rowPosition, 5, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('threshold'))))
+        self.plotTableWidget.setItem(rowPosition, 6, QtWidgets.QTableWidgetItem(str(newplot.get(key).get('eff'))))
         self.plotTableWidget.setItem(rowPosition, 7,
-                                     QtGui.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
+                                     QtWidgets.QTableWidgetItem(str(max(newplot.get(key).get('meta')[1])[0])))
 
     def clear_plots(self):
         """Deprecated"""
-        print 'clear plots'
+        print ('clear plots')
         self.plotTableWidget.setRowCount(0)
         self.canvas.figure.clear()
         self.canvas.draw()
@@ -262,8 +262,8 @@ class Window(QtGui.QMainWindow):
 
     def eff_boron_singleblade_doublecoated(self):
         """Deprecated"""
-        print ''
-        print 'Boron single blade double coated calculation '
+        print ('')
+        print ('Boron single blade double coated calculation ')
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         result = efftools.efficiency4boron(self.BSpinBox.value(), ranges[0], ranges[1], ranges[2], ranges[3], sigma)
@@ -278,8 +278,8 @@ class Window(QtGui.QMainWindow):
 
     def eff_boron_multiblade_doublecoated(self):
         """Deprecated"""
-        print ''
-        print 'Boron multi-blade double coated calculation '
+        print ('')
+        print ('Boron multi-blade double coated calculation ')
         ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
         sigma = self.Boron.full_sigma_calculation([self.lambdaSpinBox.value()], self.angleSpinBox.value())
         # TODO add aluminium consideration
@@ -327,9 +327,9 @@ class Window(QtGui.QMainWindow):
                     w = x[c0] - x[c0 - 1]
                 integral = integral + y * w
                 c0 += 1
-            print name + ': '
-            print integral
-            print
+            print (name + ': ')
+            print (integral)
+            print()
 
             E3 = []
             c1 = 0
@@ -373,8 +373,8 @@ class Window(QtGui.QMainWindow):
 
     def import_detector(self):
         try:
-            print "Import config"
-            filepath = str(QtGui.QFileDialog.getOpenFileName(self, "Select Directory"))
+            print ("Import config")
+            filepath = str(QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory"))
             detector = Detector.Detector.json_parser(filepath)
             detector = detectorDialog.detectorDialog.getDetector(detector, 'edit')
             if detector[1]:
@@ -383,11 +383,11 @@ class Window(QtGui.QMainWindow):
                     self.update_detector_list()
 
         except IOError:
-            print "Path error"
+            print ("Path error")
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     # initialize app's main controller
     # controller = MainController()
     window = Window()
