@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['launch.py'],
-             pathex=['/Users/alvarocbasanez/PycharmProjects/Git dg_efficiencyCalculator'],
+             pathex=['/Users/alvarocbasanez/PycharmProjects/Venveffcalculator/dg_efficiencyCalculator'],
              binaries=[],
              datas=[],
              hiddenimports=[],

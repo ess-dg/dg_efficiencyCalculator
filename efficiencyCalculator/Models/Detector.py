@@ -415,7 +415,7 @@ class Detector:
 
     def calculate_varargin(self):
         thick = self.blades[0].substrate
-        varargin = Aluminium.aluminium(thick,self.wavelength,self.angle)
+        varargin = [1]
         return varargin[0]
 
 
