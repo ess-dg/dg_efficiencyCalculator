@@ -11,11 +11,17 @@ This is an internship project in the ESS ERIC in order to make available to the 
 
 Uses code from the project B10 MathUtils in https://bitbucket.org/europeanspallationsource/dg_dgcode
 
-Python 2.7.12
-pyqt 4
+Python 3
 
-Execution
+Execution (Make sure to use python 3)
 ------------
+
+
+Install dependencies:
+pip install -r requirements.txt
+
+
+Run launch script:
 python launch.py
 
 

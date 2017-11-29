@@ -20,7 +20,6 @@ prompt-toolkit>=1.0.9
 ptyprocess>=0.5.1
 Pygments>=2.2.0
 pyparsing>=2.0.6
-PySide>=1.2.4
 python-dateutil>=2.4.2
 pytz>=2015.7
 scandir>=1.4
@@ -29,3 +28,4 @@ simplegeneric>=0.8.1
 six>=1.10.0
 traitlets>=4.3.1
 wcwidth>=0.1.7
+pyqt5
