@@ -10,9 +10,9 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from random import randint
 
-from .Models import B10
-from .Models import Blade as Blade
-from .Models import efftools
+from neutron_detector_eff_functions import B10
+from neutron_detector_eff_functions import Blade as Blade
+from neutron_detector_eff_functions import efftools
 
 
 class detectorDialog( QtWidgets.QDialog):

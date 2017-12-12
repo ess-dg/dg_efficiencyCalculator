@@ -1,7 +1,7 @@
 
-from efficiencyCalculator.Models import Detector
-from efficiencyCalculator.Models.efftools import efficiency4boron
-from efficiencyCalculator.Models.efftools import mg_same_thick
+from neutron_detector_eff_functions import Detector
+from neutron_detector_eff_functions.efftools import efficiency4boron
+from neutron_detector_eff_functions.efftools import mg_same_thick
 import json
 import os
 

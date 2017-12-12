@@ -1,8 +1,8 @@
 import numpy
 
-from efficiencyCalculator.Models import B10
-from efficiencyCalculator.Models.efftools import efficiency4boron
-from efficiencyCalculator.Models.efftools import mg_same_thick
+from neutron_detector_eff_functions import B10
+from neutron_detector_eff_functions.efftools import efficiency4boron
+from neutron_detector_eff_functions.efftools import mg_same_thick
 
 
 class B10_test:

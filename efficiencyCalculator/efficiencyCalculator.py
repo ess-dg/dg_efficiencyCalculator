@@ -11,10 +11,10 @@ import numpy
 import numpy as np
 from PyQt5 import QtGui, uic, QtWidgets
 
-from .Models import B10
-from .Models import Detector
+from neutron_detector_eff_functions import B10
+from neutron_detector_eff_functions import Detector
 from .detectorDialog import detectorDialog as detectorDialog
-from .Models import efftools
+from neutron_detector_eff_functions import efftools
 
 base, form = uic.loadUiType(os.path.dirname(os.path.abspath(__file__))+"/efficiencyMainwindow2.ui")
 
