@@ -69,8 +69,8 @@ class detectorDialog( QtWidgets.QDialog):
         self.thickToolLayout.addWidget(self.toolbar)
         self.waveToolLayout.addWidget(self.toolbar2)
         self.wavePlotLayout.addWidget(self.toolbar5)
-        self.bladetoolPlotLayout.addWidget(self.toolbar4)
-        self.effPlotHorizontalLayout.addWidget(self.toolbar3)
+       # self.bladetoolPlotLayout.addWidget(self.toolbar4)
+       # self.effPlotHorizontalLayout.addWidget(self.toolbar3)
 
 
         self.BladeTableWidget.setColumnWidth(0, 70)
