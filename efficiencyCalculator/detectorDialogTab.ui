@@ -798,7 +798,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget_3">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_3">
               <attribute name="title">
@@ -822,28 +822,32 @@
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
-                      <height>0</height>
+                      <height>70</height>
                      </size>
                     </property>
                     <property name="maximumSize">
                      <size>
                       <width>600</width>
-                      <height>50</height>
+                      <height>73</height>
                      </size>
                     </property>
                     <layout class="QHBoxLayout" name="horizontalLayout_12">
                      <item>
-                      <widget class="QPushButton" name="exportThickDepthButton">
-                       <property name="maximumSize">
-                        <size>
-                         <width>100</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>Export Data</string>
-                       </property>
-                      </widget>
+                      <layout class="QHBoxLayout" name="bladetoolPlotLayout">
+                       <item>
+                        <widget class="QPushButton" name="exportThickDepthButton">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Export Data</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </item>
                     </layout>
                    </widget>
