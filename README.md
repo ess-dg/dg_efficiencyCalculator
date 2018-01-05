@@ -15,10 +15,16 @@ Requisites
 - Python3: I recommend using a virtual environment  https://virtualenv.pypa.io/en/stable/userguide/
 - Qt5: You can find the installation instructions here http://doc.qt.io/qt-5/ 
 
-Execution (Make sure to use python 3)
+Installation and execution (Make sure to use python 3)
 ------------
 
+Clone the repository:
+```
+git clone https://github.com/DetectorEfficiencyCalculator/dg_efficiencyCalculator
+cd dg_efficiencyCalculator
+```
 Install dependencies:
+
 ```
 pip install -r requirements.txt
 ```
