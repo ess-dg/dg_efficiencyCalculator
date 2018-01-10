@@ -6,8 +6,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtGui, QtCore, uic, QtWidgets
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from random import randint
 
 from neutron_detector_eff_functions import B10

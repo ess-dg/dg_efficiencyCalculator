@@ -41,7 +41,7 @@ You may encounter problems depending on the OS and python when installing pyqt5,
 sip pyqt5 manually for the desired python in your machine.
 
 There are known problems with matplotlib's backend in Mac Os X (ImportError: Gtk*).
-To solve this you should edit the file ".matplotlib/matplotlibrc" and add the line "backend: TkAgg"
+To solve this you should edit the file ".matplotlib/matplotlibrc" (Create it if it doesn't exist) and add the line "backend: TkAgg"
 
 If you are missing the tk package:  ```sudo apt-get install python3-tk```
 

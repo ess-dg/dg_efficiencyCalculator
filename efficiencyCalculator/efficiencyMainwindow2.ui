@@ -84,6 +84,24 @@
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="QPushButton" name="addButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
              <property name="text">
               <string>New configuration</string>
              </property>
@@ -91,6 +109,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="editButton">
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
               <string>Edit configuration</string>
              </property>
@@ -98,6 +122,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="duplicateButton">
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
               <string>Duplicate configuration</string>
              </property>
@@ -105,6 +135,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="importButton">
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
               <string>Import configuration</string>
              </property>
