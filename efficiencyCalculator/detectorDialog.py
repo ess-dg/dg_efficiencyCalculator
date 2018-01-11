@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import matplotlib
 import matplotlib.figure
 import json
@@ -548,12 +547,12 @@ class detectorDialog( QtWidgets.QDialog):
         """writes a two column file with x and y values of selected plots
 
         Args:
-        	plot (String): key for metadata dict of desired plot
+           plot (String): key for metadata dict of desired plot
 
         """
         try:
             random = str(randint(0,100))
-            filepath = str(QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory"))
+            filepath, _filter =  QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory")
             if plot == 'effvsthick':
                 meta = self.detector.metadata.get('thickVsEff')
                 datafile_id = open(filepath, 'w+')
@@ -584,7 +583,7 @@ class detectorDialog( QtWidgets.QDialog):
             checks that the input is a number and maximum of 8. Shows a message when the input is wrong.
 
         Args:
-        	item: edited item
+           item: edited item
 
         """
         if self.state == '':
@@ -613,7 +612,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.detector.threshold = self.thresholdSpinBox.value()
         self.detector.converterConfiguration = str(self.converterComboBox.currentText())
         try:
-            filepath = str(QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory"))
+            filepath , _filter =  QtWidgets.QFileDialog.getSaveFileName(self, "Select Directory")
             with open(str(filepath)+'.json', "w") as outfile:
                 outfile.write(json.dumps(self.detector.to_json(), sort_keys=True, indent=4, ensure_ascii=False))
                 outfile.close()
@@ -624,7 +623,7 @@ class detectorDialog( QtWidgets.QDialog):
     def importWave(self):
         try:
             print ("Import wavelength")
-            filepath = str(QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory"))
+            filepath, _filter = QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory")
             wave = np.loadtxt(filepath)
             weight = np.sum(np.loadtxt(filepath), axis=0)[1]
             try:

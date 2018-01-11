@@ -67,7 +67,7 @@ class Window(QtWidgets.QMainWindow):
 
     def edit_detector(self):
         try:
-            detector = detectorDialog.detectorDialog.getDetector(
+            detector = detectorDialog.getDetector(
                 self.detectorList[self.detectorTableWidget.selectedIndexes()[0].row()], 'edit')
             if detector[1]:
                 if detector[2] == 'edit':
@@ -374,9 +374,9 @@ class Window(QtWidgets.QMainWindow):
     def import_detector(self):
         try:
             print ("Import config")
-            filepath = str(QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory"))
+            filepath, _filter = QtWidgets.QFileDialog.getOpenFileName(self, "Select Directory")
             detector = Detector.Detector.json_parser(filepath)
-            detector = detectorDialog.detectorDialog.getDetector(detector, 'edit')
+            detector = detectorDialog.getDetector(detector, 'edit')
             if detector[1]:
                 if detector[2] == 'edit':
                     self.detectorList.append(detector[0])
