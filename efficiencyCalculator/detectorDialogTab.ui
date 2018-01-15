@@ -359,7 +359,11 @@
                          </widget>
                         </item>
                         <item row="4" column="1">
-                         <widget class="QDoubleSpinBox" name="subsSingleSpinBox"/>
+                         <widget class="QDoubleSpinBox" name="subsSingleSpinBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
                         </item>
                        </layout>
                       </item>
@@ -552,7 +556,7 @@
                         <item row="1" column="1">
                          <widget class="QSpinBox" name="percentPoliSpinBox">
                           <property name="enabled">
-                           <bool>false</bool>
+                           <bool>true</bool>
                           </property>
                           <property name="maximum">
                            <number>100</number>
@@ -933,11 +937,11 @@
              <string>Generate a 2 column file with the data from the plot</string>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_4">
              <attribute name="title">
-              <string>Efficiency vs. Blade Depth</string>
+              <string>Efficiency vs. Blade Number</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_12">
               <item>
@@ -1045,7 +1049,7 @@
             </widget>
             <widget class="QWidget" name="tab_5">
              <attribute name="title">
-              <string>Efficiency vs. Lambda</string>
+              <string>Efficiency vs.Wavelength</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_17">
               <item>

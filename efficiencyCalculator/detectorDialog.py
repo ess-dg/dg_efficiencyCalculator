@@ -92,7 +92,7 @@ class detectorDialog( QtWidgets.QDialog):
             try:
                 c = 0
                 ax = self.bladeInfoFigure.add_subplot(111)
-                ax.set_xlabel('Depth')
+                ax.set_xlabel('Blade number')
                 ax.set_ylabel('Blade thickness (micronm)')
                 ax.set_ylim([0,8])
                 ax.plot(0, 0)
@@ -292,7 +292,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.state = 'RefressB'
         self.bladeInfoFigure.clear()
         ax = self.bladeInfoFigure.add_subplot(111)
-        ax.set_xlabel('Depth')
+        ax.set_xlabel('Blade number')
         ax.set_ylabel('Blade thickness ($\mu$m)')
         ax.set_ylim([0, 8])
         ax.plot(0, 0)
@@ -326,7 +326,7 @@ class detectorDialog( QtWidgets.QDialog):
             ts = self.bsSpinBox.value()
             sub = self.subSpinBox.value()
             ax = self.bladeInfoFigure.add_subplot(111)
-            ax.set_xlabel('Depth')
+            ax.set_xlabel('Blade number')
             ax.set_ylabel('Blade thickness ($\mu$m)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
@@ -372,7 +372,7 @@ class detectorDialog( QtWidgets.QDialog):
             self.bladeTabWidget.hide()
             self.bladePlotWidget.show()
             ax = self.bladeInfoFigure.add_subplot(111)
-            ax.set_xlabel('Depth')
+            ax.set_xlabel('Blade number')
             ax.set_ylabel('Blade thickness ($\mu$)')
             ax.set_ylim([0, 8])
             ax.plot(0, 0)
@@ -535,6 +535,11 @@ class detectorDialog( QtWidgets.QDialog):
             self.refresh_blades()
             self.calculate_total_efficiency()
             print ('Blade optimization with different thicknesses')
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("Optimization made using the baricenter of the multiple wavelength values")
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            retval = msg.exec_()
         else:
             msg = QtWidgets.QMessageBox()
             msg.setIcon(QtWidgets.QMessageBox.Warning)
