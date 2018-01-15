@@ -28,5 +28,5 @@ simplegeneric>=0.8.1
 six>=1.10.0
 traitlets>=4.3.1
 wcwidth>=0.1.7
-neutron_detector_eff_functions
+neutron_detector_eff_functions==1.1
 pyqt5
