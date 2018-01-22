@@ -145,7 +145,7 @@ class detectorDialog( QtWidgets.QDialog):
                 self.waveFormWidget.hide()
                 if len(self.detector.wavelength) > 1:
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength (Angstrom)')
+                    ax.set_xlabel('Wavelength ($\AA$)')
                     ax.set_ylabel('weight (%)')
                     # ax.set_xlim([0, len(wave)])
                     # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
@@ -155,7 +155,7 @@ class detectorDialog( QtWidgets.QDialog):
                     ax.grid()
                 else:
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength (Angstrom)')
+                    ax.set_xlabel('Wavelength ($\AA$)')
                     ax.set_ylabel('weight (%)')
                     # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
                     # ax.plot(a, 'ro')
@@ -252,7 +252,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.deleteWaveButton.setEnabled(True)
         self.waveTabWidget.show()
         ax = self.waveInfoFigure.add_subplot(111)
-        ax.set_xlabel('Wavelength (angstrom)')
+        ax.set_xlabel('Wavelength ($\AA$)')
         ax.set_ylabel('weight (%)')
         # a = [[1, 2], [3, 3], [4, 4], [5, 2]]
         # ax.plot(a, 'ro')
@@ -475,6 +475,8 @@ class detectorDialog( QtWidgets.QDialog):
                 self.exportEffVsWaveButton.setEnabled(True)
                 self.exportButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
+                if len(self.detector.wavelength) >= 2:
+                    self.mesage_baricenter()
             else:
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -535,18 +537,19 @@ class detectorDialog( QtWidgets.QDialog):
             self.refresh_blades()
             self.calculate_total_efficiency()
             print ('Blade optimization with different thicknesses')
-            msg = QtWidgets.QMessageBox()
-            msg.setIcon(QtWidgets.QMessageBox.Warning)
-            msg.setText("Optimization made using the baricenter of the multiple wavelength values")
-            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            retval = msg.exec_()
+
         else:
             msg = QtWidgets.QMessageBox()
             msg.setIcon(QtWidgets.QMessageBox.Warning)
             msg.setText("This optimization needs wavelength set up")
             msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
             retval = msg.exec_()
-
+    def mesage_baricenter(self):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.setText("Optimization made using the baricenter of the multiple wavelength values")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        retval = msg.exec_()
 
     def export_plot_file(self, plot):
         """writes a two column file with x and y values of selected plots
@@ -636,7 +639,7 @@ class detectorDialog( QtWidgets.QDialog):
                     self.waveTabWidget.show()
                     self.waveFormWidget.hide()
                     ax = self.waveInfoFigure.add_subplot(111)
-                    ax.set_xlabel('Wavelength (angstrom)')
+                    ax.set_xlabel('Wavelength ($\AA$)')
                     ax.set_ylabel('weight')
                     #ax.set_xlim([0, len(wave)])
                    # a = [[1, 2], [3, 3], [4, 4], [5, 2]]

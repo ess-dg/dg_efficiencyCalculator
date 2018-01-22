@@ -2,18 +2,10 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>660</width>
-    <height>600</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
-    <width>660</width>
-    <height>600</height>
+    <width>550</width>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -75,7 +67,7 @@
            </column>
            <column>
             <property name="text">
-             <string>Threshold (KeV)</string>
+             <string>Threshold (keV)</string>
             </property>
            </column>
           </widget>
@@ -160,7 +152,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>660</width>
+     <width>566</width>
      <height>22</height>
     </rect>
    </property>
