@@ -50,28 +50,30 @@ Developed by Álvaro Carmona Básañez
 File structure
 ------------
 
-efficiencyCalculator/     
-    exports/  # examples of detector configuration files
-        waves/
-            2gaussdistr.txt
-        Detector 118effVsDepth.txt 
-        Detector 11effVsDepth.txt
-        PolicromPolidconfig.json
+```
+efficiencyCalculator/       
+    exports/  # examples of detector configuration files  
+        waves/  
+            2gaussdistr.txt  
+        Detector 118effVsDepth.txt   
+        Detector 11effVsDepth.txt  
+        PolicromPolidconfig.json  
         detector1.json
-    tests/
-        B10_test.py 
-        Detector_test.py
-    detectorDialog.py  # Implementation of the window that is used to configure and optimize detectors
-    detectorDialogTab.ui # Qt UI file
-    detectorform.ui     # Qt UI file
-    efficiencyCalculator.py  # implementation of the first window, lists detector configurations
-    efficiencyMainwindow.ui
-    efficiencyMainwindow2.ui  
-.gitignore  
-.hgignore
-LICENSE
-README.txt
-launch.py   # Script to launch GUI application
-launch.spec
-requirements.txt  # Pip dependencies
-setup.py  # Packaging information
+    tests/  
+        B10_test.py   
+        Detector_test.py  
+    detectorDialog.py  # Implementation of the window that is used to configure and optimize detectors  
+    detectorDialogTab.ui # Qt UI file  
+    detectorform.ui     # Qt UI file  
+    efficiencyCalculator.py  # implementation of the first window, lists detector configurations  
+    efficiencyMainwindow.ui  
+    efficiencyMainwindow2.ui     
+.gitignore    
+.hgignore  
+LICENSE  
+README.txt  
+launch.py   # Script to launch GUI application  
+launch.spec  
+requirements.txt  # Pip dependencies  
+setup.py  # Packaging information  
+```
