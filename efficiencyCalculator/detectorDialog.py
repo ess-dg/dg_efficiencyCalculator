@@ -553,10 +553,8 @@ class detectorDialog( QtWidgets.QDialog):
 
     def export_plot_file(self, plot):
         """writes a two column file with x and y values of selected plots
-
         Args:
            plot (String): key for metadata dict of desired plot
-
         """
         try:
             random = str(randint(0,100))
@@ -589,10 +587,8 @@ class detectorDialog( QtWidgets.QDialog):
     def tableEdited(self, item):
         """signal triggered every time the blade table is updated, used to check the manual input from user to set up a specific thickness in a blade.
             checks that the input is a number and maximum of 8. Shows a message when the input is wrong.
-
         Args:
            item: edited item
-
         """
         if self.state == '':
             try:
