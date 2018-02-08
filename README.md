@@ -5,8 +5,6 @@ Python standalone application
 This is a project in the ESS ERIC in order to make available to the public a library, a GUI tool and a webpage using Francesco Piscitelli's analytical tools for the calculation of efficiency for detectors based on solid converters.
 
 - Webapp:          https://detectorefficiencycalculator.herokuapp.com/
-- ESS Wiki Page:   https://ess-ics.atlassian.net/wiki/display/DG/Detector+efficiency+calculator
-- Jira Project:    https://jira.esss.lu.se/projects/DGEF/summary
 - Repo:            https://github.com/DetectorEfficiencyCalculator/dg_efficiencyCalculator
 - Calculation libraries: https://github.com/alvcarmona/neutronDetectorEffFunctions
 
