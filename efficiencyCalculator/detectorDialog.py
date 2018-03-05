@@ -9,9 +9,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from random import randint
 
-from neutron_detector_eff_functions import B10
-from neutron_detector_eff_functions import Blade as Blade
-from neutron_detector_eff_functions import efftools
+from neutron_detector_eff_functions import B10, Blade
 
 
 class detectorDialog( QtWidgets.QDialog):
@@ -450,12 +448,12 @@ class detectorDialog( QtWidgets.QDialog):
                 if self.detector.single:
                    # print 'Boron single layer calculation '
                     self.totalEfflabel.setText(
-                        '<html><head/><body style=" font-size:24pt; font-weight:400;"><p>Backscattering: ' + str(result[0][0] * 100)[:4] + '% </p><p>Transmission: ' + str(result[1][0] * 100)[:4]+'</p>')
+                        '<html><head/><body style=" font-size:16pt; font-weight:400;"><p>Backscattering: ' + str(result[0][0] )[:4] + '% </p><p>Transmission: ' + str(result[0][1] )[:4]+'</p><p>Total: ' + str(result[1] )[:4]+'</p>')
                     self.plot_blade_figure_single(result)
                 else:
                    # print 'Boron multi-blade double coated calculation '
                     self.totalEfflabel.setText(
-                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] * 100)[:4] + '%')
+                        '<html><head/><body><p><span style=" font-size:24pt; font-weight:600;">' + str(result[1] )[:4] + '%')
                     self.plot_blade_figure(result)
                 self.plot_thick_vs_eff(sigma, ranges, self.detector.blades, result)
 
@@ -499,7 +497,7 @@ class detectorDialog( QtWidgets.QDialog):
 
     def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
         self.waveVsEffFigure.clear()
-        print('Monochromatic PLOT')
+        print('Monochromatic PLOT1')
         # TODO change to plot_eff_vs_wave
         self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, blades, result, wavelength,self.waveVsEffFigure)
         self.waveVsEffCanvas.draw()
@@ -509,7 +507,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.bladeEffFigure.clear()
         self.detector.plot_blade_figure(result, self.bladeEffFigure)
         for n in range(0, len(result[0])):
-            item = QtWidgets.QTableWidgetItem(str(result[0][n][0] * 100)[:4] + '%')
+            item = QtWidgets.QTableWidgetItem(str(result[0][n][0])[:4] + '%')
             item.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             self.BladeTableWidget.setItem(n, 3, QtWidgets.QTableWidgetItem(item))
         self.bladeEffCanvas.draw()
@@ -519,8 +517,8 @@ class detectorDialog( QtWidgets.QDialog):
     def plot_blade_figure_single(self, result):
         self.state = 'PlotBladeFigureSingle'
         self.bladeEffFigure.clear()
-        self.detector.plot_blade_figure_single(result, self.bladeEffFigure)
-        self.BladeTableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(result[0][0] * 100)[:4]+'% Backscattering, '+str(result[1][0] * 100)[:4]+'% Transmission'))
+        self.detector.plot_blade_figure_single(result, self.bladeEffFigure) #tou
+        self.BladeTableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem(str(result[0][0])[:4]+'% Backscattering, '+str(result[0][1] )[:4]+'% Transmission'))
         self.bladeEffCanvas.draw()
         self.state = ''
         print ('Plot blade figure single coated blade')
