@@ -17,7 +17,6 @@ class detectorDialog( QtWidgets.QDialog):
     def __init__(self, detector, action, parent = None):
         super(detectorDialog, self).__init__(parent)
         uic.loadUi(os.path.dirname(os.path.abspath(__file__))+"/detectorDialogTab.ui", self)
-
         self.state = 'venv'
         self.Boron = B10.B10()
         self.action = action
@@ -56,6 +55,10 @@ class detectorDialog( QtWidgets.QDialog):
         self.waveVsEffFigure = matplotlib.figure.Figure()
         self.waveVsEffCanvas = FigureCanvas(self.waveVsEffFigure)
         self.waveVsEffPlotLayout.addWidget(self.waveVsEffCanvas)
+
+        self.phsFigure = matplotlib.figure.Figure()
+        self.phsCanvas = FigureCanvas(self.phsFigure)
+        self.phsPlotLayout.addWidget(self.phsCanvas)
 
         #Interaction plot toolbars
         self.toolbar = NavigationToolbar(self.thickVsEffCanvas, self)
@@ -445,6 +448,7 @@ class detectorDialog( QtWidgets.QDialog):
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
                 result = self.detector.calculate_eff()
+                print(self.detector.blades[0].substrate)
                 if self.detector.single:
                    # print 'Boron single layer calculation '
                     self.totalEfflabel.setText(
@@ -467,6 +471,7 @@ class detectorDialog( QtWidgets.QDialog):
                         sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
                     self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
                 self.tabWidget_2.setCurrentIndex(0)
+                #self.plot_phs_figure()
                 self.optimizeThicknessSameButton.setEnabled(True)
                 self.optimizeThicknessDiffButton.setEnabled(True)
                 self.exportThickvseffButton.setEnabled(True)
@@ -511,6 +516,14 @@ class detectorDialog( QtWidgets.QDialog):
             item.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
             self.BladeTableWidget.setItem(n, 3, QtWidgets.QTableWidgetItem(item))
         self.bladeEffCanvas.draw()
+        self.state = ''
+        print ('plot blade figure multi blade')
+
+    def plot_phs_figure(self):
+        self.state = 'PlotPhdFigure'
+        self.phsFigure.clear()
+        self.detector.plot_phs(self.phsFigure)
+        self.phsCanvas.draw()
         self.state = ''
         print ('plot blade figure multi blade')
 
