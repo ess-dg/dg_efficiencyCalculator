@@ -19,6 +19,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget_11">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="minimumSize">
       <size>
        <width>30</width>
@@ -138,6 +141,9 @@
                      </item>
                      <item row="2" column="0">
                       <widget class="QLabel" name="label_4">
+                       <property name="toolTip">
+                        <string extracomment="&quot;holhacaracola&quot;"/>
+                       </property>
                        <property name="text">
                         <string>Substrate</string>
                        </property>
@@ -165,6 +171,9 @@
                      </item>
                      <item row="2" column="1">
                       <widget class="QComboBox" name="substrateComboBox">
+                       <property name="toolTip">
+                        <string extracomment="&quot;Info about substrate&quot;"/>
+                       </property>
                        <item>
                         <property name="text">
                          <string>Al</string>

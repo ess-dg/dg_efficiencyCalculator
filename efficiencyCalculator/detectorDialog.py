@@ -81,7 +81,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.verticalLayout_8.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.verticalLayout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
-
+        self.substrateComboBox.setToolTip('')
 
         # self.toolbar.hide()
         if self.action == 'create':
