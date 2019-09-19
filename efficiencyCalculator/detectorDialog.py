@@ -9,7 +9,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from random import randint
 
-from neutron_detector_eff_functions import B10, Blade
+from neutron_detector_eff_functions import B10, Blade, Detector
 
 
 class detectorDialog( QtWidgets.QDialog):
@@ -21,6 +21,7 @@ class detectorDialog( QtWidgets.QDialog):
         self.Boron = B10.B10()
         self.action = action
         self.detector = detector
+        self.Detector = Detector.Detector()
         self.setWindowTitle("Detector configurator")
         if detector.converterConfiguration != '':
             if detector.converterConfiguration is not None:
@@ -448,7 +449,7 @@ class detectorDialog( QtWidgets.QDialog):
                 ranges = self.Boron.ranges(self.thresholdSpinBox.value(), str(self.converterComboBox.currentText()))
                 sigma = self.Boron.full_sigma_calculation(self.detector.wavelength, self.angleSpinBox.value())
                 result = self.detector.calculate_eff()
-                print(self.detector.blades[0].substrate)
+                print("subs", self.detector.blades[0].substrate)
                 if self.detector.single:
                    # print 'Boron single layer calculation '
                     self.totalEfflabel.setText(
@@ -465,11 +466,12 @@ class detectorDialog( QtWidgets.QDialog):
                     self.waveVsEffFigure.clear()
                     sigmalist = np.arange(0.0011, 20, 0.1)
                     sigmaeq = []
+                    varargin = self.Detector.calculate_varargin(self.detector.blades[0].substrate, self.detector.wavelength, self.detector.angle)
                     for sigma in sigmalist:
                         # transformation for meeting requirements of functions
                         sigma = [[sigma],]
                         sigmaeq.append(self.Boron.full_sigma_calculation(sigma, self.angleSpinBox.value()))
-                    self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, self.detector.blades, result, self.detector.wavelength)
+                    self.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, varargin, self.detector.blades, result, self.detector.wavelength)
                 self.tabWidget_2.setCurrentIndex(0)
                 #self.plot_phs_figure()
                 self.optimizeThicknessSameButton.setEnabled(True)
@@ -500,12 +502,13 @@ class detectorDialog( QtWidgets.QDialog):
         self.detector.plot_thick_vs_eff(sigma, ranges, blades, result, self.thickVsEffFigure)
         self.thickVsEffCanvas.draw()
 
-    def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, blades, result, wavelength):
+    def plot_wave_vs_eff(self,sigmaeq, sigmalist, ranges, varargin, blades, result, wavelength):
         self.waveVsEffFigure.clear()
         print('Monochromatic PLOT1')
         # TODO change to plot_eff_vs_wave
-        self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, blades, result, wavelength,self.waveVsEffFigure)
+        self.detector.plot_wave_vs_eff(sigmaeq, sigmalist, ranges, varargin, blades, result, wavelength,self.waveVsEffFigure)
         self.waveVsEffCanvas.draw()
+        print(ranges)
 
     def plot_blade_figure(self, result):
         self.state = 'PlotBFigure'
@@ -604,16 +607,16 @@ class detectorDialog( QtWidgets.QDialog):
         if self.state == '':
             try:
                 itemText = float(item.text())
-                if itemText > 8:
-                    msg = QtWidgets.QMessageBox()
-                    msg.setIcon(QtWidgets.QMessageBox.Warning)
-                    msg.setText("Maximum thickness is 8")
-                    msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    retval = msg.exec_()
-                    self.refresh_blades()
-                else:
-                    self.detector.blades[item.row()].backscatter = itemText
-                    self.refresh_blades()
+                #if itemText > 8:
+                #    msg = QtWidgets.QMessageBox()
+                #    msg.setIcon(QtWidgets.QMessageBox.Warning)
+                #    msg.setText("Maximum thickness is 8")
+                #    msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+                #    retval = msg.exec_()
+                #    self.refresh_blades()
+                #else:
+                self.detector.blades[item.row()].backscatter = itemText
+                self.refresh_blades()
             except ValueError:
                 self.refresh_blades()
                 msg = QtWidgets.QMessageBox()

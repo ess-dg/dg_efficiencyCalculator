@@ -381,6 +381,7 @@ class Window(QtWidgets.QMainWindow):
                     self.detectorList.append(detector[0])
                     self.update_detector_list()
 
+
         except IOError:
             print ("Path error")
 
@@ -391,3 +392,4 @@ if __name__ == '__main__':
     # controller = MainController()
     window = Window()
     sys.exit(app.exec_())
+    print(sys.path)
