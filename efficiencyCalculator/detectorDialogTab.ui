@@ -295,7 +295,7 @@
                            <bool>true</bool>
                           </property>
                           <property name="maximum">
-                           <double>5000.000000000000000</double>
+                           <double>50000.000000000000000</double>
                           </property>
                          </widget>
                         </item>
@@ -407,7 +407,7 @@
                         <enum>QAbstractItemView::SelectRows</enum>
                        </property>
                        <attribute name="verticalHeaderDefaultSectionSize">
-                        <number>20</number>
+                        <number>24</number>
                        </attribute>
                        <column>
                         <property name="text">

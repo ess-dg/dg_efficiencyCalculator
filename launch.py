@@ -10,5 +10,6 @@ if __name__ == '__main__':
         # controller = MainController()
         window = effc.Window()
         sys.exit(app.exec_())
+        print(sys.path)
     else:
         print("use python3")
