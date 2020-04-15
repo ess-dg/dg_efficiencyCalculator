@@ -168,53 +168,73 @@ def find_th(array, threshold):
     ..  Original source in Matlab: https: // bitbucket.org / europeanspallationsource / dg_matlabborontools / src / bcbac538ad10d074c5150a228847efc2e0269e0d / B10tools / rangesMAT.m?at = default & fileviewer = file - view - default
 
     """
-    #print("threshold", threshold) # 100 000 eV
-    x = array[0] * 1E-4
-    E1 = (array[1] + array[2]) * 10 * 1E3 # eV
-    E3 = []
-    x_E3 = [] # interpolation position
-    c1 = 0
-    i = 0
-    w = x[1] - x[0]
-    c0 = 0
-    thValue=0
-    thFound= False
-    #Total integral value 'i' calculation
+    # #print("threshold", threshold) # 100 000 eV
+    # x = array[0] * 1E-4
+    # E1 = (array[1] + array[2]) * 10 * 1E3 # eV
+    # E3 = []
+    # x_E3 = [] # interpolation position
+    # c1 = 0
+    # i = 0
+    # w = x[1] - x[0]
+    # c0 = 0
+    # thValue=0
+    # thFound= False
+    # #Total integral value 'i' calculation
 
-    for y in E1:
-        if c0 != 0:
-            # interpolation of distance from previous point
-            # all points seem to be at the same distance!
-            w = x[c0] - x[c0 - 1]
-        i = i + y * w # E_max
-        c0 += 1
+    # for y in E1:
+    #     if c0 != 0:
+    #         # interpolation of distance from previous point
+    #         # all points seem to be at the same distance!
+    #         w = x[c0] - x[c0 - 1]
+    #     i = i + y * w # E_max
+    #     c0 += 1
 
-    for a in x:
-        area = 0
-        c2 = 0
-        c0 = 0
-        w = x[1] - x[0]
-        for s in range(0, c1):
-            if c0 != 0:
-                # interpolation of distance from previous point
-                w = x[c0] - x[c0 - 1]
-            area = area + E1[c2] * w
-            c2 += 1
-            c0 += 1
-        localArea = i - area # E_max - E(x) = E_rem
-        if thFound == False:
-            if localArea <= threshold:
-                thFound = True
-                thValue = x[c2-1]
-        # check if this is the threshold point
-        if localArea != 0: # remove zeros for np.interp to work
-            E3.append(localArea)
-            x_E3.append(x[c2-1])
-        c1 += 1
+    # for a in x:
+    #     area = 0
+    #     c2 = 0
+    #     c0 = 0
+    #     w = x[1] - x[0]
+    #     for s in range(0, c1):
+    #         if c0 != 0:
+    #             # interpolation of distance from previous point
+    #             w = x[c0] - x[c0 - 1]
+    #         area = area + E1[c2] * w
+    #         c2 += 1
+    #         c0 += 1
+    #     localArea = i - area # E_max - E(x) = E_rem
+    #     if thFound == False:
+    #         if localArea <= threshold:
+    #             thFound = True
+    #             thValue = x[c2-1]
+    #     # check if this is the threshold point
+    #     if localArea != 0: # remove zeros for np.interp to work
+    #         E3.append(localArea)
+    #         x_E3.append(x[c2-1])
+    #     c1 += 1
 
-    E3 = np.flip(np.array(E3)) # flip for np.interp to work (values have to increase)
-    x = np.flip(np.array(x_E3)) # flip for right mapping
-    thValue = np.interp(threshold, E3, x) # take x at threshold energy
+    # E3 = np.flip(np.array(E3)) # flip for np.interp to work (values have to increase)
+    # x = np.flip(np.array(x_E3)) # flip for right mapping
+    # thValue = np.interp(threshold, E3, x) # take x at threshold energy
+    
+#######################################################  
+    
+    # MODIFIED BY F. Piscitelli 2020/04/15
+        
+    x  = array[0]              # A
+    E1 = array[1]+array[2]     # eV/A
+
+    w = np.append(np.diff(x), x[-1]-x[-2])
+
+    totEnergy = np.sum(E1*w)
+    
+    remEnergy = totEnergy - np.cumsum(E1,axis=0)*w
+    
+    IndexThValue = np.argwhere(remEnergy >=  threshold)
+    
+    thValue = np.float64(x[IndexThValue[-1]])
+    
+####################################################### 
+    
     return thValue
 
 
