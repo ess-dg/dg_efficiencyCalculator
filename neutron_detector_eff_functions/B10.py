@@ -78,7 +78,7 @@ class B10:
         ..  Original source in Matlab: https://bitbucket.org/europeanspallationsource/dg_matlabborontools/src/bcbac538ad10d074c5150a228847efc2e0269e0d/B10tools/readCrossSect.m?at=default&fileviewer=file-view-default
 
         """
-        ht = 1.054e-34
+        ht    = 1.054e-34
         nmass = 1.67e-27
         # lambdaList transformed to ev
         lamen = []
@@ -86,6 +86,7 @@ class B10:
         c0 = 0
         for l in lambdalist:
             lamen.append(((ht ** 2) * 4 * math.pi ** 2) / (2 * nmass * (l[0] ** 2)) * 1e20 * 6.24e18)
+            
         x, y = np.loadtxt(fname=os.path.dirname(os.path.abspath(__file__)) + "/data/B10/B10CrossSect_(n,a).py",
                           delimiter=',', unpack=True)
         xlog = []
@@ -218,20 +219,21 @@ def find_th(array, threshold):
     
 #######################################################  
     
-    # MODIFIED BY F. Piscitelli 2020/04/15
+    # MODIFIED BY F. Piscitelli 2020/04/16
         
-    x  = array[0]              # A
-    E1 = array[1]+array[2]     # eV/A
-
+    x  = array[0]*1e-4                # from A to um
+    E1 = (array[1]+array[2])*1e4     # from eV/A to eV/um
+    
     w = np.append(np.diff(x), x[-1]-x[-2])
-
+    
     totEnergy = np.sum(E1*w)
     
     remEnergy = totEnergy - np.cumsum(E1,axis=0)*w
     
-    IndexThValue = np.argwhere(remEnergy >=  threshold)
+    remEnergyFlip = np.flip(remEnergy) # flip for np.interp to work (values have to increase)
+    xFlip         = np.flip(x)         # flip for right mapping
     
-    thValue = np.float64(x[IndexThValue[-1]])
+    thValue = np.interp(threshold, remEnergyFlip, xFlip) # take x at threshold energy
     
 ####################################################### 
     
