@@ -75,3 +75,7 @@ launch.spec
 requirements.txt  # Pip dependencies  
 setup.py  # Packaging information  
 ```
+
+Analysis
+------------
+Extra code containg tools for more specific analysis of different blade configurations. Also includes an add-on which takes into consideration the thickness variation of coating across the blades when calculating the efficiency.
