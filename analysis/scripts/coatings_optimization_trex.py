@@ -1,12 +1,20 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import dirname, abspath, join
+import sys
+
+# Find code directory relative to our directory
+THIS_DIR = dirname(__file__)
+CODE_DIR = abspath(join(THIS_DIR, '../../..', 'dg_efficiencyCalculator'))
+sys.path.append(CODE_DIR)
+
 import neutron_detector_eff_functions.Aluminium as Aluminium
 import neutron_detector_eff_functions.Converter as Converter
 import neutron_detector_eff_functions.efftools as efftools
 import neutron_detector_eff_functions.B10 as B10
 import itertools
-import imageio
 import shutil
 import os
 import analysis_helper_functions as hf
@@ -305,6 +313,126 @@ coatings_CTB = np.array([middle_blade_A,
                          middle_blade_B,
                          middle_blade_B])
 
+coatings_TBC = np.array([upper_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         lower_blade_A, middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_CBC = np.array([middle_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         lower_blade_A, middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_BBC = np.array([lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         lower_blade_A, middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_TTT = np.array([upper_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, upper_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_CTT = np.array([middle_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, upper_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_BTT = np.array([lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, upper_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_TCC = np.array([upper_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         middle_blade_A, middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
+coatings_BCC = np.array([lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         upper_blade_A, lower_blade_A,
+                         middle_blade_A, middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         middle_blade_A,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         upper_blade_B, lower_blade_B,
+                         middle_blade_B,
+                         middle_blade_B,
+                         middle_blade_B])
+
 eff_CCC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
                                     al_sub, coatings_CCC, inclination)
 eff_TTB = hf.get_average_efficiency(wavelengths, ranges, B10_object,
@@ -327,10 +455,13 @@ plt.grid(True, which='major', linestyle='--', zorder=0)
 plt.grid(True, which='minor', linestyle='--', zorder=0)
 plt.xlabel('Wavelength (Å)')
 plt.ylabel('Efficiency')
-plt.legend(title='Configuration')
+plt.legend(title='Configuration', loc=4)
 plt.title('Efficiency')
+plt.xlim(0.7, 6.4)
+plt.ylim(0, 1)
+fig.set_figheight(5)
+fig.set_figwidth(7)
 plt.savefig('../output/trex_eff_average_efficiency_configurations.pdf')
-plt.close()
 
 fig = plt.figure()
 plt.plot(wavelengths, eff_TBC - ideal_efficiency,
@@ -343,26 +474,162 @@ plt.grid(True, which='major', linestyle='--', zorder=0)
 plt.grid(True, which='minor', linestyle='--', zorder=0)
 plt.xlabel('Wavelength (Å)')
 plt.ylabel('Efficiency difference')
+plt.ylim(-0.01, 0.01)
+plt.xlim(0.7, 6.4)
 plt.legend(title='Configuration')
 plt.title('Efficiency difference: configuration - optimization')
+fig.set_figheight(5)
+fig.set_figwidth(7)
 plt.savefig('../output/trex_eff_diff_average_efficiency_configurations.pdf')
-plt.close()
+
+############################################################
+### Investigation to see if versions can be reduced to 2 ###
+############################################################
+
+# eff_TBC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_TBC, inclination)
+# eff_CBC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_CBC, inclination)
+# eff_BBC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_BBC, inclination)
+#
+# eff_TTT = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_TTT, inclination)
+# eff_CTT = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_CTT, inclination)
+# eff_BTT = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+#                                     al_sub, coatings_BTT, inclination)
+#
+# fig = plt.figure()
+# plt.plot(wavelengths, eff_TBC, label='(1) Top-Bottom-Center', linestyle='solid')
+# plt.plot(wavelengths, eff_BBC, label='(2) Bottom-Bottom-Center', linestyle='dashed')
+# plt.plot(wavelengths, eff_CBC, label='(3) Center-Bottom-Center', linestyle='dotted')
+# plt.plot(wavelengths, eff_TTT, label='(4) Top-Top-Top', linestyle='solid')
+# plt.plot(wavelengths, eff_BTT, label='(5) Bottom-Top-Top', linestyle='dashed')
+# plt.plot(wavelengths, eff_CTT, label='(6) Center-Top-Top', linestyle='dotted')
+# plt.plot(wavelengths, ideal_efficiency, label='Optimized', linestyle='-.', color='black')
+# plt.grid(True, which='major', linestyle='--', zorder=0)
+# plt.grid(True, which='minor', linestyle='--', zorder=0)
+# plt.xlabel('Wavelength (Å)')
+# plt.ylabel('Efficiency')
+# plt.xlim(0.7, 6.4)
+# plt.ylim(0, 1)
+# plt.legend(title='Configuration', loc=4)
+# plt.title('Efficiency')
+# plt.savefig('../output/trex_eff_average_efficiency_configurations_v2.pdf')
+#
+# fig = plt.figure()
+# plt.plot(wavelengths, eff_TBC - ideal_efficiency,
+#          label='(1) Top-Bottom-Center', linestyle='solid')
+# plt.plot(wavelengths, eff_BBC - ideal_efficiency,
+#          label='(2) Bottom-Bottom-Center', linestyle='dashed')
+# plt.plot(wavelengths, eff_CBC - ideal_efficiency,
+#          label='(3) Center-Bottom-Center', linestyle='dotted')
+# plt.plot(wavelengths, eff_TTT - ideal_efficiency,
+#          label='(4) Top-Top-Top', linestyle='solid')
+# plt.plot(wavelengths, eff_BTT - ideal_efficiency,
+#          label='(5) Bottom-Top-Top', linestyle='dashed')
+# plt.plot(wavelengths, eff_CTT - ideal_efficiency,
+#          label='(6) Center-Top-Top', linestyle='dotted')
+# plt.grid(True, which='major', linestyle='--', zorder=0)
+# plt.grid(True, which='minor', linestyle='--', zorder=0)
+# plt.xlabel('Wavelength (Å)')
+# plt.ylabel('Efficiency difference')
+# plt.ylim(-0.01, 0.01)
+# plt.xlim(0.7, 6.4)
+# plt.legend(title='Configuration')
+# plt.title('Efficiency difference: configuration - optimization')
+# plt.savefig('../output/trex_eff_diff_average_efficiency_configurations_v2.pdf')
+
+########################################################################
+### Investigation to see if versions can be reduced to 2 (ATTEMPT 2) ###
+########################################################################
+
+eff_TTB = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_TTB, inclination)
+eff_CTB = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_CTB, inclination)
+eff_BTB = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_BTB, inclination)
+
+eff_TCC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_TCC, inclination)
+eff_CCC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_CCC, inclination)
+eff_BCC = hf.get_average_efficiency(wavelengths, ranges, B10_object,
+                                    al_sub, coatings_BCC, inclination)
+
+fig = plt.figure()
+plt.plot(wavelengths, eff_TTB, label='(1) Top-Top-Bottom', linestyle='solid')
+plt.plot(wavelengths, eff_BTB, label='(2) Bottom-Top-Bottom', linestyle='dashed')
+plt.plot(wavelengths, eff_CTB, label='(3) Center-Top-Bottom', linestyle='dotted')
+
+plt.plot(wavelengths, eff_TCC, label='(4) Top-Center-Center', linestyle='solid')
+plt.plot(wavelengths, eff_BCC, label='(5) Bottom-Center-Center', linestyle='dashed')
+plt.plot(wavelengths, eff_CCC, label='(6) Center-Center-Center', linestyle='dotted')
+plt.plot(wavelengths, ideal_efficiency, label='Optimized', linestyle='-.', color='black')
+plt.grid(True, which='major', linestyle='--', zorder=0)
+plt.grid(True, which='minor', linestyle='--', zorder=0)
+plt.xlabel('Wavelength (Å)')
+plt.ylabel('Efficiency')
+plt.xlim(0.7, 6.4)
+plt.ylim(0, 1)
+plt.legend(title='Configuration', loc=4)
+plt.tight_layout()
+plt.title('Efficiency')
+fig.set_figheight(5)
+fig.set_figwidth(7)
+plt.savefig('../output/trex_eff_average_efficiency_configurations_v3.pdf')
+
+fig = plt.figure()
+plt.plot(wavelengths, eff_TTB - ideal_efficiency,
+         label='(1) Top-Top-Bottom', linestyle='solid')
+plt.plot(wavelengths, eff_BTB - ideal_efficiency,
+         label='(2) Bottom-Top-Bottom', linestyle='dashed')
+plt.plot(wavelengths, eff_CTB - ideal_efficiency,
+         label='(3) Center-Top-Bottom', linestyle='dotted')
+plt.plot(wavelengths, eff_TCC - ideal_efficiency,
+         label='(4) Top-Center-Center', linestyle='solid')
+plt.plot(wavelengths, eff_BCC - ideal_efficiency,
+         label='(5) Bottom-Center-Center', linestyle='dashed')
+plt.plot(wavelengths, eff_CCC - ideal_efficiency,
+         label='(6) Center-Center-Center', linestyle='dotted')
+plt.grid(True, which='major', linestyle='--', zorder=0)
+plt.grid(True, which='minor', linestyle='--', zorder=0)
+plt.xlabel('Wavelength (Å)')
+plt.ylabel('Efficiency difference')
+plt.ylim(-0.01, 0.01)
+plt.xlim(0.7, 6.4)
+plt.legend(title='Configuration')
+plt.title('Efficiency difference: configuration - optimization')
+plt.tight_layout()
+fig.set_figheight(5)
+fig.set_figwidth(7)
+plt.savefig('../output/trex_eff_diff_average_efficiency_configurations_v3.pdf')
+
 
 ####################
 ### Suggestion 1 ###
 ####################
 
-options_1 = [middle_blade_A, upper_blade_A]
-options_2 = [middle_blade_A, lower_blade_A]
-options_3 = [middle_blade_A, upper_blade_A]
+options_1 = [[lower_blade_A, 'bottom'],
+             [middle_blade_A, 'center'],
+             [upper_blade_A, 'upper']]
+options_2 = [[upper_blade_A, 'upper']]
+options_3 = [[upper_blade_A, 'upper']]
+orientations = ['lower', 'middle', 'upper']
+permutations = len(options_1) * len(options_2) * len(options_3)
 # Iterate through all permutations
 progress = 0
 average_efficiencies = []
 labels = []
-for a, option_1 in enumerate(options_1):
-    for b, option_2 in enumerate(options_2):
-        for c, option_3 in enumerate(options_3):
-            print('Progress: %d/7' % progress)
+for a, option_1_vec in enumerate(options_1):
+    for b, option_2_vec in enumerate(options_2):
+        for c, option_3_vec in enumerate(options_3):
+            option_1, label_1 = option_1_vec
+            option_2, label_2 = option_2_vec
+            option_3, label_3 = option_3_vec
+            print('Progress: %d/%d' % (progress, permutations))
             progress += 1
             coatings_per = np.array([option_1,
                                      lower_blade_A, upper_blade_A,
@@ -380,7 +647,7 @@ for a, option_1 in enumerate(options_1):
                                      middle_blade_B])
             average_efficiency = hf.get_average_efficiency(wavelengths, ranges, B10_object,
                                                            al_sub, coatings_per, inclination)
-            labels.append('[%d, %d, %d]' % (a, b, c))
+            labels.append('[%s, %s, %s]' % (label_1, label_2, label_3))
             average_efficiencies.append(average_efficiency)
 
 ## Absolute values
@@ -405,6 +672,7 @@ plt.grid(True, which='major', linestyle='--', zorder=0)
 plt.grid(True, which='minor', linestyle='--', zorder=0)
 plt.xlabel('Wavelength (Å)')
 plt.ylabel('Efficiency difference')
+plt.ylim(-0.01, 0.01)
 plt.legend(title='Permutation')
 plt.title('Suggestion 1: All permutations (difference: permutation - ideal)')
 plt.tight_layout()
