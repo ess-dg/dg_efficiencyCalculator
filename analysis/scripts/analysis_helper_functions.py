@@ -1,6 +1,15 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import dirname, abspath, join
+import sys
+
+# Find code directory relative to our directory
+THIS_DIR = dirname(__file__)
+CODE_DIR = abspath(join(THIS_DIR, '../../..', 'dg_efficiencyCalculator'))
+sys.path.append(CODE_DIR)
 import neutron_detector_eff_functions.Aluminium as Aluminium
 import neutron_detector_eff_functions.Converter as Converter
 import neutron_detector_eff_functions.efftools as efftools
@@ -70,15 +79,53 @@ def get_efficiency(wavelength, ranges, B10_object, al_sub, coatings, inclination
         if i == 0:
             cum_eff += varargin * transmission
             cum_thick += thickness
-        elif i == len(coatings):
+        elif i == len(coatings)-1:
             cum_eff += (varargin ** i) * np.exp(-cum_thick*sigma_eq) * back_scattering
         else:
             eff_back = (varargin ** i) * np.exp(-cum_thick*sigma_eq) * back_scattering
             eff_trans = (varargin ** (i+1)) * np.exp(-(cum_thick+thickness)*sigma_eq) * transmission
             cum_eff += (eff_back + eff_trans)
             cum_thick += 2*thickness
-        efficiency = cum_eff
+    efficiency = cum_eff
     return efficiency
+
+def get_efficiency_per_layer(wavelength, ranges, B10_object, al_sub, coatings, inclination):
+    """ Calculates the efficiency per layer for a specific configuration of
+        blades, where the first blade is single-coated and the last blade only
+        contributes to efficiency from back-scattering.
+
+        Args:
+            wavelengths (np.array): Wavelengths in unit angstrom
+            ranges (list): Ranges of the alpha and Li-6 ions, for both branches
+            B10_object (B10): Object to calculate interaction cross-sections
+            al_sub (int): Aluminum substrate thickness in um
+            coatings (np.array): Array containing blade coating thicknesses
+            inclination (int): Incident neutron angle on the blades, 90 degrees
+                               is for neutrons hitting perpendicularly.
+        Returns:
+            efficiency_array (np.array): Efficiency for the configuration
+    """
+    # Get parameters
+    varargin = get_varargin(al_sub, wavelength, inclination)
+    sigma_eq = get_sigma_eq(wavelength, inclination, B10_object)
+    # Iterate through coatings (first blade only forward, last only backwards)
+    cum_thick = 0
+    cum_eff = 0
+    eff_vec = []
+    for i, thickness in enumerate(coatings):
+        eff = efftools.efficparam(thickness, sigma_eq, ranges, varargin)
+        back_scattering, transmission = eff[0], eff[1]
+        if i == 0:
+            eff_vec.append(varargin * transmission)
+            cum_thick += thickness
+        elif i == len(coatings)-1:
+            eff_vec.append((varargin ** i) * np.exp(-cum_thick*sigma_eq) * back_scattering)
+        else:
+            eff_vec.append((varargin ** i) * np.exp(-cum_thick*sigma_eq) * back_scattering)
+            eff_vec.append((varargin ** (i+1)) * np.exp(-(cum_thick+thickness)*sigma_eq) * transmission)
+            cum_thick += 2*thickness
+    eff_vec_np = np.array(eff_vec)
+    return eff_vec_np
 
 def get_efficiency_no_single_blade(wavelength, ranges, B10_object, al_sub, coatings, inclination):
     """ Calculates the efficiency for a specific configuration of
@@ -104,15 +151,49 @@ def get_efficiency_no_single_blade(wavelength, ranges, B10_object, al_sub, coati
     for i, thickness in enumerate(coatings):
         eff = efftools.efficparam(thickness, sigma_eq, ranges, varargin)
         back_scattering, transmission = eff[0], eff[1]
-        if i == len(coatings):
+        if i == len(coatings)-1:
             cum_eff += (varargin ** (i+1)) * np.exp(-cum_thick*sigma_eq) * back_scattering
         else:
             eff_back = (varargin ** (i+1)) * np.exp(-cum_thick*sigma_eq) * back_scattering
             eff_trans = (varargin ** (i+2)) * np.exp(-(cum_thick+thickness)*sigma_eq) * transmission
             cum_eff += (eff_back + eff_trans)
             cum_thick += 2*thickness
-        efficiency = cum_eff
+    efficiency = cum_eff
     return efficiency
+
+def get_eff_per_layer_no_single_blade(wavelength, ranges, B10_object, al_sub, coatings, inclination):
+    """ Calculates the efficiency per layer for a specific configuration of
+        blades, where the coating on the first blade is missing.
+
+        Args:
+            wavelengths (np.array): Wavelengths in unit angstrom
+            ranges (list): Ranges of the alpha and Li-6 ions, for both branches
+            B10_object (B10): Object to calculate interaction cross-sections
+            al_sub (int): Aluminum substrate thickness in um
+            coatings (np.array): Array containing blade coating thicknesses
+            inclination (int): Incident neutron angle on the blades, 90 degrees
+                               is for neutrons hitting perpendicularly.
+        Returns:
+            efficiency (np.array): Efficiency for the configuration
+    """
+    # Get parameters
+    varargin = get_varargin(al_sub, wavelength, inclination)
+    sigma_eq = get_sigma_eq(wavelength, inclination, B10_object)
+    # Iterate through coatings (first blade is only transmission, last blade on back)
+    cum_thick = 0
+    cum_eff = 0
+    eff_vec = []
+    for i, thickness in enumerate(coatings):
+        eff = efftools.efficparam(thickness, sigma_eq, ranges, varargin)
+        back_scattering, transmission = eff[0], eff[1]
+        if i == len(coatings)-1:
+            eff_vec.append((varargin ** (i+1)) * np.exp(-cum_thick*sigma_eq) * back_scattering)
+        else:
+            eff_vec.append((varargin ** (i+1)) * np.exp(-cum_thick*sigma_eq) * back_scattering)
+            eff_vec.append((varargin ** (i+2)) * np.exp(-(cum_thick+thickness)*sigma_eq) * transmission)
+            cum_thick += 2*thickness
+    eff_vec_np = np.array(eff_vec)
+    return eff_vec_np
 
 def get_efficiency_vs_lambda(wavelengths, ranges, B10_object, al_sub, coatings, inclination):
     """ Calculates the efficiency vs lambda for a specific configuration of
@@ -257,3 +338,19 @@ def get_triple_blade_thickness_distribution(x):
     # Get thickness y corresponding to trippel blade position x
     y = B0 + B1*x + B2*(x**2) + B3*(x**3) + B4*(x**4) + B5*(x**5) + B6*(x**6)
     return y
+
+def meV_to_A(energy):
+    """ Converts Energy in meV to wavelength in Angstrom. """
+    return np.sqrt(81.81/energy)
+
+def A_to_meV(wavelength):
+    """ Converts wavelength in Angstrom to Energy in meV. """
+    return (81.81 /(wavelength ** 2))
+
+def get_absorption(B10_object, inclination, wavelengths, thickness_in_um):
+    abs_prob_list = []
+    for wavelength in wavelengths:
+        sigma_eq = get_sigma_eq(wavelength, inclination, B10_object)
+        abs_prob_list.append(1 - np.exp(-thickness_in_um*sigma_eq))
+    abs_prob_np = np.array(abs_prob_list)
+    return abs_prob_np
